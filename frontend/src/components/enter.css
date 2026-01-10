@@ -170,6 +170,21 @@
   position: relative;
 }
 
+.password-group .toggle-password {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.password-group .toggle-password:hover {
+  color: rgb(85, 99, 78);
+}
+
 .forgot-inline {
   position: absolute;
   right: 18px;

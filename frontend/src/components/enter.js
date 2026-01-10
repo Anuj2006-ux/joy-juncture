@@ -6,6 +6,7 @@ import logo from '../images/Web-log.png';
 function Enter() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
@@ -171,12 +172,17 @@ function Enter() {
 
             <div className="input-group password-group">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              <i 
+                className={`fa-regular ${showPassword ? 'fa-eye-slash' : 'fa-eye'} toggle-password`}
+                onClick={() => setShowPassword(!showPassword)}
+                style={{ cursor: 'pointer' }}
+              ></i>
             </div>
 
           <div className="login-otp-option">

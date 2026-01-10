@@ -58,7 +58,44 @@
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.3s ease;
-    background: #f9f9f9;
+    background: #fff !important;
+    color: #000 !important;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #fff !important;
+    color: #000 !important;
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    border-color: #39FF14;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(57, 255, 20, 0.1);
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    color: #666;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.toggle-password:hover {
+    color: #39FF14;
 }
 
 .form-group input:focus {

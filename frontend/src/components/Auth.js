@@ -8,6 +8,7 @@ function Auth() {
     const navigate = useNavigate();
     // Views: 'login', 'signup', 'forgot-password', 'verify-otp', 'reset-password'
     const [view, setView] = useState('login');
+    const [showPassword, setShowPassword] = useState(false);
 
     // Form States
     const [formData, setFormData] = useState({
@@ -294,14 +295,21 @@ function Auth() {
                             </div>
                             <div className="form-group">
                                 <label>Password</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    placeholder="At least 8 characters"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    required
-                                />
+                                <div className="input-wrapper">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        placeholder="At least 8 characters"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <i 
+                                        className={`fa-regular ${showPassword ? 'fa-eye-slash' : 'fa-eye'} toggle-password`}
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        style={{ cursor: 'pointer' }}
+                                    ></i>
+                                </div>
                             </div>
                             <div className="form-options">
                                 <span className="forgot-password" onClick={() => setView('forgot-password')} style={{ cursor: 'pointer' }}>

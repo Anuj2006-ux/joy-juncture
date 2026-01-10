@@ -105,6 +105,7 @@
   font-size: 0.95rem;
   transition: all 0.3s ease;
   background: white;
+  color: #000;
 }
 
 .input-wrapper input:focus {
