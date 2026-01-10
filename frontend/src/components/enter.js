@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import API_URL from '../config';
 import './enter.css';
 import logo from '../images/Web-log.png';
 
@@ -18,7 +19,7 @@ function Enter() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login-with-otp', {
+      const response = await fetch(API_URL + '/api/auth/login-with-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +51,7 @@ function Enter() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch(API_URL + '/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +91,7 @@ function Enter() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/verify-otp', {
+      const response = await fetch(API_URL + '/api/auth/verify-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +127,7 @@ function Enter() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/resend-otp', {
+      const response = await fetch(API_URL + '/api/auth/resend-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
