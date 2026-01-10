@@ -1,0 +1,758 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Nanum+Pen+Script&family=Roboto:wght@300;400;700&display=swap');
+
+/* CSS Variables & Reset */
+:root {
+    --toxic-green: #39FF14;
+    --blood-red: #8a0303;
+    --dark-bg: #050505;
+    --card-bg: #1a1a1a;
+    --text-main: #dddddd;
+    --font-heading: 'Creepster', display;
+    --font-body: 'Roboto', sans-serif;
+    --font-hand: 'Nanum Pen Script', cursive;
+}
+
+.about-us-page {
+    background-color: var(--dark-bg);
+    color: var(--text-main);
+    font-family: var(--font-body);
+}
+
+.about-us-page img {
+    max-width: 100%;
+    display: block;
+}
+
+.about-us-page .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Typography */
+.about-us-page h1,
+.about-us-page h2,
+.about-us-page h3 {
+    font-family: var(--font-heading);
+    letter-spacing: 2px;
+}
+
+/* SECTION 1: HERO (25% Height) */
+.about-us-page .hero-section {
+    height: 25vh;
+    background: #000;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.about-us-page .hero-section::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('./about-us-images/hero-fog.png') bottom center no-repeat;
+    background-size: cover;
+    opacity: 0.6;
+    animation: fog-move 20s infinite alternate linear;
+    z-index: 1;
+}
+
+.about-us-page .drip-text {
+    font-size: 4rem;
+    color: var(--toxic-green);
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+    display: flex;
+}
+
+.about-us-page .drip-text span {
+    position: relative;
+    display: inline-block;
+}
+
+.about-us-page .drip-text span.spacer {
+    width: 20px;
+}
+
+/* Static Drip (Hardened Wax) */
+.about-us-page .drip-text span::after {
+    content: '';
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    background: var(--toxic-green);
+    border-radius: 4px;
+    box-shadow: 0 0 10px var(--toxic-green);
+}
+
+/* Static lengths */
+.about-us-page .drip-text span:nth-child(1)::after {
+    height: 25px;
+}
+
+.about-us-page .drip-text span:nth-child(2)::after {
+    height: 45px;
+}
+
+.about-us-page .drip-text span:nth-child(3)::after {
+    height: 15px;
+}
+
+.about-us-page .drip-text span:nth-child(4)::after {
+    height: 35px;
+}
+
+.about-us-page .drip-text span:nth-child(5)::after {
+    height: 55px;
+}
+
+.about-us-page .drip-text span:nth-child(6)::after {
+    height: 10px;
+}
+
+.about-us-page .drip-text span:nth-child(7)::after {
+    height: 30px;
+}
+
+.about-us-page .drip-text span:nth-child(8)::after {
+    height: 50px;
+}
+
+@keyframes fog-move {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.1);
+    }
+}
+
+/* SECTION 2: ABOUT + VISION */
+.about-us-page .about-section {
+    padding: 5rem 0;
+    background: #0a0a0a;
+}
+
+.about-us-page .grid-2-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.about-us-page .about-image-wrapper {
+    position: relative;
+}
+
+.about-us-page .horror-art {
+    border: 2px solid var(--toxic-green);
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+    border-radius: 4px;
+    filter: brightness(0.8) contrast(1.2);
+}
+
+.about-us-page .about-content h2 {
+    color: var(--toxic-green);
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.about-us-page .about-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    color: #ccc;
+}
+
+/* SECTION 3: VISION TRANSITION */
+.about-us-page .vision-transition {
+    background: radial-gradient(circle at center, #1a4a1a 0%, #000000 100%);
+    padding: 6rem 0;
+    text-align: center;
+    border-top: 1px solid #1f331f;
+    border-bottom: 1px solid #1f331f;
+}
+
+.about-us-page .vision-content h2 {
+    font-size: 3.5rem;
+    color: #fff;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px #206020;
+    margin-bottom: 1rem;
+}
+
+.about-us-page .vision-content p {
+    font-size: 1.5rem;
+    color: var(--toxic-green);
+    font-style: italic;
+    font-family: var(--font-heading);
+}
+
+/* SECTION 4: TIMELINE */
+.about-us-page .timeline-section {
+    padding: 6rem 0;
+    background: #080808;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-us-page .timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-us-page .timeline-line {
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background: var(--toxic-green);
+    box-shadow: 0 0 10px var(--toxic-green);
+    border-radius: 3px;
+}
+
+.about-us-page .timeline-item {
+    position: relative;
+    margin-left: 60px;
+    margin-bottom: 4rem;
+    padding-left: 20px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.about-us-page .timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.about-us-page .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -49px;
+    top: 5px;
+    width: 16px;
+    height: 16px;
+    background: #000;
+    border: 2px solid var(--toxic-green);
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.about-us-page .year {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    color: var(--toxic-green);
+    margin-bottom: 0.5rem;
+}
+
+.about-us-page .description {
+    font-size: 1.1rem;
+    color: #aaa;
+}
+
+/* SECTION 4.5: PHILOSOPHY */
+.about-us-page .philosophy-section {
+    padding: 6rem 0;
+    background: #0f1a0f;
+    text-align: center;
+    border-bottom: 1px solid var(--toxic-green);
+}
+
+.about-us-page .section-title {
+    font-size: 3rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.about-us-page .section-subtitle {
+    font-size: 1.2rem;
+    color: #ccc;
+    max-width: 800px;
+    margin: 0 auto 4rem;
+}
+
+.about-us-page .philosophy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+}
+
+.about-us-page .philosophy-item {
+    background: #151515;
+    padding: 2.5rem 1.5rem;
+    border: 2px solid #333;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.about-us-page .philosophy-item::before {
+    content: attr(data-rank);
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    color: var(--toxic-green);
+    opacity: 0.8;
+}
+
+.about-us-page .philosophy-item::after {
+    content: attr(data-rank);
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    color: var(--toxic-green);
+    transform: rotate(180deg);
+    opacity: 0.8;
+}
+
+.about-us-page .philosophy-item:hover {
+    transform: translateY(-15px) rotate(2deg) scale(1.02);
+    border-color: var(--toxic-green);
+    background: #000;
+    box-shadow: 0 0 25px rgba(57, 255, 20, 0.15);
+}
+
+.about-us-page .philosophy-item:hover::before,
+.about-us-page .philosophy-item:hover::after {
+    opacity: 1;
+    text-shadow: 0 0 10px var(--toxic-green);
+}
+
+.about-us-page .philosophy-item .icon {
+    font-size: 3rem;
+    color: var(--toxic-green);
+    margin-bottom: 1rem;
+    text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+}
+
+.about-us-page .philosophy-item h3 {
+    color: #fff;
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.about-us-page .philosophy-item p {
+    color: #ddd;
+    line-height: 1.6;
+    font-family: var(--font-hand);
+    font-size: 1.5rem;
+}
+
+/* SECTION 5 & 6: STORIES */
+.about-us-page .white-bg {
+    background: var(--dark-bg);
+    color: var(--text-main);
+    padding: 8rem 0;
+    position: relative;
+    overflow: visible;
+}
+
+/* Cards */
+.about-us-page .card-wrapper {
+    position: relative;
+    perspective: 1000px;
+    background: transparent;
+    z-index: 5;
+}
+
+.about-us-page .profile-card {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    transform: rotate(-2deg);
+    position: relative;
+    z-index: 5;
+    transition: transform 0.3s;
+}
+
+.about-us-page .profile-card:hover {
+    transform: rotate(0deg) scale(1.02);
+}
+
+.about-us-page .card-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.about-us-page .card-image img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    filter: sepia(0.3) contrast(1.1);
+}
+
+.about-us-page .card-info {
+    text-align: center;
+    padding-top: 1rem;
+}
+
+.about-us-page .card-info h3 {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 1.5rem;
+    letter-spacing: 0;
+    color: #000;
+}
+
+.about-us-page .card-info span {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: #555;
+    text-transform: uppercase;
+}
+
+/* Zombies */
+.about-us-page .zombie-hanging {
+    position: absolute;
+    top: -160px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 260px;
+    z-index: 25;
+    pointer-events: none;
+    filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.5));
+    animation: subtle-sway 6s infinite ease-in-out;
+}
+
+.about-us-page .zombie-leaning {
+    position: absolute;
+    bottom: 0;
+    right: -250px;
+    height: 130%;
+    width: auto;
+    z-index: 20;
+    pointer-events: none;
+    transform: rotate(5deg);
+    filter: drop-shadow(-20px 10px 15px rgba(0, 0, 0, 0.5));
+}
+
+@keyframes subtle-sway {
+
+    0%,
+    100% {
+        transform: translateX(-50%) rotate(0deg);
+    }
+
+    50% {
+        transform: translateX(-50%) rotate(2deg);
+    }
+}
+
+/* Handwritten Text (Paper Effect) */
+.about-us-page .handwritten-content {
+    background: #fdfdfd;
+    color: #000;
+    padding: 3rem;
+    border-radius: 2px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transform: rotate(1deg);
+    position: relative;
+    margin: 1rem;
+    border: 1px solid #ddd;
+}
+
+.about-us-page .blood-title {
+    font-family: var(--font-hand);
+    font-size: 3rem;
+    color: var(--blood-red);
+    margin-bottom: 1rem;
+    transform: rotate(-2deg);
+    letter-spacing: 0;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.about-us-page .blood-text {
+    font-family: var(--font-hand);
+    font-size: 2rem;
+    line-height: 1.4;
+    color: #222;
+}
+
+.about-us-page .blood-splatter {
+    position: absolute;
+    bottom: -20px;
+    right: -10px;
+    width: 200px;
+    opacity: 0.9;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+}
+
+/* Footer */
+.about-us-page footer {
+    background: #2d4a3e;
+    padding: 80px 5% 30px;
+    color: white;
+    position: relative;
+    z-index: 2;
+}
+
+.about-us-page .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.about-us-page .footer-col h4 {
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.about-us-page .footer-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.about-us-page .footer-col ul li {
+    margin-bottom: 10px;
+}
+
+.about-us-page .footer-col ul li a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    transition: 0.3s;
+}
+
+.about-us-page .footer-col ul li a:hover {
+    font-weight: 700;
+    padding-left: 5px;
+}
+
+.about-us-page .footer-logo img {
+    height: 70px;
+    margin-bottom: 20px;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.about-us-page .footer-logo p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.about-us-page .footer-bottom {
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+    font-weight: 600;
+    color: white;
+}
+
+/* SECTION 7: GOT QUESTIONS (CONTACT) */
+.about-us-page .contact-section {
+    background: #080808;
+    color: var(--text-main);
+    padding: 6rem 0;
+    border-top: 1px solid #1a1a1a;
+}
+
+.about-us-page .contact-title {
+    font-size: 3.5rem;
+    color: #fff;
+    margin-bottom: 3rem;
+    font-family: var(--font-body);
+    font-weight: bold;
+    letter-spacing: -1px;
+}
+
+.about-us-page .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 4rem;
+}
+
+.about-us-page .contact-info h3 {
+    font-family: var(--font-body);
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #eee;
+}
+
+.about-us-page .contact-info p {
+    color: #aaa;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.about-us-page .contact-details p {
+    margin-bottom: 0.5rem;
+    color: #ccc;
+}
+
+.about-us-page .contact-details strong {
+    color: #fff;
+}
+
+.about-us-page .contact-link {
+    color: var(--toxic-green);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.about-us-page .contact-link:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.about-us-page .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.about-us-page .form-row {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.about-us-page .form-row input,
+.about-us-page .form-row textarea {
+    width: 100%;
+    padding: 1rem;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.about-us-page .form-row input:focus,
+.about-us-page .form-row textarea:focus {
+    outline: none;
+    border-color: var(--toxic-green);
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
+}
+
+.about-us-page .submit-btn {
+    align-self: flex-start;
+    padding: 1rem 3rem;
+    background: var(--toxic-green);
+    color: #000;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.about-us-page .submit-btn:hover {
+    background: #fff;
+    box-shadow: 0 0 20px var(--toxic-green);
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+
+    .about-us-page .timeline-line,
+    .about-us-page .timeline-progress {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .about-us-page .timeline-item {
+        margin-left: 0;
+        width: 45%;
+    }
+
+    .about-us-page .timeline-item:nth-child(even) {
+        margin-left: auto;
+    }
+
+    .about-us-page .timeline-item::before {
+        right: -59px;
+        left: auto;
+    }
+
+    .about-us-page .timeline-item:nth-child(odd)::before {
+        right: -60px;
+    }
+
+    .about-us-page .timeline-item:nth-child(even)::before {
+        left: -60px;
+    }
+
+    .about-us-page .timeline-item:nth-child(odd) {
+        text-align: right;
+        padding-right: 2rem;
+    }
+
+    .about-us-page .timeline-item:nth-child(even) {
+        text-align: left;
+        padding-left: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-us-page .grid-2-col {
+        grid-template-columns: 1fr;
+        gap: 6rem;
+    }
+
+    .about-us-page .reverse-mobile {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 6rem;
+    }
+
+    .about-us-page .drip-text {
+        font-size: 2.5rem;
+    }
+
+    .about-us-page .white-bg {
+        padding: 4rem 0;
+    }
+
+    .about-us-page .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .about-us-page .form-row {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .about-us-page .contact-title {
+        font-size: 2.5rem;
+    }
+}

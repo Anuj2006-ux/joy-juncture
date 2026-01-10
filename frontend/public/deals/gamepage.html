@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joy Juncture | Game Store</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;600;700&family=Manrope:wght@300;500;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- API Config -->
+    <script src="../config.js"></script>
+
+    <style>
+        :root {
+            --bg-dark: #020a05;
+            /* Blackish Green */
+            --grid-line: rgba(50, 205, 50, 0.1);
+            /* Brighter Green Grid */
+            --accent: #2ecc71;
+            /* Green Accent */
+            --btn-color: #0d3a35;
+            --text-main: #FFFFFF;
+            --text-muted: #9eaead;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(46, 204, 113, 0.2);
+            --card-bg: #05100a;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 50px 50px;
+            color: var(--text-main);
+            font-family: 'Manrope', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: radial-gradient(circle at center, rgba(46, 204, 113, 0.1) 0%, transparent 70%);
+        }
+
+        h1 {
+            font-family: 'Zilla Slab', serif;
+            font-size: 4rem;
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+            margin: 0;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin-top: 1rem;
+            font-size: 1.2rem;
+        }
+
+        /* Grid */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        /* Card */
+        .game-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.15);
+            border-color: var(--accent);
+        }
+
+        /* Tag */
+        .card-tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--accent);
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            z-index: 10;
+            text-transform: uppercase;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Image Area */
+        .card-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            overflow: hidden;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .game-card:hover .card-image {
+            transform: scale(1.1);
+        }
+
+        /* Overlay */
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(2px);
+        }
+
+        .game-card:hover .card-overlay {
+            opacity: 1;
+        }
+
+        /* Float Buttons */
+        .overlay-btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 160px;
+            justify-content: center;
+            text-decoration: none;
+            /* For <a href> buttons */
+            font-family: inherit;
+        }
+
+        .overlay-btn.secondary {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .overlay-btn.secondary:hover {
+            background: rgba(46, 204, 113, 0.1);
+            color: white;
+            border-color: white;
+        }
+
+        .overlay-btn:hover {
+            transform: translateY(20px) scale(1.05);
+            /* keep translateY for init pos logic if needed, but here simple scale is better */
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        /* Reset transform on hover for clean anim */
+        .game-card:hover .overlay-btn {
+            transform: translateY(0);
+        }
+
+        .game-card:hover .overlay-btn:nth-child(2) {
+            transition-delay: 0.1s;
+            /* stagger */
+        }
+
+        /* Content */
+        .card-details {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-top: 1px solid var(--border);
+            z-index: 5;
+            background: var(--card-bg);
+        }
+
+        .card-title {
+            font-family: 'Zilla Slab', serif;
+            font-size: 1.5rem;
+            margin: 0 0 0.5rem 0;
+            line-height: 1.2;
+        }
+
+        .price-block {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .new-price {
+            color: var(--accent);
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .old-price {
+            color: var(--text-muted);
+            text-decoration: line-through;
+            font-size: 0.9rem;
+        }
+
+        /* Home Button */
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--accent);
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .home-btn:hover {
+            background: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="/" class="home-btn"><i class="fas fa-home"></i> Home</a>
+
+    <header>
+        <h1>Game Store</h1>
+        <div class="subtitle">Tabletop, Card Games & More</div>
+    </header>
+
+    <div class="container">
+        <div class="game-grid" id="gameGrid">
+            <!-- Cards injected via JS -->
+        </div>
+    </div>
+
+    <script>
+        // Currency conversion
+        const currencies = {
+            'INR': { symbol: '₹', rate: 1 },
+            'USD': { symbol: '$', rate: 0.012 },
+            'EUR': { symbol: '€', rate: 0.011 },
+            'GBP': { symbol: '£', rate: 0.0095 },
+            'AUD': { symbol: 'A$', rate: 0.018 },
+            'AED': { symbol: 'د.إ', rate: 0.044 }
+        };
+
+        function getCurrencySymbol() {
+            const selectedCurrency = localStorage.getItem('selectedCurrency') || 'INR';
+            return currencies[selectedCurrency]?.symbol || '₹';
+        }
+
+        function convertPrice(priceInINR) {
+            const selectedCurrency = localStorage.getItem('selectedCurrency') || 'INR';
+            const currency = currencies[selectedCurrency] || currencies['INR'];
+            return Math.round(priceInINR * currency.rate);
+        }
+
+        let games = []; // Will be loaded from API
+
+        const grid = document.getElementById('gameGrid');
+
+        // Fetch games from API
+        async function fetchGames() {
+            try {
+                const res = await fetch(window.API_URL + '/api/games');
+                const data = await res.json();
+                if (data.success && data.games.length > 0) {
+                    games = data.games;
+                } else {
+                    // Fallback games
+                    games = [
+                        { "id": "jj01", "title": "Dead Man's Deck", "oldPrice": 1038, "price": 518, "image": "https://images.unsplash.com/photo-1606167668584-78701c57f13d?q=80&w=2070&auto=format&fit=crop", "tag": "Sale" },
+                        { "id": "jj02", "title": "Mehfil – Musical Card Game", "oldPrice": 1038, "price": 518, "image": "https://joyjuncture.com/cdn/shop/files/WhatsApp_Image_2025-11-29_at_13.51.05.jpg?v=1764407325&width=713", "tag": "Hot" },
+                        { "id": "jj03", "title": "Tamasha – Bollywood Bid", "oldPrice": 1038, "price": 518, "image": "https://joyjuncture.com/cdn/shop/files/generated_image2.png?v=1764408944&width=713", "tag": "New" },
+                        { "id": "jj04", "title": "Murder Mystery Case File", "oldPrice": 2598, "price": 1298, "image": "https://joyjuncture.com/cdn/shop/files/WhatsAppImage2025-11-26at22.26.34.jpg?v=1764311510&width=360", "tag": "Best Seller" },
+                        { "id": "jj05", "title": "Buzzed – Drinking Game", "oldPrice": 778, "price": 388, "image": "https://joyjuncture.com/cdn/shop/files/generated_image_buzz.png?v=1764409590&width=360", "tag": "18+" },
+                        { "id": "jj06", "title": "Judge Me & Guess", "oldPrice": 1948.70, "price": 1298.70, "image": "https://joyjuncture.com/cdn/shop/files/WhatsApp_Image_2025-11-29_at_14.45.13.jpg?v=1764407770&width=360", "tag": "Sale" },
+                        { "id": "jj07", "title": "One More Round | Jigsaw Puzzle", "oldPrice": 843.70, "price": 648.70, "image": "https://joyjuncture.com/cdn/shop/files/IMG_1735.jpg?v=1750756387&width=360", "tag": "Sale" }
+                    ];
+                }
+                renderGames();
+            } catch (error) {
+                console.error('Error fetching games:', error);
+                // Fallback games
+                games = [
+                    { "id": "jj01", "title": "Dead Man's Deck", "oldPrice": 1038, "price": 518, "image": "https://images.unsplash.com/photo-1606167668584-78701c57f13d?q=80&w=2070&auto=format&fit=crop", "tag": "Sale" },
+                    { "id": "jj02", "title": "Mehfil – Musical Card Game", "oldPrice": 1038, "price": 518, "image": "https://joyjuncture.com/cdn/shop/files/WhatsApp_Image_2025-11-29_at_13.51.05.jpg?v=1764407325&width=713", "tag": "Hot" },
+                    { "id": "jj03", "title": "Tamasha – Bollywood Bid", "oldPrice": 1038, "price": 518, "image": "https://joyjuncture.com/cdn/shop/files/generated_image2.png?v=1764408944&width=713", "tag": "New" },
+                    { "id": "jj04", "title": "Murder Mystery Case File", "oldPrice": 2598, "price": 1298, "image": "https://joyjuncture.com/cdn/shop/files/WhatsAppImage2025-11-26at22.26.34.jpg?v=1764311510&width=360", "tag": "Best Seller" },
+                    { "id": "jj05", "title": "Buzzed – Drinking Game", "oldPrice": 778, "price": 388, "image": "https://joyjuncture.com/cdn/shop/files/generated_image_buzz.png?v=1764409590&width=360", "tag": "18+" },
+                    { "id": "jj06", "title": "Judge Me & Guess", "oldPrice": 1948.70, "price": 1298.70, "image": "https://joyjuncture.com/cdn/shop/files/WhatsApp_Image_2025-11-29_at_14.45.13.jpg?v=1764407770&width=360", "tag": "Sale" },
+                    { "id": "jj07", "title": "One More Round | Jigsaw Puzzle", "oldPrice": 843.70, "price": 648.70, "image": "https://joyjuncture.com/cdn/shop/files/IMG_1735.jpg?v=1750756387&width=360", "tag": "Sale" }
+                ];
+                renderGames();
+            }
+        }
+
+        function renderGames() {
+            grid.innerHTML = '';
+            const symbol = getCurrencySymbol();
+            
+            games.forEach((game, index) => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                const detailLink = `g${index + 1}.html`;
+
+                card.innerHTML = `
+                    <div class="card-tag">${game.tag}</div>
+                    <div class="card-image-wrapper">
+                        <img src="${game.image}" alt="${game.title}" class="card-image" onerror="this.src='https://images.unsplash.com/photo-1605806616949-1e87b487bc2a?q=80&w=1000&auto=format&fit=crop'">
+                        <div class="card-overlay">
+                            <a href="${detailLink}" class="overlay-btn secondary">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <button class="overlay-btn add-to-cart-btn" data-id="${game.id}" data-title="${game.title}" data-price="${game.price}" data-oldprice="${game.oldPrice}" data-image="${game.image}" data-tag="${game.tag}">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <h3 class="card-title">${game.title}</h3>
+                        <div class="price-block">
+                            <span class="new-price">${symbol}${convertPrice(game.price)}</span>
+                            <span class="old-price">${symbol}${convertPrice(game.oldPrice)}</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Re-attach event listeners for add to cart
+            document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    addToCart(this);
+                });
+            });
+        }
+
+        // Initial load - fetch games from API
+        fetchGames();
+
+        // Listen for currency changes
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'selectedCurrency') renderGames();
+        });
+
+        // Add to Cart Logic
+        async function addToCart(btn) {
+            const gameId = btn.dataset.id;
+            const title = btn.dataset.title;
+            const price = parseFloat(btn.dataset.price);
+            const oldPrice = parseFloat(btn.dataset.oldprice);
+            const image = btn.dataset.image;
+            const tag = btn.dataset.tag;
+
+            const token = localStorage.getItem('token');
+
+            if (token) {
+                // Logged in user - save to backend
+                try {
+                    const response = await fetch(window.API_URL + '/api/cart/add', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ gameId, title, price, oldPrice, image, tag })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        showSuccess(btn);
+                        // Dispatch event to update cart badge
+                        window.dispatchEvent(new Event('cartUpdated'));
+                    } else if (data.requiresLogin) {
+                        window.location.href = '/login';
+                    } else {
+                        alert(data.message || 'Failed to add to cart');
+                    }
+                } catch (error) {
+                    console.error('Add to cart error:', error);
+                    alert('Failed to add to cart. Please try again.');
+                }
+            } else {
+                // Guest user - save to localStorage
+                let guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+                
+                const existingItem = guestCart.find(item => item.gameId === gameId);
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    guestCart.push({ gameId, title, price, oldPrice, image, tag, quantity: 1 });
+                }
+                
+                localStorage.setItem('guestCart', JSON.stringify(guestCart));
+                showSuccess(btn);
+                window.dispatchEvent(new Event('cartUpdated'));
+            }
+        }
+
+        function showSuccess(btn) {
+            // Confetti
+            const rect = btn.getBoundingClientRect();
+            const x = (rect.left + rect.width / 2) / window.innerWidth;
+            const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { x: x, y: y },
+                colors: ['#2ecc71', '#ffffff', '#000000'],
+                zIndex: 9999
+            });
+
+            // Button feedback
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+            btn.style.background = '#fff';
+            btn.style.color = '#000';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+                btn.style.color = '';
+            }, 2000);
+        }
+    </script>
+</body>
+
+</html>

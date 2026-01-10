@@ -1,0 +1,149 @@
+/* Global Cinematic Theme Variables */
+:root {
+  --bg-color: #0a0a0a;
+  --text-color: #e0e0e0;
+  --accent-color: #39ff14;
+  /* Toxic Green */
+  --accent-dim: #2cb810;
+  --heading-font: 'Poppins', sans-serif;
+  --body-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Main Container - Centered Column */
+.privacy-container {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  padding: 80px 20px;
+  margin: 0 auto;
+  max-width: 800px;
+  /* Narrow, readable column */
+  text-align: center;
+  /* MANDATORY CENTER ALIGNMENT */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Centers flex children */
+  font-family: var(--body-font);
+  line-height: 2.0;
+}
+
+/* Headings */
+.privacy-container h1 {
+  font-size: 48px;
+  font-family: var(--heading-font);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 40px;
+  color: var(--accent-color);
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+  /* Subtle toxic glow */
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 10px;
+  display: inline-block;
+  /* Allows border to wrap text width */
+}
+
+/* Subheadings / Sections */
+.privacy-container .numbered-section {
+  font-family: var(--heading-font);
+  color: var(--accent-color);
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border-left: 0;
+  /* Removing side borders for centered look */
+  border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+  /* Subtle underline divider */
+  padding-bottom: 5px;
+  display: inline-block;
+}
+
+/* Body Text */
+.privacy-container p {
+  color: var(--text-color);
+  font-size: 17px;
+  margin-bottom: 25px;
+  font-weight: 300;
+  max-width: 100%;
+}
+
+.privacy-container .effective-date {
+  color: #888;
+  font-size: 14px;
+  font-style: italic;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
+}
+
+/* Lists - Visually Centered Blocks */
+.privacy-container ul {
+  list-style: none;
+  /* remove default bullets to handle custom centering */
+  margin-bottom: 30px;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.privacy-container li {
+  color: #ccc;
+  font-size: 16px;
+  margin-bottom: 15px;
+  line-height: 1.8;
+  padding: 10px 15px;
+  background: rgba(255, 255, 255, 0.03);
+  /* Extremely subtle card effect for readability */
+  border-left: 2px solid var(--accent-dim);
+  text-align: center;
+  /* Center text inside list items */
+  width: 100%;
+  max-width: 700px;
+  /* Keep list itmes contained */
+  transition: all 0.3s ease;
+}
+
+.privacy-container li:hover {
+  background: rgba(57, 255, 20, 0.05);
+  /* Slight green tint on hover */
+  border-left-color: var(--accent-color);
+}
+
+/* Links (if any) */
+.privacy-container a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  border-bottom: 1px dotted var(--accent-color);
+}
+
+.privacy-container a:hover {
+  color: #fff;
+  text-shadow: 0 0 5px var(--accent-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .privacy-container {
+    padding: 40px 15px;
+  }
+
+  .privacy-container h1 {
+    font-size: 32px;
+    letter-spacing: 1px;
+  }
+
+  .privacy-container .numbered-section {
+    font-size: 18px;
+  }
+
+  .privacy-container p,
+  .privacy-container li {
+    font-size: 15px;
+  }
+}
