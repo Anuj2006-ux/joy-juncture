@@ -21,6 +21,7 @@ function Navbar() {
   const [currencyDropdown, setCurrencyDropdown] = useState(false);
   const profileRef = useRef(null);
   const currencyRef = useRef(null);
+  const searchRef = useRef(null);
   const [selectedCurrency, setSelectedCurrency] = useState(() => {
     return localStorage.getItem('selectedCurrency') || 'INR';
   });
@@ -54,6 +55,10 @@ function Navbar() {
       }
       if (currencyRef.current && !currencyRef.current.contains(event.target)) {
         setCurrencyDropdown(false);
+      }
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setSearchOpen(false);
+        setSearchQuery('');
       }
     };
 
@@ -92,9 +97,9 @@ function Navbar() {
     fetchGames();
   }, []);
 
-  const filteredGames = games.filter(game =>
-    game.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredGames = searchQuery 
+    ? games.filter(game => game.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    : games;
 
   useEffect(() => {
     // Check if user is logged in
@@ -319,7 +324,7 @@ function Navbar() {
           </ul>
 
           <div className="nav-icons">
-            <div className={`search-box ${searchOpen ? 'active' : ''}`}>
+            <div className={`search-box ${searchOpen ? 'active' : ''}`} ref={searchRef}>
               <input
                 className="search-txt"
                 type="text"
@@ -331,7 +336,7 @@ function Navbar() {
                 <i className="fa-solid fa-magnifying-glass"></i>
               </button>
 
-              {searchQuery && searchOpen && (
+              {searchOpen && (
                 <div className="inline-search-results">
                   {filteredGames.length > 0 ? (
                     filteredGames.map(game => (
@@ -353,38 +358,50 @@ function Navbar() {
             <div className="profile-wrapper" ref={profileRef}>
               <button
                 className="icon-btn user"
-                onClick={() => user ? setProfileDropdown(!profileDropdown) : window.location.href = '/login'}
+                onClick={() => setProfileDropdown(!profileDropdown)}
               >
                 <i className="fa-regular fa-user"></i>
               </button>
 
-              {user && profileDropdown && (
+              {profileDropdown && (
                 <div className="profile-dropdown">
                   <div className="profile-header">
                     <div className="profile-avatar">
-                      {user.profilePicture ? (
-                        <img src={user.profilePicture} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                      {user ? (
+                        user.profilePicture ? (
+                          <img src={user.profilePicture} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                        ) : (
+                          (user.name || user.username || 'U').charAt(0).toUpperCase()
+                        )
                       ) : (
-                        (user.name || user.username || 'U').charAt(0).toUpperCase()
+                        'G'
                       )}
                     </div>
                     <div className="profile-info">
-                      <h4>{user.name || user.username}</h4>
-                      <p>{user.email}</p>
+                      <h4>{user ? (user.name || user.username) : 'Guest'}</h4>
+                      <p>{user ? user.email : 'Not logged in'}</p>
                     </div>
                   </div>
                   <div className="profile-menu">
-                    {user.role === 'admin' && (
-                      <Link to="/admin" onClick={() => setProfileDropdown(false)} className="admin-link">
-                        <i className="fa-solid fa-gauge-high"></i> Admin Dashboard
+                    {user ? (
+                      <>
+                        {user.role === 'admin' && (
+                          <Link to="/admin" onClick={() => setProfileDropdown(false)} className="admin-link">
+                            <i className="fa-solid fa-gauge-high"></i> Admin Dashboard
+                          </Link>
+                        )}
+                        <a href="#" onClick={(e) => { e.preventDefault(); setProfileDropdown(false); setProfilePopupOpen(true); }}><i className="fa-solid fa-user"></i> My Profile</a>
+                        <a href="#"><i className="fa-solid fa-box"></i> Orders</a>
+                        <a href="#"><i className="fa-solid fa-wallet"></i> Wallet</a>
+                        <a href="#" onClick={(e) => { e.preventDefault(); handleLogout(); }}>
+                          <i className="fa-solid fa-right-from-bracket"></i> Logout
+                        </a>
+                      </>
+                    ) : (
+                      <Link to="/login" onClick={() => setProfileDropdown(false)}>
+                        <i className="fa-solid fa-right-to-bracket"></i> Login
                       </Link>
                     )}
-                    <a href="#" onClick={(e) => { e.preventDefault(); setProfileDropdown(false); setProfilePopupOpen(true); }}><i className="fa-solid fa-user"></i> My Profile</a>
-                    <a href="#"><i className="fa-solid fa-box"></i> Orders</a>
-                    <a href="#"><i className="fa-solid fa-wallet"></i> Wallet</a>
-                    <a href="#" onClick={(e) => { e.preventDefault(); handleLogout(); }}>
-                      <i className="fa-solid fa-right-from-bracket"></i> Logout
-                    </a>
                   </div>
                 </div>
               )}

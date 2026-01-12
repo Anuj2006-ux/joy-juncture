@@ -20,7 +20,7 @@
 }
 
 .profile-popup {
-  background: linear-gradient(145deg, #2d4a3e 0%, #1a2f26 100%);
+  background: linear-gradient(145deg, #1a3a2e 0%, #0d1f19 100%);
   border-radius: 20px;
   width: 90%;
   max-width: 450px;
@@ -29,7 +29,7 @@
   position: relative;
   box-shadow: 
     0 25px 60px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 140, 0, 0.2),
+    0 0 0 1px rgba(46, 204, 113, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -65,7 +65,7 @@
 }
 
 .profile-popup-close:hover {
-  background: #FF8C00;
+  background: #2ecc71;
   transform: rotate(90deg);
 }
 
@@ -79,8 +79,8 @@
 .spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid rgba(255, 140, 0, 0.2);
-  border-top-color: #FF8C00;
+  border: 4px solid rgba(46, 204, 113, 0.2);
+  border-top-color: #2ecc71;
   border-radius: 50%;
   margin: 0 auto 20px;
   animation: spin 1s linear infinite;
@@ -106,17 +106,17 @@
 .profile-popup-avatar {
   width: 90px;
   height: 90px;
-  background: linear-gradient(135deg, #FF8C00 0%, #ff6b00 100%);
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2.2rem;
   font-weight: 700;
-  color: #fff;
+  color: #000;
   box-shadow: 
-    0 8px 20px rgba(255, 140, 0, 0.4),
-    0 0 0 4px rgba(255, 140, 0, 0.2);
+    0 8px 20px rgba(46, 204, 113, 0.4),
+    0 0 0 4px rgba(46, 204, 113, 0.2);
   text-transform: uppercase;
   cursor: pointer;
   position: relative;
@@ -249,7 +249,7 @@
 }
 
 .profile-field label i {
-  color: #FF8C00;
+  color: #2ecc71;
   width: 16px;
 }
 
@@ -270,7 +270,7 @@
 }
 
 .field-value.points span:first-child {
-  color: #FF8C00;
+  color: #2ecc71;
   font-weight: 600;
 }
 
@@ -284,9 +284,9 @@
 }
 
 .edit-btn {
-  background: rgba(255, 140, 0, 0.2);
+  background: rgba(46, 204, 113, 0.2);
   border: none;
-  color: #FF8C00;
+  color: #2ecc71;
   width: 32px;
   height: 32px;
   border-radius: 8px;
@@ -298,8 +298,8 @@
 }
 
 .edit-btn:hover {
-  background: #FF8C00;
-  color: #fff;
+  background: #2ecc71;
+  color: #000;
 }
 
 /* Edit Name Field */
@@ -311,7 +311,7 @@
 .edit-name-field input {
   flex: 1;
   background: rgba(255, 255, 255, 0.1);
-  border: 2px solid #FF8C00;
+  border: 2px solid #2ecc71;
   color: #fff;
   padding: 12px 16px;
   border-radius: 10px;
@@ -322,7 +322,7 @@
 
 .edit-name-field input:focus {
   background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 0 0 4px rgba(255, 140, 0, 0.2);
+  box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.2);
 }
 
 .edit-name-actions {
@@ -343,12 +343,12 @@
 }
 
 .save-btn {
-  background: #FF8C00;
-  color: #fff;
+  background: #2ecc71;
+  color: #000;
 }
 
 .save-btn:hover {
-  background: #ff9f33;
+  background: #27ae60;
   transform: scale(1.05);
 }
 
@@ -371,9 +371,9 @@
 .reset-password-btn {
   width: 100%;
   padding: 15px;
-  background: linear-gradient(135deg, rgba(255, 140, 0, 0.2) 0%, rgba(255, 107, 0, 0.2) 100%);
-  border: 1px solid rgba(255, 140, 0, 0.3);
-  color: #FF8C00;
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.2) 0%, rgba(39, 174, 96, 0.2) 100%);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  color: #2ecc71;
   font-size: 1rem;
   font-weight: 600;
   border-radius: 12px;
@@ -387,10 +387,10 @@
 }
 
 .reset-password-btn:hover {
-  background: linear-gradient(135deg, #FF8C00 0%, #ff6b00 100%);
-  color: #fff;
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  color: #000;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 140, 0, 0.3);
+  box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3);
 }
 
 /* Password Reset Content */
@@ -413,7 +413,7 @@
 }
 
 .back-btn:hover {
-  color: #FF8C00;
+  color: #2ecc71;
 }
 
 .password-reset-content h3 {
@@ -426,7 +426,7 @@
 }
 
 .password-reset-content h3 i {
-  color: #FF8C00;
+  color: #2ecc71;
 }
 
 /* OTP Request */
@@ -441,16 +441,16 @@
 }
 
 .masked-email {
-  color: #FF8C00 !important;
+  color: #2ecc71 !important;
   font-weight: 600;
   font-size: 1.1rem;
   margin-bottom: 25px !important;
 }
 
 .send-otp-btn {
-  background: linear-gradient(135deg, #FF8C00 0%, #ff6b00 100%);
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
   border: none;
-  color: #fff;
+  color: #000;
   padding: 14px 30px;
   font-size: 1rem;
   font-weight: 600;
@@ -464,7 +464,7 @@
 
 .send-otp-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 140, 0, 0.4);
+  box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
 }
 
 .send-otp-btn:disabled {
@@ -504,9 +504,9 @@
 }
 
 .input-group input:focus {
-  border-color: #FF8C00;
+  border-color: #2ecc71;
   background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 0 0 4px rgba(255, 140, 0, 0.15);
+  box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.15);
 }
 
 .input-group input::placeholder {
@@ -516,9 +516,9 @@
 .confirm-reset-btn {
   width: 100%;
   padding: 15px;
-  background: linear-gradient(135deg, #FF8C00 0%, #ff6b00 100%);
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
   border: none;
-  color: #fff;
+  color: #000;
   font-size: 1rem;
   font-weight: 600;
   border-radius: 12px;
@@ -533,7 +533,7 @@
 
 .confirm-reset-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 140, 0, 0.4);
+  box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
 }
 
 .confirm-reset-btn:disabled {
@@ -558,8 +558,8 @@
 }
 
 .resend-otp-btn:hover:not(:disabled) {
-  border-color: #FF8C00;
-  color: #FF8C00;
+  border-color: #2ecc71;
+  color: #2ecc71;
 }
 
 .resend-otp-btn:disabled {
@@ -588,12 +588,12 @@
 }
 
 .profile-popup::-webkit-scrollbar-thumb {
-  background: rgba(255, 140, 0, 0.4);
+  background: rgba(46, 204, 113, 0.4);
   border-radius: 4px;
 }
 
 .profile-popup::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 140, 0, 0.6);
+  background: rgba(46, 204, 113, 0.6);
 }
 
 /* Delete Account Button */
@@ -673,11 +673,11 @@
 }
 
 .delete-confirm-icon.otp-icon {
-  background: rgba(255, 140, 0, 0.15);
+  background: rgba(46, 204, 113, 0.15);
 }
 
 .delete-confirm-icon.otp-icon i {
-  color: #FF8C00;
+  color: #2ecc71;
 }
 
 .delete-confirm-popup h3 {
@@ -750,7 +750,7 @@
   width: 100%;
   padding: 15px 20px;
   background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 140, 0, 0.3);
+  border: 1px solid rgba(46, 204, 113, 0.3);
   border-radius: 12px;
   color: #fff;
   font-size: 1.5rem;
@@ -762,8 +762,8 @@
 }
 
 .delete-otp-input:focus {
-  border-color: #FF8C00;
-  box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.2);
+  border-color: #2ecc71;
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
 }
 
 .delete-otp-input::placeholder {
