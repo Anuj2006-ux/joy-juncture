@@ -152,6 +152,7 @@ header {
     list-style: none;
     display: flex;
     gap: 5px;
+    align-items: center;
 }
 
 .nav-item {
@@ -159,7 +160,8 @@ header {
     perspective: 1000px;
 }
 
-.nav-item>a {
+.nav-item>a,
+.nav-item>.nav-dropdown-trigger {
     text-decoration: none;
     color: #1a1a1a;
     font-weight: 500;
@@ -173,10 +175,12 @@ header {
     gap: 8px;
     transition: all 0.3s ease;
     background-color: transparent;
+    cursor: pointer;
 }
 
 /* The "Morphing" Hover Background */
-.nav-item>a::before {
+.nav-item>a::before,
+.nav-item>.nav-dropdown-trigger::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -188,34 +192,40 @@ header {
     z-index: -1;
 }
 
-.nav-item:hover>a {
+.nav-item:hover>a,
+.nav-item:hover>.nav-dropdown-trigger {
     color: white;
 }
 
-.nav-item:hover>a::before {
+.nav-item:hover>a::before,
+.nav-item:hover>.nav-dropdown-trigger::before {
     transform: scale(1);
     opacity: 1;
 }
 
 /* Active state for current page */
-.nav-item.active>a::before {
+.nav-item.active>a::before,
+.nav-item.active>.nav-dropdown-trigger::before {
     transform: scale(1);
     opacity: 1;
     background-color: var(--nav-item-hover);
 }
 
-.nav-item.active>a {
+.nav-item.active>a,
+.nav-item.active>.nav-dropdown-trigger {
     color: white;
     font-weight: 600;
 }
 
 /* Arrow Rotation */
-.nav-item>a i {
+.nav-item>a i,
+.nav-item>.nav-dropdown-trigger i {
     font-size: 0.7rem;
     transition: transform 0.4s var(--spring);
 }
 
-.nav-item:hover>a i {
+.nav-item:hover>a i,
+.nav-item:hover>.nav-dropdown-trigger i {
     transform: rotate(180deg);
 }
 
