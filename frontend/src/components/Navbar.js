@@ -299,10 +299,6 @@ function Navbar() {
               <a href="/deals/gamepage.html">Shopping</a>
             </li>
 
-            <li className={`nav-item ${location.pathname === '/freegames' ? 'active' : ''}`}>
-              <Link to="/freegames">Free Games 🎮</Link>
-            </li>
-
             <li className="nav-item">
               <span className="nav-dropdown-trigger">Experiences <i className="fa-solid fa-chevron-down"></i></span>
               <ul className="dropdown-menu">
@@ -448,7 +444,6 @@ function Navbar() {
           <ul className="mobile-nav-links">
             <li><Link to="/" onClick={() => setMobileMenuOpen(false)}>Home</Link></li>
             <li><a href="/deals/gamepage.html" onClick={() => setMobileMenuOpen(false)}>Shopping</a></li>
-            <li><Link to="/freegames" onClick={() => setMobileMenuOpen(false)}>Free Games 🎮</Link></li>
             <li className="mobile-dropdown">
               <span>Experiences <i className="fa-solid fa-chevron-down"></i></span>
               <ul className="mobile-submenu">
