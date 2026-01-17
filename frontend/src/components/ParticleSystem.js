@@ -91,7 +91,7 @@ void main() {
 `;
 
 const ParticleSystem = () => {
-    const { viewport, pointer, camera } = useThree();
+    const { pointer, camera } = useThree();  // eslint-disable-line no-unused-vars
     const count = 10000; // Increased count for density
 
     // Custom Shader Material

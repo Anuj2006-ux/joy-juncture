@@ -261,7 +261,7 @@ function Navbar() {
           <div className="social-icons">
             <a href="https://www.instagram.com/joy_juncture/#" target="_blank" rel="noopener noreferrer"><i className="fa-brands fa-instagram"></i></a>
             <a href="https://www.youtube.com/@Joy_Juncture" target="_blank" rel="noopener noreferrer"><i className="fa-brands fa-youtube"></i></a>
-            <a href="#" target="_blank" rel="noopener noreferrer"><i className="fa-brands fa-x-twitter"></i></a>
+            <a href="https://twitter.com/joy_juncture" target="_blank" rel="noopener noreferrer"><i className="fa-brands fa-x-twitter"></i></a>
             <a href="https://www.pinterest.com/joy_juncture/" target="_blank" rel="noopener noreferrer"><i className="fa-brands fa-pinterest"></i></a>
           </div>
           <div className="top-message">✨ Warning: Entering a joy-packed zone!! ✨</div>
@@ -304,7 +304,7 @@ function Navbar() {
             </li>
 
             <li className="nav-item">
-              <a href="#">Experiences <i className="fa-solid fa-chevron-down"></i></a>
+              <span className="nav-dropdown-trigger">Experiences <i className="fa-solid fa-chevron-down"></i></span>
               <ul className="dropdown-menu">
                 <li><a href="/corporate.html">Corporate Events <span>👔</span></a></li>
                 <li><a href="/weddings.html">Weddings <span>💍</span></a></li>
@@ -323,11 +323,11 @@ function Navbar() {
             </li>
 
             <li className="nav-item">
-              <a href="#">Events</a>
+              <a href="/events/index.html">Events</a>
             </li>
 
             <li className="nav-item">
-              <a href="#">Community <i className="fa-solid fa-chevron-down"></i></a>
+              <span className="nav-dropdown-trigger">Community <i className="fa-solid fa-chevron-down"></i></span>
               <ul className="dropdown-menu">
                 <li><Link to="/blog">Blog <span>✍️</span></Link></li>
                 <li><Link to="/wallet">Wallet & Points <span>💰</span></Link></li>
@@ -407,13 +407,13 @@ function Navbar() {
                             <i className="fa-solid fa-gauge-high"></i> Admin Dashboard
                           </Link>
                         )}
-                        <a href="#" onClick={(e) => { e.preventDefault(); setProfileDropdown(false); setProfilePopupOpen(true); }}><i className="fa-solid fa-user"></i> My Profile</a>
+                        <button type="button" className="profile-menu-btn" onClick={() => { setProfileDropdown(false); setProfilePopupOpen(true); }}><i className="fa-solid fa-user"></i> My Profile</button>
                         <Link to="/orders" onClick={() => setProfileDropdown(false)}><i className="fa-solid fa-box"></i> Orders</Link>
                         <Link to="/wallet" onClick={() => setProfileDropdown(false)}><i className="fa-solid fa-wallet"></i> Wallet</Link>
                         <Link to="/addresses" onClick={() => setProfileDropdown(false)}><i className="fa-solid fa-location-dot"></i> Addresses</Link>
-                        <a href="#" onClick={(e) => { e.preventDefault(); handleLogout(); }}>
+                        <button type="button" className="profile-menu-btn" onClick={handleLogout}>
                           <i className="fa-solid fa-right-from-bracket"></i> Logout
-                        </a>
+                        </button>
                       </>
                     ) : (
                       <Link to="/login" onClick={() => setProfileDropdown(false)}>
@@ -461,7 +461,7 @@ function Navbar() {
             <li className="mobile-highlight">
               <Link to="/#play-style" onClick={() => setMobileMenuOpen(false)}>Play The Showdown 🚀</Link>
             </li>
-            <li><a href="#" onClick={() => setMobileMenuOpen(false)}>Events</a></li>
+            <li><a href="/events/index.html" onClick={() => setMobileMenuOpen(false)}>Events</a></li>
             <li className="mobile-dropdown">
               <span>Community <i className="fa-solid fa-chevron-down"></i></span>
               <ul className="mobile-submenu">

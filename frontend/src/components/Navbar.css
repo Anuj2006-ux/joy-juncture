@@ -517,7 +517,8 @@ header {
     padding: 10px;
 }
 
-.profile-menu a {
+.profile-menu a,
+.profile-menu .profile-menu-btn {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -527,16 +528,31 @@ header {
     border-radius: 8px;
     transition: all 0.2s ease;
     font-size: 0.95rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
 }
 
-.profile-menu a:hover {
+.profile-menu a:hover,
+.profile-menu .profile-menu-btn:hover {
     background: rgba(45, 74, 62, 0.1);
     color: var(--joy-green);
 }
 
-.profile-menu a i {
+.profile-menu a i,
+.profile-menu .profile-menu-btn i {
     width: 18px;
     font-size: 1rem;
+}
+
+/* Nav Dropdown Trigger */
+.nav-dropdown-trigger {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 /* --- INLINE EXPANDING SEARCH --- */
