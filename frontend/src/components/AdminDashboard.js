@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import API_URL from '../config';
-import ReactDOM from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [stats, setStats] = useState({ users: 0, games: 0 });
+  const [stats, setStats] = useState({ users: 0, games: 0, orders: 0, totalRevenue: 0, totalPoints: 0, recentOrders: 0 });
   const [games, setGames] = useState([]);
-  const [users, setUsers] = useState([]); // New state for users
-  const [activeTab, setActiveTab] = useState('games'); // 'games' or 'users'
+  const [users, setUsers] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [freeGames, setFreeGames] = useState([]);
+  const [activeTab, setActiveTab] = useState('games');
   const [loading, setLoading] = useState(true);
+  
+  // Modal States
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteGameId, setDeleteGameId] = useState(null);
@@ -20,6 +23,38 @@ const AdminDashboard = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [currentGame, setCurrentGame] = useState(null);
+  
+  // User Detail Modal
+  const [showUserDetailModal, setShowUserDetailModal] = useState(false);
+  const [selectedUserDetail, setSelectedUserDetail] = useState(null);
+  const [userOrders, setUserOrders] = useState([]);
+  const [userPointsHistory, setUserPointsHistory] = useState([]);
+  const [loadingUserDetail, setLoadingUserDetail] = useState(false);
+  
+  // Points Modal
+  const [showPointsModal, setShowPointsModal] = useState(false);
+  const [pointsAction, setPointsAction] = useState({ points: '', type: 'add', description: '' });
+  
+  // Order Status Modal
+  const [showOrderModal, setShowOrderModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orderUpdate, setOrderUpdate] = useState({ orderStatus: '', paymentStatus: '', trackingNumber: '' });
+
+  // Free Games Modal States
+  const [showFreeGameModal, setShowFreeGameModal] = useState(false);
+  const [currentFreeGame, setCurrentFreeGame] = useState(null);
+  const [freeGameForm, setFreeGameForm] = useState({
+    title: '',
+    description: '',
+    image: '',
+    gameUrl: '',
+    rating: 4.5,
+    isActive: true,
+    order: 0
+  });
+  const [showDeleteFreeGameModal, setShowDeleteFreeGameModal] = useState(false);
+  const [deleteFreeGameId, setDeleteFreeGameId] = useState(null);
+
   const [formData, setFormData] = useState({
     id: '',
     title: '',
@@ -45,27 +80,67 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const statsRes = await fetch(API_URL + '/api/admin/stats', { headers: getHeaders() });
+      const [statsRes, gamesRes, usersRes, ordersRes, freeGamesRes] = await Promise.all([
+        fetch(API_URL + '/api/admin/stats', { headers: getHeaders() }),
+        fetch(API_URL + '/api/admin/games', { headers: getHeaders() }),
+        fetch(API_URL + '/api/admin/users', { headers: getHeaders() }),
+        fetch(API_URL + '/api/admin/orders', { headers: getHeaders() }),
+        fetch(API_URL + '/api/admin/free-games', { headers: getHeaders() })
+      ]);
+
       if (statsRes.status === 401 || statsRes.status === 403) {
         alert('Unauthorized. Please login as admin.');
         navigate('/login');
         return;
       }
-      const statsData = await statsRes.json();
-      if (statsData.success) setStats(statsData.stats);
 
-      const gamesRes = await fetch(API_URL + '/api/admin/games', { headers: getHeaders() });
-      const gamesData = await gamesRes.json();
+      const [statsData, gamesData, usersData, ordersData, freeGamesData] = await Promise.all([
+        statsRes.json(),
+        gamesRes.json(),
+        usersRes.json(),
+        ordersRes.json(),
+        freeGamesRes.json()
+      ]);
+
+      console.log('Admin Stats Response:', statsData);
+      console.log('Admin Games Response:', gamesData);
+      console.log('Admin Users Response:', usersData);
+      console.log('Admin Orders Response:', ordersData);
+      console.log('Admin Free Games Response:', freeGamesData);
+
+      if (statsData.success) {
+        console.log('Setting stats:', statsData.stats);
+        setStats(statsData.stats);
+      } else {
+        console.error('Stats fetch failed:', statsData.message);
+      }
       if (gamesData.success) setGames(gamesData.games);
-
-      const usersRes = await fetch(API_URL + '/api/admin/users', { headers: getHeaders() });
-      const usersData = await usersRes.json();
       if (usersData.success) setUsers(usersData.users);
+      if (ordersData.success) setOrders(ordersData.orders);
+      if (freeGamesData.success) setFreeGames(freeGamesData.freeGames);
 
     } catch (error) {
       console.error('Error fetching admin data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchUserDetail = async (userId) => {
+    setLoadingUserDetail(true);
+    try {
+      const res = await fetch(API_URL + `/api/admin/users/${userId}`, { headers: getHeaders() });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedUserDetail(data.user);
+        setUserOrders(data.orders);
+        setUserPointsHistory(data.pointsHistory);
+        setShowUserDetailModal(true);
+      }
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    } finally {
+      setLoadingUserDetail(false);
     }
   };
 
@@ -75,15 +150,12 @@ const AdminDashboard = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted with data:', formData);
-    
     const isEdit = !!currentGame;
     const url = isEdit 
       ? API_URL + `/api/admin/games/${currentGame.id}`
       : API_URL + '/api/admin/games';
     
     const method = isEdit ? 'PUT' : 'POST';
-    console.log('Sending request to:', url, 'Method:', method);
 
     try {
       const res = await fetch(url, {
@@ -92,13 +164,11 @@ const AdminDashboard = () => {
         body: JSON.stringify(formData)
       });
       
-      console.log('Response status:', res.status);
       const data = await res.json();
-      console.log('Response data:', data);
       
       if (data.success) {
         setShowModal(false);
-        fetchData(); // Refresh list
+        fetchData();
         setSuccessMessage(isEdit ? 'Game Updated Successfully!' : 'New Game Added Successfully!');
         setShowSuccessModal(true);
       } else {
@@ -147,7 +217,7 @@ const AdminDashboard = () => {
         headers: getHeaders(),
         body: JSON.stringify({ 
           block: days !== 0, 
-          days: days // -1 means forever, 0 means unblock
+          days: days
         })
       });
       
@@ -168,6 +238,62 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleUpdatePoints = async () => {
+    if (!selectedUserDetail || !pointsAction.points) return;
+    try {
+      const res = await fetch(API_URL + `/api/admin/users/${selectedUserDetail._id}/points`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify({
+          points: parseInt(pointsAction.points),
+          type: pointsAction.type,
+          description: pointsAction.description
+        })
+      });
+      
+      const data = await res.json();
+      if (data.success) {
+        setShowPointsModal(false);
+        setPointsAction({ points: '', type: 'add', description: '' });
+        fetchUserDetail(selectedUserDetail._id);
+        fetchData();
+        setSuccessMessage(`Points ${pointsAction.type === 'add' ? 'Added' : 'Deducted'} Successfully!`);
+        setShowSuccessModal(true);
+      } else {
+        alert(data.message || 'Error updating points');
+      }
+    } catch (error) {
+      console.error('Error updating points:', error);
+      alert('Error updating points');
+    }
+  };
+
+  const handleUpdateOrder = async () => {
+    if (!selectedOrder) return;
+    try {
+      const res = await fetch(API_URL + `/api/admin/orders/${selectedOrder._id}/status`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(orderUpdate)
+      });
+      
+      const data = await res.json();
+      if (data.success) {
+        setShowOrderModal(false);
+        setSelectedOrder(null);
+        setOrderUpdate({ orderStatus: '', paymentStatus: '', trackingNumber: '' });
+        fetchData();
+        setSuccessMessage('Order Updated Successfully!');
+        setShowSuccessModal(true);
+      } else {
+        alert(data.message || 'Error updating order');
+      }
+    } catch (error) {
+      console.error('Error updating order:', error);
+      alert('Error updating order');
+    }
+  };
+
   const openEditModal = (game) => {
     setCurrentGame(game);
     setFormData({
@@ -184,7 +310,6 @@ const AdminDashboard = () => {
   };
 
   const openAddModal = () => {
-    console.log('Add button clicked, opening modal...');
     setCurrentGame(null);
     setFormData({
       id: `jj${Date.now()}`, 
@@ -197,7 +322,31 @@ const AdminDashboard = () => {
       category: ''
     });
     setShowModal(true);
-    console.log('Modal state set to true');
+  };
+
+  const openOrderModal = (order) => {
+    setSelectedOrder(order);
+    setOrderUpdate({
+      orderStatus: order.orderStatus,
+      paymentStatus: order.paymentStatus,
+      trackingNumber: order.trackingNumber || ''
+    });
+    setShowOrderModal(true);
+  };
+
+  const getStatusColor = (status) => {
+    const colors = {
+      processing: '#ff9100',
+      confirmed: '#00b8d4',
+      shipped: '#536dfe',
+      delivered: '#00e676',
+      cancelled: '#ff4444',
+      pending: '#ff9100',
+      completed: '#00e676',
+      failed: '#ff4444',
+      refunded: '#ab47bc'
+    };
+    return colors[status] || '#aaa';
   };
 
   if (loading) return <div className="admin-loader">Loading...</div>;
@@ -211,40 +360,83 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className="stats-grid">
+      {/* Stats Grid - Enhanced */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px' }}>
         <div className="stat-card">
-          <div className="stat-icon"><i className="fa-solid fa-users"></i></div>
+          <div className="stat-icon" style={{background: 'linear-gradient(135deg, #ff0055, #ff4081)'}}><i className="fa-solid fa-users"></i></div>
           <div className="stat-info">
             <h3>Total Users</h3>
-            <div className="value">{stats.users}</div>
+            <p className="value">{stats.users}</p>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon"><i className="fa-solid fa-gamepad"></i></div>
+          <div className="stat-icon" style={{background: 'linear-gradient(135deg, #ff6b9d, #ffa0c0)'}}><i className="fa-solid fa-gamepad"></i></div>
           <div className="stat-info">
             <h3>Total Games</h3>
-            <div className="value">{stats.games}</div>
+            <p className="value">{stats.games}</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon" style={{background: 'linear-gradient(135deg, #00b8d4, #00e5ff)'}}><i className="fa-solid fa-shopping-cart"></i></div>
+          <div className="stat-info">
+            <h3>Total Orders</h3>
+            <p className="value">{stats.orders}</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon" style={{background: 'linear-gradient(135deg, #00c853, #69f0ae)'}}><i className="fa-solid fa-indian-rupee-sign"></i></div>
+          <div className="stat-info">
+            <h3>Revenue</h3>
+            <p className="value">₹{stats.totalRevenue?.toLocaleString() || 0}</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon" style={{background: 'linear-gradient(135deg, #ff6d00, #ffab40)'}}><i className="fa-solid fa-coins"></i></div>
+          <div className="stat-info">
+            <h3>Total Points</h3>
+            <p className="value">{stats.totalPoints?.toLocaleString() || 0}</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon" style={{background: 'linear-gradient(135deg, #aa00ff, #e040fb)'}}><i className="fa-solid fa-clock"></i></div>
+          <div className="stat-info">
+            <h3>Recent Orders</h3>
+            <p className="value">{stats.recentOrders} <span style={{fontSize: '0.7rem', color: '#aaa'}}>(7 days)</span></p>
           </div>
         </div>
       </div>
 
+      {/* Tabs */}
       <div className="admin-tabs">
         <button 
           className={`tab-btn ${activeTab === 'games' ? 'active' : ''}`}
           onClick={() => setActiveTab('games')}
         >
-          Games Management
+          <i className="fa-solid fa-gamepad"></i> Games
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'freeGames' ? 'active' : ''}`}
+          onClick={() => setActiveTab('freeGames')}
+        >
+          <i className="fa-solid fa-gift"></i> Free Games
         </button>
         <button 
           className={`tab-btn ${activeTab === 'users' ? 'active' : ''}`}
           onClick={() => setActiveTab('users')}
         >
-          Users List
+          <i className="fa-solid fa-users"></i> Users
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'orders' ? 'active' : ''}`}
+          onClick={() => setActiveTab('orders')}
+        >
+          <i className="fa-solid fa-shopping-bag"></i> Orders
         </button>
       </div>
 
       <div className="admin-content-area">
-        {activeTab === 'games' ? (
+        {/* Games Tab */}
+        {activeTab === 'games' && (
           <div className="games-section">
             <div className="section-header">
               <h2>All Games ({games.length})</h2>
@@ -292,7 +484,106 @@ const AdminDashboard = () => {
               </table>
             </div>
           </div>
-        ) : (
+        )}
+
+        {/* Free Games Tab */}
+        {activeTab === 'freeGames' && (
+          <div className="games-section">
+            <div className="section-header">
+              <h2>Free Games ({freeGames.length})</h2>
+              <button className="add-btn" onClick={() => {
+                setCurrentFreeGame(null);
+                setFreeGameForm({ title: '', description: '', image: '', gameUrl: '', rating: 4.5, isActive: true, order: 0 });
+                setShowFreeGameModal(true);
+              }}>+ Add Free Game</button>
+            </div>
+
+            <div style={{ overflowX: 'auto' }}>
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Game URL</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {freeGames.map((game) => (
+                    <tr key={game._id}>
+                      <td>
+                        <img 
+                          src={game.image} 
+                          alt={game.title} 
+                          style={{ width: '60px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
+                        />
+                      </td>
+                      <td style={{ fontWeight: '500' }}>{game.title}</td>
+                      <td style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{game.description}</td>
+                      <td style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{game.gameUrl}</td>
+                      <td>⭐ {game.rating}</td>
+                      <td>
+                        <span style={{ 
+                          padding: '4px 8px', 
+                          borderRadius: '4px', 
+                          fontSize: '0.8rem',
+                          background: game.isActive ? 'rgba(0, 230, 118, 0.2)' : 'rgba(255, 68, 68, 0.2)',
+                          color: game.isActive ? '#00e676' : '#ff4444'
+                        }}>
+                          {game.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                      </td>
+                      <td>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button 
+                            onClick={() => {
+                              setCurrentFreeGame(game);
+                              setFreeGameForm({
+                                title: game.title,
+                                description: game.description,
+                                image: game.image,
+                                gameUrl: game.gameUrl,
+                                rating: game.rating,
+                                isActive: game.isActive,
+                                order: game.order || 0
+                              });
+                              setShowFreeGameModal(true);
+                            }}
+                            style={{ padding: '6px 12px', background: '#4a90d9', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                          >
+                            <i className="fa-solid fa-edit"></i> Edit
+                          </button>
+                          <button 
+                            onClick={() => {
+                              setDeleteFreeGameId(game._id);
+                              setShowDeleteFreeGameModal(true);
+                            }}
+                            style={{ padding: '6px 12px', background: '#ff4444', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                          >
+                            <i className="fa-solid fa-trash"></i> Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                  {freeGames.length === 0 && (
+                    <tr>
+                      <td colSpan="7" style={{textAlign: 'center', padding: '40px', color: '#aaa'}}>
+                        No free games found. Click "Add Free Game" to add one.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Users Tab */}
+        {activeTab === 'users' && (
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <h2 style={{ color: 'white', fontSize: '1.2rem' }}>Registered Users ({users.length})</h2>
@@ -303,9 +594,9 @@ const AdminDashboard = () => {
                   <tr style={{ borderBottom: '2px solid #ff0055' }}>
                     <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Name</th>
                     <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Email</th>
-                    <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Username</th>
+                    <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Points</th>
                     <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Status</th>
-                    <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Created At</th>
+                    <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Created</th>
                     <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Actions</th>
                   </tr>
                 </thead>
@@ -314,7 +605,11 @@ const AdminDashboard = () => {
                     <tr key={user._id} style={{ borderBottom: '1px solid #333' }}>
                       <td style={{ padding: '16px', color: 'white', fontWeight: '500' }}>{user.name || 'N/A'}</td>
                       <td style={{ padding: '16px', color: '#aaa' }}>{user.email}</td>
-                      <td style={{ padding: '16px', color: '#00e676', fontWeight: '500' }}>{user.username || 'N/A'}</td>
+                      <td style={{ padding: '16px' }}>
+                        <span style={{ background: 'rgba(255, 140, 0, 0.15)', color: '#ff8c00', padding: '4px 12px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '600' }}>
+                          {user.wallet?.currentPoints || 0} pts
+                        </span>
+                      </td>
                       <td style={{ padding: '16px' }}>
                         {user.isBlocked 
                           ? <span style={{ background: 'rgba(255, 68, 68, 0.15)', color: '#ff4444', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem' }}>Blocked</span>
@@ -325,20 +620,37 @@ const AdminDashboard = () => {
                       </td>
                       <td style={{ padding: '16px', color: '#aaa' }}>{new Date(user.createdAt).toLocaleDateString()}</td>
                       <td style={{ padding: '16px' }}>
-                        <button 
-                          onClick={() => { setBlockUser(user); setShowBlockModal(true); }}
-                          style={{ 
-                            padding: '8px 14px', 
-                            background: user.isBlocked ? 'rgba(0, 230, 118, 0.2)' : 'rgba(255, 68, 68, 0.2)', 
-                            color: user.isBlocked ? '#00e676' : '#ff4444', 
-                            border: 'none', 
-                            borderRadius: '6px', 
-                            cursor: 'pointer',
-                            fontWeight: '500'
-                          }}
-                        >
-                          {user.isBlocked ? 'Unblock' : 'Block'}
-                        </button>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button 
+                            onClick={() => fetchUserDetail(user._id)}
+                            disabled={loadingUserDetail}
+                            style={{ 
+                              padding: '8px 14px', 
+                              background: 'rgba(0, 184, 212, 0.2)', 
+                              color: '#00b8d4', 
+                              border: 'none', 
+                              borderRadius: '6px', 
+                              cursor: 'pointer',
+                              fontWeight: '500'
+                            }}
+                          >
+                            <i className="fa-solid fa-eye"></i> View
+                          </button>
+                          <button 
+                            onClick={() => { setBlockUser(user); setShowBlockModal(true); }}
+                            style={{ 
+                              padding: '8px 14px', 
+                              background: user.isBlocked ? 'rgba(0, 230, 118, 0.2)' : 'rgba(255, 68, 68, 0.2)', 
+                              color: user.isBlocked ? '#00e676' : '#ff4444', 
+                              border: 'none', 
+                              borderRadius: '6px', 
+                              cursor: 'pointer',
+                              fontWeight: '500'
+                            }}
+                          >
+                            {user.isBlocked ? 'Unblock' : 'Block'}
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -348,8 +660,88 @@ const AdminDashboard = () => {
             </div>
           </div>
         )}
+
+        {/* Orders Tab */}
+        {activeTab === 'orders' && (
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h2 style={{ color: 'white', fontSize: '1.2rem' }}>All Orders ({orders.length})</h2>
+            </div>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ borderBottom: '2px solid #ff0055' }}>
+                    <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.9rem', textTransform: 'uppercase' }}>Order #</th>
+                    <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.9rem', textTransform: 'uppercase' }}>Customer</th>
+                    <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.9rem', textTransform: 'uppercase' }}>Items</th>
+                    <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.9rem', textTransform: 'uppercase' }}>Amount</th>
+                    <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.9rem', textTransform: 'uppercase' }}>Payment</th>
+                    <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.9rem', textTransform: 'uppercase' }}>Status</th>
+                    <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.9rem', textTransform: 'uppercase' }}>Date</th>
+                    <th style={{ padding: '16px', textAlign: 'left', color: '#ff0055', fontWeight: '700', fontSize: '0.9rem', textTransform: 'uppercase' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.map(order => (
+                    <tr key={order._id} style={{ borderBottom: '1px solid #333' }}>
+                      <td style={{ padding: '16px', color: '#00e676', fontWeight: '600' }}>#{order.orderNumber}</td>
+                      <td style={{ padding: '16px', color: 'white' }}>
+                        <div>{order.userId?.name || 'N/A'}</div>
+                        <div style={{ fontSize: '0.8rem', color: '#aaa' }}>{order.userId?.email}</div>
+                      </td>
+                      <td style={{ padding: '16px', color: '#aaa' }}>{order.items?.length || 0} items</td>
+                      <td style={{ padding: '16px', color: '#00e676', fontWeight: '600' }}>₹{order.finalAmount}</td>
+                      <td style={{ padding: '16px' }}>
+                        <span style={{ 
+                          background: `rgba(${getStatusColor(order.paymentStatus) === '#00e676' ? '0,230,118' : getStatusColor(order.paymentStatus) === '#ff4444' ? '255,68,68' : '255,145,0'}, 0.15)`, 
+                          color: getStatusColor(order.paymentStatus), 
+                          padding: '4px 10px', 
+                          borderRadius: '15px', 
+                          fontSize: '0.8rem',
+                          textTransform: 'capitalize'
+                        }}>
+                          {order.paymentStatus}
+                        </span>
+                      </td>
+                      <td style={{ padding: '16px' }}>
+                        <span style={{ 
+                          background: `rgba(${getStatusColor(order.orderStatus) === '#00e676' ? '0,230,118' : getStatusColor(order.orderStatus) === '#ff4444' ? '255,68,68' : '255,145,0'}, 0.15)`, 
+                          color: getStatusColor(order.orderStatus), 
+                          padding: '4px 10px', 
+                          borderRadius: '15px', 
+                          fontSize: '0.8rem',
+                          textTransform: 'capitalize'
+                        }}>
+                          {order.orderStatus}
+                        </span>
+                      </td>
+                      <td style={{ padding: '16px', color: '#aaa', fontSize: '0.9rem' }}>{new Date(order.createdAt).toLocaleDateString()}</td>
+                      <td style={{ padding: '16px' }}>
+                        <button 
+                          onClick={() => openOrderModal(order)}
+                          style={{ 
+                            padding: '8px 14px', 
+                            background: '#333', 
+                            color: 'white', 
+                            border: 'none', 
+                            borderRadius: '6px', 
+                            cursor: 'pointer'
+                          }}
+                        >
+                          <i className="fa-solid fa-pen"></i> Update
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  {orders.length === 0 && <tr><td colSpan="8" style={{textAlign: 'center', padding: '40px', color: '#aaa'}}>No orders found</td></tr>}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
 
+      {/* Game Add/Edit Modal */}
       {showModal && (
         <div 
           style={{
@@ -395,51 +787,103 @@ const AdminDashboard = () => {
                   onChange={handleInputChange} 
                   readOnly={!!currentGame} 
                   required
-                  style={{ width: '100%', padding: '12px', background: '#121212', border: '1px solid #333', color: 'white', borderRadius: '8px' }} 
+                  style={{ width: '100%', padding: '12px', background: '#121212', border: '1px solid #333', color: 'white', borderRadius: '8px', boxSizing: 'border-box' }} 
                 />
               </div>
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Title</label>
-                <input type="text" name="title" value={formData.title} onChange={handleInputChange} required 
-                  style={{ width: '100%', padding: '12px', background: '#121212', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                <input 
+                  type="text" 
+                  name="title" 
+                  value={formData.title} 
+                  onChange={handleInputChange} 
+                  required
+                  style={{ width: '100%', padding: '12px', background: '#121212', border: '1px solid #333', color: 'white', borderRadius: '8px', boxSizing: 'border-box' }} 
                 />
               </div>
-              <div style={{ display: 'flex', gap: '15px' }}>
-                 <div style={{ flex: 1, marginBottom: '20px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Price</label>
-                    <input type="number" name="price" value={formData.price} onChange={handleInputChange} required 
-                      style={{ width: '100%', padding: '12px', background: '#121212', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                    />
-                 </div>
-                 <div style={{ flex: 1, marginBottom: '20px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Old Price (Optional)</label>
-                    <input type="number" name="oldPrice" value={formData.oldPrice} onChange={handleInputChange} 
-                      style={{ width: '100%', padding: '12px', background: '#121212', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                    />
-                 </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '20px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Price (₹)</label>
+                  <input 
+                    type="number" 
+                    name="price" 
+                    value={formData.price} 
+                    onChange={handleInputChange} 
+                    required
+                    style={{ width: '100%', padding: '12px', background: '#121212', border: '1px solid #333', color: 'white', borderRadius: '8px', boxSizing: 'border-box' }} 
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Old Price (₹)</label>
+                  <input 
+                    type="number" 
+                    name="oldPrice" 
+                    value={formData.oldPrice} 
+                    onChange={handleInputChange} 
+                    style={{ width: '100%', padding: '12px', background: '#121212', border: '1px solid #333', color: 'white', borderRadius: '8px', boxSizing: 'border-box' }} 
+                  />
+                </div>
               </div>
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Image URL</label>
-                <input type="text" name="image" value={formData.image} onChange={handleInputChange} required 
-                  style={{ width: '100%', padding: '12px', background: '#121212', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                <input 
+                  type="text" 
+                  name="image" 
+                  value={formData.image} 
+                  onChange={handleInputChange} 
+                  required
+                  style={{ width: '100%', padding: '12px', background: '#121212', border: '1px solid #333', color: 'white', borderRadius: '8px', boxSizing: 'border-box' }} 
                 />
-                {formData.image && <div style={{ marginTop: '10px', height: '150px', borderRadius: '8px', overflow: 'hidden' }}><img src={formData.image} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '20px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Tag</label>
+                  <input 
+                    type="text" 
+                    name="tag" 
+                    value={formData.tag} 
+                    onChange={handleInputChange} 
+                    placeholder="e.g., New, Sale"
+                    style={{ width: '100%', padding: '12px', background: '#121212', border: '1px solid #333', color: 'white', borderRadius: '8px', boxSizing: 'border-box' }} 
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Category</label>
+                  <input 
+                    type="text" 
+                    name="category" 
+                    value={formData.category} 
+                    onChange={handleInputChange} 
+                    style={{ width: '100%', padding: '12px', background: '#121212', border: '1px solid #333', color: 'white', borderRadius: '8px', boxSizing: 'border-box' }} 
+                  />
+                </div>
               </div>
               <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Tag (e.g., Best Seller)</label>
-                <input type="text" name="tag" value={formData.tag} onChange={handleInputChange} 
-                  style={{ width: '100%', padding: '12px', background: '#121212', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Description</label>
+                <textarea 
+                  name="description" 
+                  value={formData.description} 
+                  onChange={handleInputChange} 
+                  rows="3"
+                  style={{ width: '100%', padding: '12px', background: '#121212', border: '1px solid #333', color: 'white', borderRadius: '8px', resize: 'vertical', boxSizing: 'border-box' }} 
                 />
               </div>
-              
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #333' }}>
-                <button type="button" onClick={() => setShowModal(false)}
-                  style={{ background: 'transparent', border: '1px solid #444', color: 'white', padding: '10px 24px', borderRadius: '8px', cursor: 'pointer' }}
-                >Cancel</button>
-                <button type="submit"
-                  style={{ background: '#ff0055', color: 'white', border: 'none', padding: '10px 24px', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
-                >{currentGame ? 'Update Game' : 'Add Game'}</button>
-              </div>
+              <button 
+                type="submit"
+                style={{ 
+                  width: '100%', 
+                  padding: '14px', 
+                  background: '#ff0055', 
+                  color: 'white', 
+                  border: 'none', 
+                  borderRadius: '8px', 
+                  cursor: 'pointer', 
+                  fontWeight: '600', 
+                  fontSize: '1rem' 
+                }}
+              >
+                {currentGame ? 'Update Game' : 'Add Game'}
+              </button>
             </form>
           </div>
         </div>
@@ -460,7 +904,6 @@ const AdminDashboard = () => {
             alignItems: 'center',
             zIndex: 99999
           }}
-          onClick={(e) => e.target === e.currentTarget && setShowDeleteModal(false)}
         >
           <div 
             style={{
@@ -473,12 +916,12 @@ const AdminDashboard = () => {
               border: '1px solid #333'
             }}
           >
-            <div style={{ fontSize: '3rem', marginBottom: '20px' }}>🗑️</div>
+            <div style={{ fontSize: '4rem', marginBottom: '20px' }}>⚠️</div>
             <h2 style={{ color: 'white', marginBottom: '10px' }}>Delete Game?</h2>
             <p style={{ color: '#aaa', marginBottom: '30px' }}>
-              Are you sure you want to delete this game? This action cannot be undone.
+              This action cannot be undone. Are you sure you want to delete this game?
             </p>
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
               <button 
                 onClick={() => { setShowDeleteModal(false); setDeleteGameId(null); }}
                 style={{ 
@@ -487,8 +930,7 @@ const AdminDashboard = () => {
                   color: 'white', 
                   padding: '12px 30px', 
                   borderRadius: '8px', 
-                  cursor: 'pointer',
-                  fontSize: '1rem'
+                  cursor: 'pointer'
                 }}
               >Cancel</button>
               <button 
@@ -500,10 +942,9 @@ const AdminDashboard = () => {
                   padding: '12px 30px', 
                   borderRadius: '8px', 
                   cursor: 'pointer',
-                  fontWeight: '600',
-                  fontSize: '1rem'
+                  fontWeight: '600'
                 }}
-              >Yes, Delete</button>
+              >Delete</button>
             </div>
           </div>
         </div>
@@ -524,7 +965,6 @@ const AdminDashboard = () => {
             alignItems: 'center',
             zIndex: 99999
           }}
-          onClick={(e) => e.target === e.currentTarget && setShowBlockModal(false)}
         >
           <div 
             style={{
@@ -536,65 +976,40 @@ const AdminDashboard = () => {
               border: '1px solid #333'
             }}
           >
-            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '15px' }}>{blockUser.isBlocked ? '🔓' : '🚫'}</div>
-              <h2 style={{ color: 'white', marginBottom: '10px' }}>
-                {blockUser.isBlocked ? 'Unblock User?' : 'Block User?'}
-              </h2>
-              <p style={{ color: '#aaa', marginBottom: '5px' }}>
-                <strong style={{ color: '#ff0055' }}>{blockUser.username || blockUser.email}</strong>
-              </p>
+            <h2 style={{ color: 'white', marginBottom: '20px', textAlign: 'center' }}>
+              {blockUser.isBlocked ? 'Unblock User' : 'Block User'}
+            </h2>
+            <div style={{ textAlign: 'center', marginBottom: '25px' }}>
+              <p style={{ color: '#aaa', marginBottom: '5px' }}>User: <strong style={{ color: 'white' }}>{blockUser.name || blockUser.email}</strong></p>
+              <p style={{ color: '#aaa' }}>Email: {blockUser.email}</p>
             </div>
 
             {!blockUser.isBlocked && (
               <div style={{ marginBottom: '20px' }}>
                 <p style={{ color: '#aaa', marginBottom: '15px', textAlign: 'center' }}>Select block duration:</p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '15px' }}>
-                  {[
-                    { label: '1 Day', days: 1 },
-                    { label: '7 Days', days: 7 },
-                    { label: '1 Month', days: 30 },
-                    { label: '6 Months', days: 180 },
-                  ].map(opt => (
+                  {[7, 14, 30, -1].map(days => (
                     <button 
-                      key={opt.days}
-                      onClick={() => handleBlockUser(opt.days)}
+                      key={days}
+                      onClick={() => handleBlockUser(days)}
                       style={{ 
                         padding: '12px', 
-                        background: '#333', 
-                        color: 'white', 
-                        border: '1px solid #444', 
+                        background: days === -1 ? 'rgba(255, 68, 68, 0.3)' : '#333', 
+                        color: days === -1 ? '#ff4444' : 'white', 
+                        border: 'none', 
                         borderRadius: '8px', 
                         cursor: 'pointer',
-                        transition: 'all 0.2s'
+                        fontWeight: '500'
                       }}
-                      onMouseOver={(e) => e.target.style.borderColor = '#ff0055'}
-                      onMouseOut={(e) => e.target.style.borderColor = '#444'}
                     >
-                      {opt.label}
+                      {days === -1 ? 'Forever' : `${days} Days`}
                     </button>
                   ))}
                 </div>
-                <button 
-                  onClick={() => handleBlockUser(-1)}
-                  style={{ 
-                    width: '100%',
-                    padding: '12px', 
-                    background: '#ff4444', 
-                    color: 'white', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    cursor: 'pointer',
-                    fontWeight: '600',
-                    marginBottom: '15px'
-                  }}
-                >
-                  🚫 Block Forever
-                </button>
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <input 
                     type="number" 
-                    placeholder="Custom days..." 
+                    placeholder="Custom days..."
                     value={customBlockDays}
                     onChange={(e) => setCustomBlockDays(e.target.value)}
                     style={{ 
@@ -655,6 +1070,448 @@ const AdminDashboard = () => {
         </div>
       )}
 
+      {/* User Detail Modal */}
+      {showUserDetailModal && selectedUserDetail && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 99999,
+            padding: '20px'
+          }}
+          onClick={(e) => e.target === e.currentTarget && setShowUserDetailModal(false)}
+        >
+          <div 
+            style={{
+              background: '#1e1e1e',
+              padding: '30px',
+              borderRadius: '16px',
+              width: '800px',
+              maxWidth: '95%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              border: '1px solid #333'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
+              <h2 style={{ margin: 0, color: 'white' }}>User Details</h2>
+              <button 
+                style={{ background: 'none', border: 'none', color: 'white', fontSize: '2rem', cursor: 'pointer' }}
+                onClick={() => setShowUserDetailModal(false)}
+              >×</button>
+            </div>
+
+            {/* User Info */}
+            <div style={{ background: '#121212', padding: '20px', borderRadius: '12px', marginBottom: '20px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+                <div>
+                  <label style={{ color: '#aaa', fontSize: '0.85rem' }}>Name</label>
+                  <p style={{ color: 'white', margin: '5px 0 0', fontWeight: '500' }}>{selectedUserDetail.name || 'N/A'}</p>
+                </div>
+                <div>
+                  <label style={{ color: '#aaa', fontSize: '0.85rem' }}>Email</label>
+                  <p style={{ color: 'white', margin: '5px 0 0' }}>{selectedUserDetail.email}</p>
+                </div>
+                <div>
+                  <label style={{ color: '#aaa', fontSize: '0.85rem' }}>Username</label>
+                  <p style={{ color: '#00e676', margin: '5px 0 0', fontWeight: '500' }}>{selectedUserDetail.username || 'N/A'}</p>
+                </div>
+                <div>
+                  <label style={{ color: '#aaa', fontSize: '0.85rem' }}>Referral Code</label>
+                  <p style={{ color: '#ff0055', margin: '5px 0 0', fontWeight: '500' }}>{selectedUserDetail.referralCode || 'N/A'}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Wallet Section */}
+            <div style={{ background: 'linear-gradient(135deg, #1a1a2e, #16213e)', padding: '20px', borderRadius: '12px', marginBottom: '20px', border: '1px solid #333' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                <h3 style={{ color: 'white', margin: 0 }}>💰 Wallet & Points</h3>
+                <button 
+                  onClick={() => setShowPointsModal(true)}
+                  style={{ 
+                    padding: '8px 16px', 
+                    background: '#ff8c00', 
+                    color: 'white', 
+                    border: 'none', 
+                    borderRadius: '6px', 
+                    cursor: 'pointer',
+                    fontWeight: '500'
+                  }}
+                >
+                  <i className="fa-solid fa-coins"></i> Manage Points
+                </button>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
+                <div style={{ background: 'rgba(255, 140, 0, 0.1)', padding: '15px', borderRadius: '8px', textAlign: 'center' }}>
+                  <div style={{ color: '#ff8c00', fontSize: '1.8rem', fontWeight: '700' }}>{selectedUserDetail.wallet?.balance || 0}</div>
+                  <div style={{ color: '#aaa', fontSize: '0.85rem' }}>Current Points</div>
+                </div>
+                <div style={{ background: 'rgba(0, 230, 118, 0.1)', padding: '15px', borderRadius: '8px', textAlign: 'center' }}>
+                  <div style={{ color: '#00e676', fontSize: '1.8rem', fontWeight: '700' }}>{selectedUserDetail.wallet?.totalPointsEarned || 0}</div>
+                  <div style={{ color: '#aaa', fontSize: '0.85rem' }}>Total Earned</div>
+                </div>
+                <div style={{ background: 'rgba(255, 68, 68, 0.1)', padding: '15px', borderRadius: '8px', textAlign: 'center' }}>
+                  <div style={{ color: '#ff4444', fontSize: '1.8rem', fontWeight: '700' }}>{selectedUserDetail.wallet?.totalPointsRedeemed || 0}</div>
+                  <div style={{ color: '#aaa', fontSize: '0.85rem' }}>Total Redeemed</div>
+                </div>
+              </div>
+            </div>
+
+            {/* User Orders */}
+            <div style={{ marginBottom: '20px' }}>
+              <h3 style={{ color: 'white', marginBottom: '15px' }}>📦 Orders ({userOrders.length})</h3>
+              {userOrders.length > 0 ? (
+                <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ background: '#121212' }}>
+                        <th style={{ padding: '10px', textAlign: 'left', color: '#aaa', fontSize: '0.85rem' }}>Order #</th>
+                        <th style={{ padding: '10px', textAlign: 'left', color: '#aaa', fontSize: '0.85rem' }}>Amount</th>
+                        <th style={{ padding: '10px', textAlign: 'left', color: '#aaa', fontSize: '0.85rem' }}>Status</th>
+                        <th style={{ padding: '10px', textAlign: 'left', color: '#aaa', fontSize: '0.85rem' }}>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {userOrders.map(order => (
+                        <tr key={order._id} style={{ borderBottom: '1px solid #333' }}>
+                          <td style={{ padding: '10px', color: '#00e676' }}>#{order.orderNumber}</td>
+                          <td style={{ padding: '10px', color: 'white' }}>₹{order.finalAmount}</td>
+                          <td style={{ padding: '10px' }}>
+                            <span style={{ color: getStatusColor(order.orderStatus), textTransform: 'capitalize' }}>{order.orderStatus}</span>
+                          </td>
+                          <td style={{ padding: '10px', color: '#aaa' }}>{new Date(order.createdAt).toLocaleDateString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p style={{ color: '#aaa', textAlign: 'center', padding: '20px' }}>No orders yet</p>
+              )}
+            </div>
+
+            {/* Points History */}
+            <div>
+              <h3 style={{ color: 'white', marginBottom: '15px' }}>📊 Points History ({userPointsHistory.length})</h3>
+              {userPointsHistory.length > 0 ? (
+                <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ background: '#121212' }}>
+                        <th style={{ padding: '10px', textAlign: 'left', color: '#aaa', fontSize: '0.85rem' }}>Points</th>
+                        <th style={{ padding: '10px', textAlign: 'left', color: '#aaa', fontSize: '0.85rem' }}>Type</th>
+                        <th style={{ padding: '10px', textAlign: 'left', color: '#aaa', fontSize: '0.85rem' }}>Source</th>
+                        <th style={{ padding: '10px', textAlign: 'left', color: '#aaa', fontSize: '0.85rem' }}>Description</th>
+                        <th style={{ padding: '10px', textAlign: 'left', color: '#aaa', fontSize: '0.85rem' }}>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {userPointsHistory.map(history => (
+                        <tr key={history._id} style={{ borderBottom: '1px solid #333' }}>
+                          <td style={{ padding: '10px', color: history.type === 'earned' ? '#00e676' : '#ff4444', fontWeight: '600' }}>
+                            {history.type === 'earned' ? '+' : ''}{history.points}
+                          </td>
+                          <td style={{ padding: '10px', color: 'white', textTransform: 'capitalize' }}>{history.type}</td>
+                          <td style={{ padding: '10px', color: '#aaa', textTransform: 'capitalize' }}>{history.source?.replace('_', ' ')}</td>
+                          <td style={{ padding: '10px', color: '#aaa', fontSize: '0.9rem' }}>{history.description}</td>
+                          <td style={{ padding: '10px', color: '#aaa' }}>{new Date(history.createdAt).toLocaleDateString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p style={{ color: '#aaa', textAlign: 'center', padding: '20px' }}>No points history</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Points Management Modal */}
+      {showPointsModal && selectedUserDetail && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 100000
+          }}
+        >
+          <div 
+            style={{
+              background: '#1e1e1e',
+              padding: '30px',
+              borderRadius: '16px',
+              width: '400px',
+              maxWidth: '90%',
+              border: '1px solid #333'
+            }}
+          >
+            <h2 style={{ color: 'white', marginBottom: '20px', textAlign: 'center' }}>Manage Points</h2>
+            <p style={{ color: '#aaa', textAlign: 'center', marginBottom: '20px' }}>
+              Current Balance: <strong style={{ color: '#ff8c00' }}>{selectedUserDetail.wallet?.currentPoints || 0} pts</strong>
+            </p>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Action</label>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button 
+                  onClick={() => setPointsAction({...pointsAction, type: 'add'})}
+                  style={{ 
+                    flex: 1,
+                    padding: '12px', 
+                    background: pointsAction.type === 'add' ? '#00e676' : '#333', 
+                    color: pointsAction.type === 'add' ? 'black' : 'white', 
+                    border: 'none', 
+                    borderRadius: '8px', 
+                    cursor: 'pointer',
+                    fontWeight: '600'
+                  }}
+                >
+                  + Add Points
+                </button>
+                <button 
+                  onClick={() => setPointsAction({...pointsAction, type: 'deduct'})}
+                  style={{ 
+                    flex: 1,
+                    padding: '12px', 
+                    background: pointsAction.type === 'deduct' ? '#ff4444' : '#333', 
+                    color: 'white', 
+                    border: 'none', 
+                    borderRadius: '8px', 
+                    cursor: 'pointer',
+                    fontWeight: '600'
+                  }}
+                >
+                  - Deduct Points
+                </button>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Points Amount</label>
+              <input 
+                type="number" 
+                placeholder="Enter points..."
+                value={pointsAction.points}
+                onChange={(e) => setPointsAction({...pointsAction, points: e.target.value})}
+                style={{ 
+                  width: '100%',
+                  padding: '12px', 
+                  background: '#121212', 
+                  border: '1px solid #333', 
+                  color: 'white', 
+                  borderRadius: '8px',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Reason (Optional)</label>
+              <input 
+                type="text" 
+                placeholder="e.g., Bonus, Compensation..."
+                value={pointsAction.description}
+                onChange={(e) => setPointsAction({...pointsAction, description: e.target.value})}
+                style={{ 
+                  width: '100%',
+                  padding: '12px', 
+                  background: '#121212', 
+                  border: '1px solid #333', 
+                  color: 'white', 
+                  borderRadius: '8px',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button 
+                onClick={() => { setShowPointsModal(false); setPointsAction({ points: '', type: 'add', description: '' }); }}
+                style={{ 
+                  flex: 1,
+                  background: 'transparent', 
+                  border: '1px solid #444', 
+                  color: 'white', 
+                  padding: '12px', 
+                  borderRadius: '8px', 
+                  cursor: 'pointer'
+                }}
+              >Cancel</button>
+              <button 
+                onClick={handleUpdatePoints}
+                disabled={!pointsAction.points}
+                style={{ 
+                  flex: 1,
+                  background: pointsAction.type === 'add' ? '#00e676' : '#ff4444', 
+                  color: pointsAction.type === 'add' ? 'black' : 'white', 
+                  border: 'none', 
+                  padding: '12px', 
+                  borderRadius: '8px', 
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  opacity: pointsAction.points ? 1 : 0.5
+                }}
+              >
+                {pointsAction.type === 'add' ? 'Add' : 'Deduct'} Points
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Order Update Modal */}
+      {showOrderModal && selectedOrder && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 99999
+          }}
+        >
+          <div 
+            style={{
+              background: '#1e1e1e',
+              padding: '30px',
+              borderRadius: '16px',
+              width: '500px',
+              maxWidth: '90%',
+              border: '1px solid #333'
+            }}
+          >
+            <h2 style={{ color: 'white', marginBottom: '20px', textAlign: 'center' }}>Update Order #{selectedOrder.orderNumber}</h2>
+            
+            {/* Order Items Preview */}
+            <div style={{ background: '#121212', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
+              <p style={{ color: '#aaa', marginBottom: '10px', fontSize: '0.9rem' }}>Order Items:</p>
+              {selectedOrder.items?.map((item, idx) => (
+                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', color: 'white', fontSize: '0.9rem', marginBottom: '5px' }}>
+                  <span>{item.title} x{item.quantity}</span>
+                  <span style={{ color: '#00e676' }}>₹{item.price * item.quantity}</span>
+                </div>
+              ))}
+              <div style={{ borderTop: '1px solid #333', marginTop: '10px', paddingTop: '10px', display: 'flex', justifyContent: 'space-between' }}>
+                <strong style={{ color: 'white' }}>Total:</strong>
+                <strong style={{ color: '#00e676' }}>₹{selectedOrder.finalAmount}</strong>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Order Status</label>
+              <select 
+                value={orderUpdate.orderStatus}
+                onChange={(e) => setOrderUpdate({...orderUpdate, orderStatus: e.target.value})}
+                style={{ 
+                  width: '100%',
+                  padding: '12px', 
+                  background: '#121212', 
+                  border: '1px solid #333', 
+                  color: 'white', 
+                  borderRadius: '8px'
+                }}
+              >
+                <option value="processing">Processing</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Payment Status</label>
+              <select 
+                value={orderUpdate.paymentStatus}
+                onChange={(e) => setOrderUpdate({...orderUpdate, paymentStatus: e.target.value})}
+                style={{ 
+                  width: '100%',
+                  padding: '12px', 
+                  background: '#121212', 
+                  border: '1px solid #333', 
+                  color: 'white', 
+                  borderRadius: '8px'
+                }}
+              >
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+                <option value="failed">Failed</option>
+                <option value="refunded">Refunded</option>
+              </select>
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', color: '#aaa' }}>Tracking Number (Optional)</label>
+              <input 
+                type="text" 
+                placeholder="Enter tracking number..."
+                value={orderUpdate.trackingNumber}
+                onChange={(e) => setOrderUpdate({...orderUpdate, trackingNumber: e.target.value})}
+                style={{ 
+                  width: '100%',
+                  padding: '12px', 
+                  background: '#121212', 
+                  border: '1px solid #333', 
+                  color: 'white', 
+                  borderRadius: '8px',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button 
+                onClick={() => { setShowOrderModal(false); setSelectedOrder(null); }}
+                style={{ 
+                  flex: 1,
+                  background: 'transparent', 
+                  border: '1px solid #444', 
+                  color: 'white', 
+                  padding: '12px', 
+                  borderRadius: '8px', 
+                  cursor: 'pointer'
+                }}
+              >Cancel</button>
+              <button 
+                onClick={handleUpdateOrder}
+                style={{ 
+                  flex: 1,
+                  background: '#ff0055', 
+                  color: 'white', 
+                  border: 'none', 
+                  padding: '12px', 
+                  borderRadius: '8px', 
+                  cursor: 'pointer',
+                  fontWeight: '600'
+                }}
+              >Update Order</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Success Modal */}
       {showSuccessModal && (
         <div 
@@ -668,7 +1525,7 @@ const AdminDashboard = () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            zIndex: 99999
+            zIndex: 100001
           }}
         >
           <div 
@@ -708,6 +1565,233 @@ const AdminDashboard = () => {
               onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
               onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
             >Done</button>
+          </div>
+        </div>
+      )}
+
+      {/* Free Game Add/Edit Modal */}
+      {showFreeGameModal && (
+        <div 
+          onClick={() => setShowFreeGameModal(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0,0,0,0.8)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 999999
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: '#1e1e1e',
+              padding: '30px',
+              borderRadius: '12px',
+              width: '90%',
+              maxWidth: '500px',
+              maxHeight: '90vh',
+              overflowY: 'auto'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ color: 'white', fontSize: '1.3rem' }}>
+                {currentFreeGame ? '✏️ Edit Free Game' : '🎮 Add Free Game'}
+              </h2>
+              <button onClick={() => setShowFreeGameModal(false)} style={{ background: 'transparent', border: 'none', color: '#aaa', fontSize: '1.5rem', cursor: 'pointer' }}>×</button>
+            </div>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const url = currentFreeGame 
+                ? `${API_URL}/api/admin/free-games/${currentFreeGame._id}`
+                : `${API_URL}/api/admin/free-games`;
+              const method = currentFreeGame ? 'PUT' : 'POST';
+              
+              try {
+                const res = await fetch(url, {
+                  method,
+                  headers: getHeaders(),
+                  body: JSON.stringify(freeGameForm)
+                });
+                const data = await res.json();
+                if (data.success) {
+                  setShowFreeGameModal(false);
+                  fetchData();
+                  setSuccessMessage(currentFreeGame ? 'Free Game Updated!' : 'Free Game Added!');
+                  setShowSuccessModal(true);
+                } else {
+                  alert(data.message || 'Error saving free game');
+                }
+              } catch (error) {
+                console.error('Error:', error);
+                alert('Network error');
+              }
+            }}>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', color: '#aaa', marginBottom: '5px', fontSize: '0.9rem' }}>Title *</label>
+                <input
+                  type="text"
+                  value={freeGameForm.title}
+                  onChange={(e) => setFreeGameForm({...freeGameForm, title: e.target.value})}
+                  required
+                  style={{ width: '100%', padding: '10px', background: '#121212', border: '1px solid #333', borderRadius: '6px', color: 'white' }}
+                  placeholder="e.g., Chess, Sudoku"
+                />
+              </div>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', color: '#aaa', marginBottom: '5px', fontSize: '0.9rem' }}>Description *</label>
+                <textarea
+                  value={freeGameForm.description}
+                  onChange={(e) => setFreeGameForm({...freeGameForm, description: e.target.value})}
+                  required
+                  rows="3"
+                  style={{ width: '100%', padding: '10px', background: '#121212', border: '1px solid #333', borderRadius: '6px', color: 'white', resize: 'vertical' }}
+                  placeholder="Game description..."
+                />
+              </div>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', color: '#aaa', marginBottom: '5px', fontSize: '0.9rem' }}>Image URL *</label>
+                <input
+                  type="url"
+                  value={freeGameForm.image}
+                  onChange={(e) => setFreeGameForm({...freeGameForm, image: e.target.value})}
+                  required
+                  style={{ width: '100%', padding: '10px', background: '#121212', border: '1px solid #333', borderRadius: '6px', color: 'white' }}
+                  placeholder="https://example.com/image.jpg"
+                />
+              </div>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', color: '#aaa', marginBottom: '5px', fontSize: '0.9rem' }}>Game URL *</label>
+                <input
+                  type="text"
+                  value={freeGameForm.gameUrl}
+                  onChange={(e) => setFreeGameForm({...freeGameForm, gameUrl: e.target.value})}
+                  required
+                  style={{ width: '100%', padding: '10px', background: '#121212', border: '1px solid #333', borderRadius: '6px', color: 'white' }}
+                  placeholder="/games/game1/game1.html or external URL"
+                />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
+                <div>
+                  <label style={{ display: 'block', color: '#aaa', marginBottom: '5px', fontSize: '0.9rem' }}>Rating</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="5"
+                    value={freeGameForm.rating}
+                    onChange={(e) => setFreeGameForm({...freeGameForm, rating: parseFloat(e.target.value)})}
+                    style={{ width: '100%', padding: '10px', background: '#121212', border: '1px solid #333', borderRadius: '6px', color: 'white' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', color: '#aaa', marginBottom: '5px', fontSize: '0.9rem' }}>Display Order</label>
+                  <input
+                    type="number"
+                    value={freeGameForm.order}
+                    onChange={(e) => setFreeGameForm({...freeGameForm, order: parseInt(e.target.value) || 0})}
+                    style={{ width: '100%', padding: '10px', background: '#121212', border: '1px solid #333', borderRadius: '6px', color: 'white' }}
+                  />
+                </div>
+              </div>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#aaa', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={freeGameForm.isActive}
+                    onChange={(e) => setFreeGameForm({...freeGameForm, isActive: e.target.checked})}
+                    style={{ width: '18px', height: '18px' }}
+                  />
+                  Active (visible to users)
+                </label>
+              </div>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowFreeGameModal(false)}
+                  style={{ flex: 1, padding: '12px', background: '#333', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  style={{ flex: 1, padding: '12px', background: '#ff0055', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+                >
+                  {currentFreeGame ? 'Update Game' : 'Add Game'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Free Game Confirmation Modal */}
+      {showDeleteFreeGameModal && (
+        <div 
+          onClick={() => setShowDeleteFreeGameModal(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0,0,0,0.8)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 999999
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: '#1e1e1e',
+              padding: '30px',
+              borderRadius: '12px',
+              textAlign: 'center',
+              maxWidth: '400px'
+            }}
+          >
+            <div style={{ fontSize: '3rem', marginBottom: '15px' }}>🗑️</div>
+            <h3 style={{ color: 'white', marginBottom: '10px' }}>Delete Free Game?</h3>
+            <p style={{ color: '#aaa', marginBottom: '20px' }}>This action cannot be undone.</p>
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+              <button
+                onClick={() => setShowDeleteFreeGameModal(false)}
+                style={{ padding: '10px 25px', background: '#333', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  try {
+                    const res = await fetch(`${API_URL}/api/admin/free-games/${deleteFreeGameId}`, {
+                      method: 'DELETE',
+                      headers: getHeaders()
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                      setShowDeleteFreeGameModal(false);
+                      fetchData();
+                      setSuccessMessage('Free Game Deleted!');
+                      setShowSuccessModal(true);
+                    } else {
+                      alert(data.message || 'Error deleting game');
+                    }
+                  } catch (error) {
+                    console.error('Error:', error);
+                    alert('Network error');
+                  }
+                }}
+                style={{ padding: '10px 25px', background: '#ff4444', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}

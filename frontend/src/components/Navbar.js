@@ -299,6 +299,10 @@ function Navbar() {
               <a href="/deals/gamepage.html">Shopping</a>
             </li>
 
+            <li className={`nav-item ${location.pathname === '/freegames' ? 'active' : ''}`}>
+              <Link to="/freegames">Free Games 🎮</Link>
+            </li>
+
             <li className="nav-item">
               <a href="#">Experiences <i className="fa-solid fa-chevron-down"></i></a>
               <ul className="dropdown-menu">
@@ -339,7 +343,11 @@ function Navbar() {
                 type="text"
                 placeholder="Search..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setSearchOpen(true);
+                }}
+                onFocus={() => setSearchOpen(true)}
               />
               <button className="search-btn" onClick={() => setSearchOpen(!searchOpen)}>
                 <i className="fa-solid fa-magnifying-glass"></i>
@@ -440,6 +448,7 @@ function Navbar() {
           <ul className="mobile-nav-links">
             <li><Link to="/" onClick={() => setMobileMenuOpen(false)}>Home</Link></li>
             <li><a href="/deals/gamepage.html" onClick={() => setMobileMenuOpen(false)}>Shopping</a></li>
+            <li><Link to="/freegames" onClick={() => setMobileMenuOpen(false)}>Free Games 🎮</Link></li>
             <li className="mobile-dropdown">
               <span>Experiences <i className="fa-solid fa-chevron-down"></i></span>
               <ul className="mobile-submenu">

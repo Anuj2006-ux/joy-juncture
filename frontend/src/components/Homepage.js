@@ -473,7 +473,7 @@ function Homepage() {
             </div>
             <div className="free-game-info">
               <h3>Chess</h3>
-              <button className="free-game-play-btn" onClick={() => navigate('/chess')}>Play Now</button>
+              <button className="free-game-play-btn" onClick={() => window.location.href = '/games/game1/game1.html'}>Play Now</button>
             </div>
           </div>
           <div className="free-game-card">
@@ -482,9 +482,12 @@ function Homepage() {
             </div>
             <div className="free-game-info">
               <h3>Sudoku</h3>
-              <button className="free-game-play-btn" onClick={() => navigate('/sudoku')}>Play Now</button>
+              <button className="free-game-play-btn" onClick={() => window.location.href = '/games/game2/game2.html'}>Play Now</button>
             </div>
           </div>
+        </div>
+        <div className="view-more-container">
+          <button className="view-more-btn" onClick={() => navigate('/freegames')}>View All Free Games</button>
         </div>
       </section>
 

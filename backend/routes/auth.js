@@ -370,6 +370,25 @@ router.post(
         });
       }
 
+      // Check if user is blocked
+      if (user.isBlocked) {
+        // Check if block has expired
+        if (user.blockExpiry && new Date() > user.blockExpiry) {
+          // Block expired, unblock the user
+          user.isBlocked = false;
+          user.blockExpiry = null;
+          await user.save();
+        } else {
+          const blockMessage = user.blockExpiry 
+            ? `Your account has been blocked until ${user.blockExpiry.toLocaleDateString()}. Please contact support.`
+            : 'Your account has been permanently blocked. Please contact support.';
+          return res.status(403).json({
+            success: false,
+            message: blockMessage,
+          });
+        }
+      }
+
       // Check if user has a password field
       if (!user.password) {
         return res.status(401).json({

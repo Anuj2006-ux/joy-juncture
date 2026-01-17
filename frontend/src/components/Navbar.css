@@ -668,16 +668,22 @@ header {
 
 /* --- EXPANDING SEARCH --- */
 .search-box {
-    background: transparent;
+    background: rgba(45, 74, 62, 0.08);
     height: 40px;
     border-radius: 40px;
-    padding: 5px;
+    padding: 5px 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
     transition: 0.4s;
-    border: 1px solid transparent;
+    border: 1px solid rgba(45, 74, 62, 0.2);
+    width: 200px;
+}
+
+.search-box:hover {
+    border-color: var(--joy-green);
+    background: rgba(45, 74, 62, 0.12);
 }
 
 .search-box.active {
@@ -687,25 +693,21 @@ header {
     width: 250px;
 }
 
-/* Ensure padding is removed in default state to avoid 'pill' shape */
-.search-box:not(.active) {
-    padding: 0;
-    width: 30px;
-    /* Reduced width to fit just the icon */
-}
-
 .search-txt {
     border: none;
     background: none;
     outline: none;
-    padding: 0;
-    color: white;
+    padding: 0 10px;
+    color: #1a1a1a;
     font-size: 0.9rem;
     transition: width 0.4s linear;
-    /* Linear expansion as requested */
-    width: 0;
+    width: 140px;
     line-height: 40px;
     font-weight: 500;
+}
+
+.search-txt::placeholder {
+    color: #888;
 }
 
 .search-box.active .search-txt {
@@ -718,21 +720,22 @@ header {
     height: 30px;
     border-radius: 50%;
     background: transparent !important;
-    /* Force transparent */
     display: flex;
     justify-content: center;
     align-items: center;
     transition: 0.4s;
-    color: white;
-    /* White icon */
+    color: var(--joy-green);
     cursor: pointer;
     border: none;
+}
+
+.search-btn:hover {
+    color: #1a1a1a;
 }
 
 .search-box.active .search-btn {
     background: transparent;
     color: var(--joy-green);
-    /* Green when active? or keep white? User said "make them white all three". Let's keep white or themed active */
     transform: rotate(360deg);
 }
 
@@ -741,51 +744,54 @@ header {
     position: absolute;
     top: 50px;
     right: 0;
-    width: 300px;
-    background: rgba(20, 20, 20, 0.95);
-    border: 1px solid var(--joy-green);
-    border-radius: 10px;
+    width: 320px;
+    max-height: 400px;
+    overflow-y: auto;
+    background: #ffffff;
+    border: 1px solid rgba(45, 74, 62, 0.2);
+    border-radius: 12px;
     padding: 10px;
     z-index: 1000;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .search-result-item {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
     padding: 10px;
     border-radius: 8px;
     cursor: pointer;
     transition: 0.2s;
-    background: rgba(255, 255, 255, 0.05);
+    background: #f8f8f8;
 }
 
 .search-result-item:hover {
-    background: rgba(57, 255, 20, 0.1);
+    background: rgba(45, 74, 62, 0.1);
 }
 
 .search-result-item img {
-    width: 40px;
-    height: 40px;
-    border-radius: 5px;
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
     object-fit: cover;
 }
 
 .search-result-info h4 {
     font-size: 0.9rem;
     margin: 0;
-    color: white;
+    color: #1a1a1a;
+    font-weight: 600;
 }
 
 .search-result-info p {
-    font-size: 0.8rem;
-    margin: 0;
+    font-size: 0.85rem;
+    margin: 3px 0 0 0;
     color: var(--joy-green);
+    font-weight: 600;
 }
 
 .search-results {
