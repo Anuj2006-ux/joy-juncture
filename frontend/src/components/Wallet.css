@@ -1,0 +1,535 @@
+/* Wallet.css - Light Theme */
+
+:root {
+  --joy-orange: #FF8C00;
+  --joy-green: #2d4a3e;
+  --joy-dark-green: #1f3530;
+  --bg-white: #ffffff;
+  --text-dark: #333333;
+  --text-gray: #666666;
+  --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.wallet-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 120px 20px 40px;
+    min-height: 100vh;
+    background: #f8f9fa;
+}
+
+.wallet-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.wallet-header h1 {
+    font-size: 2.8rem;
+    color: var(--joy-green);
+    margin-bottom: 10px;
+    font-family: "Orbitron", sans-serif;
+}
+
+.wallet-header p {
+    color: var(--text-gray);
+    font-size: 1.1rem;
+}
+
+.loading {
+    text-align: center;
+    color: var(--joy-green);
+    font-size: 1.2rem;
+    padding: 60px;
+}
+
+/* ---------------------------------- */
+/* Points Overview Card & Stats */
+/* ---------------------------------- */
+.points-overview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.points-card.main-points {
+    background: linear-gradient(135deg, var(--joy-green) 0%, var(--joy-dark-green) 100%);
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    box-shadow: 0 10px 30px rgba(45, 74, 62, 0.3);
+    color: #fff;
+}
+
+.points-icon {
+    font-size: 4rem;
+}
+
+.points-content h2 {
+    font-size: 3.5rem;
+    margin: 0;
+    font-family: inherit;
+    color: #fff;
+}
+
+.points-content p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.2rem;
+    margin: 5px 0;
+}
+
+.discount-preview {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 15px;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 10px;
+    display: inline-block;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.points-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.stat-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--joy-orange);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    background: rgba(255, 140, 0, 0.1);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.stat-content h3 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--joy-green);
+}
+
+.stat-content p {
+    margin: 0;
+    color: var(--text-gray);
+    font-size: 0.9rem;
+}
+
+/* ---------------------------------- */
+/* How to Earn Points (Rules Section) */
+/* ---------------------------------- */
+.rules-section {
+    margin-bottom: 40px;
+}
+
+.rules-section h3 {
+    text-align: center;
+    font-size: 2rem;
+    color: var(--joy-green);
+    margin-bottom: 30px;
+    font-family: "Orbitron", sans-serif;
+}
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.rule-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+    border: 1px solid #eee;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rule-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border-color: var(--joy-orange);
+}
+
+.rule-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.rule-content h4 {
+    font-size: 1.2rem;
+    color: var(--joy-green);
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.points-value {
+    color: var(--joy-orange);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 5px 0;
+}
+
+.rule-desc {
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 15px; /* space for button if present */
+}
+
+/* Claim Button */
+.claim-btn {
+    margin-top: auto;
+    background: var(--joy-orange);
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.claim-btn:hover:not(:disabled) {
+    background: #e67e00;
+    transform: scale(1.05);
+}
+
+.claim-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* ---------------------------------- */
+/* Referral Section */
+/* ---------------------------------- */
+.referral-section {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: var(--card-shadow);
+    text-align: center;
+    border-top: 5px solid var(--joy-green);
+}
+
+.referral-section h3 {
+    font-size: 2rem;
+    color: var(--joy-green);
+    margin-bottom: 10px;
+    font-family: "Orbitron", sans-serif;
+}
+
+.referral-desc {
+    color: var(--text-gray);
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.referral-code-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    background: #f0f4f2;
+    padding: 15px 30px;
+    border-radius: 12px;
+    border: 2px dashed var(--joy-green);
+    margin-bottom: 30px;
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.referral-code {
+    font-family: monospace;
+    font-size: 1.8rem;
+    color: var(--joy-green);
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.copy-btn {
+    background: var(--joy-green);
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.2s;
+}
+
+.copy-btn:hover {
+    background: var(--joy-dark-green);
+}
+
+.share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    color: #fff;
+    transition: transform 0.2s ease;
+}
+
+.share-btn:hover {
+    transform: translateY(-2px);
+}
+
+.share-btn.whatsapp {
+    background-color: #25D366;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+.share-btn.whatsapp:hover {
+    background-color: #128C7E;
+}
+
+/* ---------------------------------- */
+/* Usage Section */
+/* ---------------------------------- */
+.usage-section {
+    margin-bottom: 40px;
+}
+
+.usage-section h3 {
+    text-align: center;
+    font-size: 2rem;
+    color: var(--joy-green);
+    margin-bottom: 30px;
+    font-family: "Orbitron", sans-serif;
+}
+
+.usage-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.usage-card {
+    background: linear-gradient(to bottom right, #fff, #fefefe);
+    border-radius: 15px;
+    padding: 25px;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid #f0f0f0;
+}
+
+.usage-icon {
+    font-size: 2rem;
+    background: rgba(45, 74, 62, 0.05);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.usage-card h4 {
+    margin: 0 0 5px 0;
+    color: var(--joy-orange);
+    font-size: 1.1rem;
+}
+
+.usage-card p {
+    margin: 0;
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* Discount Calculator */
+.discount-calculator {
+    background: var(--joy-green);
+    border-radius: 15px;
+    padding: 30px;
+    color: #fff;
+    text-align: center;
+    margin-top: 30px;
+    box-shadow: 0 10px 30px rgba(45, 74, 62, 0.2);
+}
+
+.discount-calculator h4 {
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    font-family: "Orbitron", sans-serif;
+}
+
+.calculator-result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.points-display {
+    color: #ccc;
+}
+
+.equals {
+    color: var(--joy-orange);
+}
+
+.discount-display {
+    color: #fff;
+    background: rgba(255, 140, 0, 0.2);
+    padding: 5px 20px;
+    border-radius: 10px;
+    border: 1px solid var(--joy-orange);
+}
+
+/* ---------------------------------- */
+/* History Section */
+/* ---------------------------------- */
+.history-section {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: var(--card-shadow);
+}
+
+.history-section h3 {
+    font-size: 1.8rem;
+    color: var(--joy-green);
+    margin-bottom: 25px;
+    font-family: "Orbitron", sans-serif;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.history-item:hover {
+    border-color: var(--joy-orange);
+    background: #fffbf5;
+}
+
+.history-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    background: rgba(45, 74, 62, 0.05); /* Default icon bg */
+}
+
+/* Item Types */
+.history-item.earned .history-icon {
+    background: rgba(45, 74, 62, 0.1);
+    color: var(--joy-green);
+}
+
+.history-item.redeemed .history-icon {
+    background: rgba(255, 140, 0, 0.1);
+    color: var(--joy-orange);
+}
+
+.history-content {
+    flex: 1;
+    margin-left: 15px;
+}
+
+.history-content h4 {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 1.1rem;
+}
+
+.history-date {
+    margin: 5px 0 0;
+    color: #aaa;
+    font-size: 0.85rem;
+}
+
+.history-points {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.history-points.earned {
+    color: var(--joy-green);
+}
+
+.history-points.redeemed {
+    color: #e74c3c; /* Red for spending */
+}
+
+.no-history {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-gray);
+}
+
+/* Media Queries */
+@media (max-width: 900px) {
+    .points-overview,
+    .rules-grid,
+    .usage-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .referral-code-box {
+        flex-direction: column;
+    }
+}

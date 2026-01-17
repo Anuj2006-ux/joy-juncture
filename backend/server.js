@@ -43,6 +43,10 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/cart', require('./routes/cart'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/games', require('./routes/games'));
+app.use('/api/contact', require('./routes/contact'));
+app.use('/api/orders', require('./routes/orders'));
+app.use('/api/wallet', require('./routes/wallet'));
+app.use('/api/address', require('./routes/address'));
 
 // Health check route
 app.get('/', (req, res) => {

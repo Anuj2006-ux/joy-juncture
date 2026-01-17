@@ -358,3 +358,94 @@ img.auth-corner-logo {
         display: none;
     }
 }
+
+/* Referral Code Input */
+.referral-group {
+    margin-bottom: 20px;
+}
+
+.referral-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.optional-label {
+    font-size: 0.8rem;
+    color: #888;
+    font-weight: 400;
+}
+
+.referral-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.referral-input-wrapper input {
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    padding-right: 40px;
+}
+
+.referral-input-wrapper input::placeholder {
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: 400;
+}
+
+.referral-input-wrapper.valid input {
+    border-color: #4caf50;
+    background: rgba(76, 175, 80, 0.05);
+}
+
+.referral-input-wrapper.invalid input {
+    border-color: #f44336;
+    background: rgba(244, 67, 54, 0.05);
+}
+
+.referral-icon {
+    position: absolute;
+    right: 12px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.referral-icon.checking {
+    animation: spin 1s linear infinite;
+}
+
+.referral-icon.valid {
+    color: #4caf50;
+}
+
+.referral-icon.invalid {
+    color: #f44336;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+.referral-message {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.85rem;
+}
+
+.referral-message.valid {
+    color: #4caf50;
+}
+
+.referral-message.invalid {
+    color: #f44336;
+}
+
+.referral-hint {
+    display: block;
+    margin-top: 8px;
+    color: #4caf50;
+    font-size: 0.85rem;
+}

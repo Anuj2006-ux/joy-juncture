@@ -65,7 +65,7 @@ void main() {
     gl_PointSize = size * uPixelRatio * (12.0 / -mvPosition.z);
     
     // Pass randomness to fragment
-    vColor = vec3(0.95, 0.95, 1.0); // Clean dust color
+    vColor = vec3(0.25, 0.35, 0.28); // Visible green particles
 
 }
 `;
@@ -81,12 +81,12 @@ void main() {
     // Very soft falloff
     float alpha = 1.0 - smoothstep(0.0, 0.5, dist);
     
-    // Make it even softer/more transparent
-    alpha = pow(alpha, 3.0); 
+    // Make it visible but soft
+    alpha = pow(alpha, 2.0); 
 
     if (alpha < 0.01) discard;
 
-    gl_FragColor = vec4(vColor, alpha * 0.5); // Lower opacity
+    gl_FragColor = vec4(vColor, alpha * 0.8); // Increased opacity for visibility
 }
 `;
 

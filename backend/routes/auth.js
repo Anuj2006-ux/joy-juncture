@@ -4,12 +4,68 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
+const PointsHistory = require('../models/PointsHistory');
 const { sendOTPEmail } = require('../config/email');
 
 // Generate 6-digit OTP
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
+
+// Generate unique referral code
+const generateReferralCode = async (username) => {
+  let referralCode;
+  let isUnique = false;
+  
+  while (!isUnique) {
+    const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+    referralCode = `JJ${username?.substring(0, 3).toUpperCase() || 'USR'}${random}`;
+    
+    // Check if code already exists
+    const existing = await User.findOne({ referralCode });
+    if (!existing) {
+      isUnique = true;
+    }
+  }
+  
+  return referralCode;
+};
+
+// @route   GET /api/auth/validate-referral/:code
+// @desc    Check if referral code is valid
+// @access  Public
+router.get('/validate-referral/:code', async (req, res) => {
+  try {
+    const { code } = req.params;
+    
+    if (!code || code.length < 5) {
+      return res.json({ success: false, valid: false, message: 'Invalid referral code format' });
+    }
+
+    const referrer = await User.findOne({ 
+      referralCode: code.toUpperCase(),
+      isVerified: true 
+    }).select('username');
+
+    if (referrer) {
+      return res.json({ 
+        success: true, 
+        valid: true, 
+        message: `Code belongs to ${referrer.username}! You'll both get bonus points.`,
+        referrerName: referrer.username
+      });
+    } else {
+      return res.json({ 
+        success: true, 
+        valid: false, 
+        message: 'Referral code not found' 
+      });
+    }
+  } catch (error) {
+    console.error('Error validating referral:', error);
+    res.status(500).json({ success: false, valid: false, message: 'Error validating code' });
+  }
+});
 
 // @route   POST /api/auth/register
 // @desc    Send OTP for registration (Step 1)
@@ -29,7 +85,7 @@ router.post(
         return res.status(400).json({ success: false, errors: errors.array() });
       }
 
-      const { username, email, password } = req.body;
+      const { username, email, password, referralCode } = req.body;
 
       // Check if user already exists
       let existingUser = await User.findOne({ $or: [{ email }, { username }] });
@@ -38,6 +94,15 @@ router.post(
           success: false,
           message: 'User with this email or username already exists',
         });
+      }
+
+      // Check referral code if provided
+      let referredBy = null;
+      if (referralCode) {
+        const referrer = await User.findOne({ referralCode: referralCode.toUpperCase() });
+        if (referrer) {
+          referredBy = referrer._id;
+        }
       }
 
       // Generate OTP
@@ -50,6 +115,7 @@ router.post(
         existingUser.password = password;
         existingUser.otp = otp;
         existingUser.otpExpiry = otpExpiry;
+        existingUser.referredBy = referredBy;
         await existingUser.save();
       } else {
         // Create new unverified user
@@ -60,6 +126,7 @@ router.post(
           otp,
           otpExpiry,
           isVerified: false,
+          referredBy,
         });
         await user.save();
       }
@@ -141,7 +208,50 @@ router.post(
       user.isVerified = true;
       user.otp = undefined;
       user.otpExpiry = undefined;
+      
+      // Generate unique referral code for the user
+      user.referralCode = await generateReferralCode(user.username);
+      
+      // Award signup bonus (20 points)
+      const signupBonus = 20;
+      user.points = signupBonus;
+      user.wallet = {
+        ...user.wallet,
+        totalPointsEarned: signupBonus
+      };
+      
       await user.save();
+
+      // Record signup bonus in points history
+      await PointsHistory.create({
+        userId: user._id,
+        points: signupBonus,
+        type: 'earned',
+        source: 'bonus',
+        description: 'Welcome bonus for signing up!'
+      });
+
+      // Check if user was referred by someone
+      if (user.referredBy) {
+        const referrer = await User.findById(user.referredBy);
+        if (referrer) {
+          // Award referral bonus to referrer (200 points)
+          const referralBonus = 200;
+          referrer.points += referralBonus;
+          referrer.referralCount += 1;
+          referrer.wallet.totalPointsEarned += referralBonus;
+          await referrer.save();
+
+          // Record referral bonus in points history
+          await PointsHistory.create({
+            userId: referrer._id,
+            points: referralBonus,
+            type: 'earned',
+            source: 'bonus',
+            description: `Referral bonus! ${user.username || user.email} joined using your code`
+          });
+        }
+      }
 
       // Create JWT token
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {

@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joy Juncture | Buzzed – Drinking Game</title>
+    <title>Joy Juncture | Buzzed ï¿½ Drinking Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;600;700&family=Manrope:wght@300;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="../config.js"></script>
     <style>
         :root {
-            --bg-dark: #0b1a13;
-            --grid-line: rgba(74, 222, 128, 0.05);
-            --accent: #2ecc71;
-            --btn-color: #14532d;
-            --text-main: #FFFFFF;
-            --text-muted: #dcfce7;
-            --border: rgba(74, 222, 128, 0.2);
-            --card-bg: #112920;
-            --glass: rgba(10, 22, 18, 0.7);
+            --bg-light: #ffffff;
+            --bg-secondary: #f8f8f8;
+            --grid-line: rgba(45, 74, 62, 0.08);
+            --accent: #2d4a3e;
+            --accent-hover: #1f3530;
+            --btn-color: #2d4a3e;
+            --text-main: #1a1a1a;
+            --text-muted: #666666;
+            --border: rgba(45, 74, 62, 0.2);
+            --card-bg: #ffffff;
+            --glass: rgba(255, 255, 255, 0.95);
         }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--bg-light);
             background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
             background-size: 50px 50px;
             color: var(--text-main);
@@ -44,7 +46,7 @@
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(5, 16, 10, 0.95);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             z-index: 1000;
@@ -52,6 +54,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
         .nav-left {
@@ -62,7 +65,7 @@
 
         .home-btn {
             background: var(--accent);
-            color: #000;
+            color: #fff;
             padding: 10px 20px;
             border-radius: 50px;
             font-weight: 700;
@@ -71,14 +74,14 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+            box-shadow: 0 4px 15px rgba(45, 74, 62, 0.2);
             font-size: 0.9rem;
         }
 
         .home-btn:hover {
-            background: #fff;
+            background: var(--accent-hover);
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+            box-shadow: 0 6px 20px rgba(45, 74, 62, 0.3);
         }
 
         .nav-title {
@@ -119,7 +122,7 @@
             top: -5px;
             right: -5px;
             background: var(--accent);
-            color: #000;
+            color: #ffffff;
             border-radius: 50%;
             width: 20px;
             height: 20px;
@@ -142,7 +145,7 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             min-width: 250px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             display: none;
         }
 
@@ -163,7 +166,7 @@
             height: 50px;
             border-radius: 50%;
             background: var(--accent);
-            color: #000;
+            color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -201,7 +204,7 @@
         }
 
         .profile-menu a:hover {
-            background: var(--glass);
+            background: var(--bg-secondary);
             color: var(--accent);
         }
 
@@ -231,13 +234,13 @@
             right: 0;
             width: 450px;
             height: 100%;
-            background: #0a1612;
+            background: #ffffff;
             z-index: 3001;
             transform: translateX(100%);
             transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             display: flex;
             flex-direction: column;
-            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
             border-left: 1px solid var(--border);
         }
 
@@ -289,7 +292,7 @@
             display: flex;
             gap: 15px;
             padding: 15px;
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 12px;
             margin-bottom: 15px;
@@ -370,7 +373,7 @@
         .cart-footer {
             padding: 20px 25px;
             border-top: 1px solid var(--border);
-            background: rgba(0, 0, 0, 0.3);
+            background: var(--bg-secondary);
         }
 
         .cart-subtotal {
@@ -395,7 +398,7 @@
             width: 100%;
             padding: 15px;
             background: var(--accent);
-            color: #000;
+            color: #fff;
             border: none;
             border-radius: 10px;
             font-weight: 700;
@@ -443,6 +446,20 @@
             object-fit: cover;
             border-radius: 12px;
             border: 1px solid var(--border);
+            transition: transform 0.3s ease;
+        }
+
+        
+        .main-img.rotate-90 {
+            transform: rotate(90deg);
+        }
+
+        .main-img.rotate-180 {
+            transform: rotate(180deg);
+        }
+
+        .main-img.rotate-270 {
+            transform: rotate(270deg);
         }
 
         .thumb-grid {
@@ -459,13 +476,32 @@
             cursor: pointer;
             border: 1px solid var(--border);
             opacity: 0.6;
-            transition: 0.3s;
+            transition: all 0.3s;
         }
 
         .thumb:hover,
         .thumb.active {
             opacity: 1;
             border-color: var(--accent);
+        }
+
+        .thumb.rotate-90,
+        .thumb.rotate-270 {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        .thumb.rotate-90 {
+            transform: rotate(90deg);
+        }
+
+        .thumb.rotate-180 {
+            transform: rotate(180deg);
+        }
+
+        .thumb.rotate-270 {
+            transform: rotate(270deg);
         }
 
         .product-info h1 {
@@ -525,7 +561,7 @@
         .qty-btn {
             background: none;
             border: none;
-            color: white;
+            color: var(--text-main);
             padding: 0 15px;
             font-size: 1.2rem;
             cursor: pointer;
@@ -560,17 +596,17 @@
         }
 
         .btn-outline:hover {
-            background: rgba(46, 204, 113, 0.1);
+            background: rgba(45, 74, 62, 0.1);
         }
 
         .btn-solid {
             background: var(--accent);
-            color: black;
+            color: #fff;
         }
 
         .btn-solid:hover {
-            background: #fff;
-            box-shadow: 0 0 20px var(--accent);
+            background: var(--accent-hover);
+            box-shadow: 0 0 20px rgba(45, 74, 62, 0.3);
         }
 
         .meta-icons {
@@ -597,7 +633,7 @@
         }
 
         .features-sec {
-            background: #08140e;
+            background: var(--bg-secondary);
             padding: 4rem 0;
             border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
@@ -610,11 +646,12 @@
         }
 
         .f-card {
-            background: rgba(255, 255, 255, 0.03);
+            background: #ffffff;
             padding: 1.5rem;
             border-radius: 12px;
             border: 1px solid var(--border);
             transition: 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .f-card:hover {
@@ -641,8 +678,8 @@
         }
 
         .glimpse-title {
-            background: #1a4d2e;
-            color: #d1fae5;
+            background: var(--accent);
+            color: #ffffff;
             padding: 1rem;
             font-family: 'Zilla Slab';
             font-size: 2rem;
@@ -653,11 +690,11 @@
             width: 100%;
             height: auto;
             display: block;
-            border-bottom: 4px solid #1a4d2e;
+            border-bottom: 4px solid var(--accent);
         }
 
         .decode-sec {
-            background: #0b1d15;
+            background: var(--bg-light);
             padding: 4rem 2rem;
             text-align: center;
             color: var(--text-muted);
@@ -665,7 +702,7 @@
 
         /* Footer */
         footer {
-            background: linear-gradient(to bottom, #020a05, #0a1612);
+            background: linear-gradient(to bottom, var(--bg-secondary), var(--bg-light));
             padding: 60px 5% 20px;
             border-top: 1px solid var(--border);
         }
@@ -695,7 +732,7 @@
         }
 
         .footer-col ul li a {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--text-muted);
             text-decoration: none;
             transition: color 0.3s ease;
         }
@@ -707,11 +744,10 @@
         .footer-logo img {
             width: 120px;
             margin-bottom: 15px;
-            filter: brightness(1.2);
         }
 
         .footer-logo p {
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--text-muted);
             line-height: 1.8;
             font-size: 0.9rem;
         }
@@ -719,8 +755,8 @@
         .footer-bottom {
             text-align: center;
             padding-top: 20px;
-            border-top: 1px solid rgba(74, 222, 128, 0.1);
-            color: rgba(255, 255, 255, 0.5);
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
             font-size: 0.9rem;
         }
 
@@ -755,7 +791,7 @@
     <nav class="navbar">
         <div class="nav-left">
             <a href="/" class="home-btn"><i class="fas fa-home"></i> Home</a>
-            <span class="nav-title">Buzzed – Drinking Game</span>
+            <span class="nav-title">Buzzed ï¿½ Drinking Game</span>
         </div>
 
         <div class="nav-icons">
@@ -815,17 +851,17 @@
     <div class="container">
         <div class="product-hero">
             <div class="image-gallery">
-                <img src="https://images.unsplash.com/photo-1606167668584-78701c57f13d?q=80&w=2070&auto=format&fit=crop" class="main-img" id="mainImg">
+                <img src="https://joyjuncture.com/cdn/shop/files/generated_image_buzz.png?v=1764409590&width=1200" class="main-img" id="mainImg">
                 <div class="thumb-grid">
-                    <img src="https://images.unsplash.com/photo-1606167668584-78701c57f13d?q=80&w=2070" class="thumb active" onclick="setImg(this)">
-                    <img src="https://images.unsplash.com/photo-1629814595261-2b621532ba97?w=800" class="thumb" onclick="setImg(this)">
-                    <img src="https://images.unsplash.com/photo-1632516643720-e7f5d7d6ecc9?w=800" class="thumb" onclick="setImg(this)">
-                    <img src="https://images.unsplash.com/photo-1605806616949-1e87b487bc2a?w=800" class="thumb" onclick="setImg(this)">
+                    <img src="https://joyjuncture.com/cdn/shop/files/generated_image_buzz.png?v=1764409590&width=1200" class="thumb active" onclick="setImg(this)">
+                    <img src="https://joyjuncture.com/cdn/shop/files/generated_image_buzz.png?v=1764409590&width=1200" class="thumb rotate-90" onclick="setImg(this)">
+                    <img src="https://joyjuncture.com/cdn/shop/files/generated_image_buzz.png?v=1764409590&width=1200" class="thumb rotate-180" onclick="setImg(this)">
+                    <img src="https://joyjuncture.com/cdn/shop/files/generated_image_buzz.png?v=1764409590&width=1200" class="thumb rotate-270" onclick="setImg(this)">
                 </div>
             </div>
 
             <div class="product-info">
-                <h1>Buzzed – Drinking Game</h1>
+                <h1>Buzzed ï¿½ Drinking Game</h1>
                 <div class="price-wrap">
                     <span class="old-price">â‚¹1,038</span>
                     <span class="new-price">â‚¹518</span>
@@ -833,8 +869,8 @@
                 </div>
 
                 <p class="desc-text">
-                    Meet Buzzed – Drinking Game, the card game that combines strategy, memory, and a chilling zombie theme to keep you on your toes! With every flip of the card, you're one step closer to survival... or succumbing to the undead. <br><br>
-                    But here's the twist: Want to turn up the party? Buzzed – Drinking Game easily transforms into a rowdy, themed drinking game!
+                    Meet Buzzed ï¿½ Drinking Game, the card game that combines strategy, memory, and a chilling zombie theme to keep you on your toes! With every flip of the card, you're one step closer to survival... or succumbing to the undead. <br><br>
+                    But here's the twist: Want to turn up the party? Buzzed ï¿½ Drinking Game easily transforms into a rowdy, themed drinking game!
                 </p>
 
                 <div class="qty-row">
@@ -861,7 +897,7 @@
 
     <div class="features-sec">
         <div class="container">
-            <h2 style="font-family:'Zilla Slab'; color:white; font-size:2.5rem; margin-bottom:2rem;">Key Features</h2>
+            <h2 style="font-family:'Zilla Slab'; color:#1a1a1a; font-size:2.5rem; margin-bottom:2rem;">Key Features</h2>
             <div class="f-grid">
                 <div class="f-card">
                     <h3>Dual Gameplay</h3>
@@ -971,9 +1007,23 @@
             document.querySelector('.new-price').textContent = symbol + newPriceConverted.toLocaleString();
         }
 
-        // Image gallery
+                // Image gallery
         function setImg(el) {
-            document.getElementById('mainImg').src = el.src.split('?')[0] + '?q=80&w=2070&auto=format&fit=crop';
+            const mainImg = document.getElementById('mainImg');
+            mainImg.src = el.src.split('?')[0] + '?q=80&w=2070&auto=format&fit=crop';
+            
+            // Remove all rotation classes from main image
+            mainImg.classList.remove('rotate-90', 'rotate-180', 'rotate-270');
+            
+            // Apply the same rotation class as the thumbnail
+            if (el.classList.contains('rotate-90')) {
+                mainImg.classList.add('rotate-90');
+            } else if (el.classList.contains('rotate-180')) {
+                mainImg.classList.add('rotate-180');
+            } else if (el.classList.contains('rotate-270')) {
+                mainImg.classList.add('rotate-270');
+            }
+            
             document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
         }

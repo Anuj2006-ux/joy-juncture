@@ -19,22 +19,27 @@
 
     <style>
         :root {
-            --bg-dark: #020a05;
-            /* Blackish Green */
-            --grid-line: rgba(50, 205, 50, 0.1);
-            /* Brighter Green Grid */
-            --accent: #2ecc71;
-            /* Green Accent */
-            --btn-color: #0d3a35;
-            --text-main: #FFFFFF;
-            --text-muted: #9eaead;
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(46, 204, 113, 0.2);
-            --card-bg: #05100a;
+            --bg-light: #ffffff;
+            /* White Background */
+            --grid-line: rgba(45, 74, 62, 0.1);
+            /* Dark Green Grid */
+            --accent: #2d4a3e;
+            /* Dark Green Accent */
+            --accent-hover: #1f3530;
+            /* Darker Green on Hover */
+            --btn-color: #2d4a3e;
+            --text-main: #1a1a1a;
+            /* Black Text */
+            --text-muted: #666666;
+            /* Gray Text */
+            --glass: rgba(45, 74, 62, 0.05);
+            --border: rgba(45, 74, 62, 0.15);
+            --card-bg: #f8f8f8;
+            /* Light Gray Card Background */
         }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--bg-light);
             background-image:
                 linear-gradient(var(--grid-line) 1px, transparent 1px),
                 linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
@@ -49,14 +54,14 @@
         header {
             text-align: center;
             padding: 4rem 1rem;
-            background: radial-gradient(circle at center, rgba(46, 204, 113, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle at center, rgba(45, 74, 62, 0.08) 0%, transparent 70%);
         }
 
         h1 {
             font-family: 'Zilla Slab', serif;
             font-size: 4rem;
             color: var(--accent);
-            text-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+            text-shadow: 0 2px 10px rgba(45, 74, 62, 0.15);
             margin: 0;
         }
 
@@ -93,7 +98,7 @@
 
         .game-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.15);
+            box-shadow: 0 10px 30px rgba(45, 74, 62, 0.2);
             border-color: var(--accent);
         }
 
@@ -103,14 +108,14 @@
             top: 15px;
             left: 15px;
             background: var(--accent);
-            color: #000;
+            color: #ffffff;
             padding: 4px 12px;
             border-radius: 20px;
             font-weight: 800;
             font-size: 0.8rem;
             z-index: 10;
             text-transform: uppercase;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 2px 10px rgba(45, 74, 62, 0.2);
         }
 
         /* Image Area */
@@ -136,7 +141,7 @@
         .card-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(255, 255, 255, 0.85);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -144,7 +149,7 @@
             gap: 15px;
             opacity: 0;
             transition: opacity 0.3s ease;
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(5px);
         }
 
         .game-card:hover .card-overlay {
@@ -154,7 +159,7 @@
         /* Float Buttons */
         .overlay-btn {
             background: var(--accent);
-            color: #000;
+            color: #ffffff;
             border: none;
             padding: 12px 24px;
             border-radius: 30px;
@@ -180,15 +185,16 @@
         }
 
         .overlay-btn.secondary:hover {
-            background: rgba(46, 204, 113, 0.1);
-            color: white;
-            border-color: white;
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
         }
 
         .overlay-btn:hover {
+            background: var(--accent-hover);
             transform: translateY(20px) scale(1.05);
             /* keep translateY for init pos logic if needed, but here simple scale is better */
-            box-shadow: 0 0 15px var(--accent);
+            box-shadow: 0 4px 15px rgba(45, 74, 62, 0.3);
         }
 
         /* Reset transform on hover for clean anim */
@@ -245,13 +251,13 @@
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(5, 16, 10, 0.95);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             z-index: 1000;
             padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
         }
 
@@ -259,11 +265,12 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            justify-self: start;
         }
 
         .home-btn {
             background: var(--accent);
-            color: #000;
+            color: #ffffff;
             padding: 10px 20px;
             border-radius: 50px;
             font-weight: 700;
@@ -272,26 +279,29 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+            box-shadow: 0 4px 15px rgba(45, 74, 62, 0.3);
             font-size: 0.9rem;
         }
 
         .home-btn:hover {
-            background: #fff;
+            background: var(--accent-hover);
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+            box-shadow: 0 6px 20px rgba(45, 74, 62, 0.4);
         }
 
         .nav-title {
             font-size: 1.2rem;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--accent);
+            justify-self: center;
+            text-align: center;
         }
 
         .nav-icons {
             display: flex;
             align-items: center;
             gap: 15px;
+            justify-self: end;
         }
 
         .search-container {
@@ -310,7 +320,7 @@
 
         .search-box:focus-within {
             border-color: var(--accent);
-            box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+            box-shadow: 0 0 10px rgba(45, 74, 62, 0.2);
         }
 
         .search-input {
@@ -344,7 +354,7 @@
             min-width: 300px;
             max-height: 400px;
             overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15);
             display: none;
         }
 
@@ -416,7 +426,7 @@
             top: -5px;
             right: -5px;
             background: var(--accent);
-            color: #000;
+            color: #ffffff;
             border-radius: 50%;
             width: 20px;
             height: 20px;
@@ -439,7 +449,7 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             min-width: 250px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(45, 74, 62, 0.15);
             display: none;
         }
 
@@ -460,7 +470,7 @@
             height: 50px;
             border-radius: 50%;
             background: var(--accent);
-            color: #000;
+            color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -513,7 +523,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(4px);
             z-index: 3000;
             opacity: 0;
@@ -532,13 +542,13 @@
             right: 0;
             width: 450px;
             height: 100%;
-            background: #0a1612;
+            background: #ffffff;
             z-index: 3001;
             transform: translateX(100%);
             transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             display: flex;
             flex-direction: column;
-            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+            box-shadow: -10px 0 30px rgba(45, 74, 62, 0.15);
             border-left: 1px solid var(--border);
         }
 
@@ -741,7 +751,7 @@
         .cart-footer {
             padding: 24px;
             border-top: 2px solid var(--border);
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(45, 74, 62, 0.05);
         }
 
         .cart-total {
@@ -772,7 +782,7 @@
         .checkout-btn {
             width: 100%;
             background: var(--accent);
-            color: #000;
+            color: #ffffff;
             border: none;
             padding: 14px;
             border-radius: 8px;
@@ -783,9 +793,9 @@
         }
 
         .checkout-btn:hover {
-            background: #fff;
+            background: var(--accent-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+            box-shadow: 0 6px 20px rgba(45, 74, 62, 0.3);
         }
 
         @media (max-width: 768px) {
@@ -891,8 +901,9 @@
     <nav class="navbar">
         <div class="nav-left">
             <a href="/" class="home-btn"><i class="fas fa-home"></i> Home</a>
-            <span class="nav-title">Game Store</span>
         </div>
+
+        <span class="nav-title">Game Store</span>
 
         <div class="nav-icons">
             <!-- Search -->

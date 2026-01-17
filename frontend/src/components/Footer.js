@@ -7,7 +7,9 @@ const Footer = () => {
     <footer>
       <div className="footer-grid">
         <div className="footer-col footer-logo">
-          <img src="https://joyjuncture.com/cdn/shop/files/JJ_Logo.jpg?v=1735415999&width=150" alt="JJ Logo" />
+          <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <img src="https://joyjuncture.com/cdn/shop/files/JJ_Logo.jpg?v=1735415999&width=150" alt="JJ Logo" />
+          </Link>
           <p>At Joy Juncture, we believe the best moments in life happen around a table... laughing, bonding, and competing.</p>
         </div>
         <div className="footer-col">

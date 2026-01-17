@@ -57,6 +57,9 @@ const cartSchema = new mongoose.Schema({
   timestamps: true 
 });
 
+// Add index for faster userId lookups
+cartSchema.index({ userId: 1 });
+
 // Calculate total price and items before saving
 cartSchema.pre('save', function(next) {
   this.totalItems = this.items.reduce((sum, item) => sum + item.quantity, 0);

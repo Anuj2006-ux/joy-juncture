@@ -1,20 +1,18 @@
 /* --- 1. CORE VARIABLES & RESET --- */
 :root {
     --joy-orange: #FF8C00;
-    /* Orange color for accents */
     --joy-orange-dark: #e07b00;
-    /* Darker orange */
-    --joy-black: #111111;
-    --text-dark: #1a1a1a;
+    --joy-black: #1a1a1a;
+    --text-dark: #000000;
     --white: #ffffff;
-    --nav-dark-bg: #2d4a3e;
-    --nav-item-bg: #3d5a4e;
-    --nav-item-hover: #1f3530;
-    --nav-text-gray: #a8c5b8;
-    --nav-text-white: #ffffff;
-    /* The "Bouncy" Physics Curve */
+    --nav-dark-bg: #ffffff;
+    --nav-item-bg: #f8f8f8;
+    --nav-item-hover: #2d4a3e;
+    --nav-text-gray: #666;
+    --nav-text-white: #1a1a1a;
     --spring: cubic-bezier(0.90, -0.7, 0.32, 1.6);
     --soft: cubic-bezier(0.25, 1, 0.5, 1);
+    --border-light: #e0e0e0;
 }
 
 /* --- 2. HEADER CONTAINER --- */
@@ -23,12 +21,12 @@ header {
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 /* --- 3. TOP BAR (Sleek Black) --- */
 .top-bar {
-    background-color: var(--joy-black);
+    background-color: #2d4a3e;
     color: var(--white);
     height: 42px;
     display: flex;
@@ -129,13 +127,14 @@ header {
 
 /* --- 4. MAIN NAV (Green Theme) --- */
 .main-nav {
-    background-color: var(--nav-dark-bg);
+    background-color: #ffffff;
     height: 90px;
     padding: 0 5%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: relative;
+    border-bottom: 1px solid var(--border-light);
 }
 
 /* Logo Tilt */
@@ -162,7 +161,7 @@ header {
 
 .nav-item>a {
     text-decoration: none;
-    color: var(--nav-text-white);
+    color: #1a1a1a;
     font-weight: 500;
     font-size: 1.05rem;
     padding: 12px 28px;
@@ -190,7 +189,7 @@ header {
 }
 
 .nav-item:hover>a {
-    color: var(--nav-text-white);
+    color: white;
 }
 
 .nav-item:hover>a::before {
@@ -206,7 +205,7 @@ header {
 }
 
 .nav-item.active>a {
-    color: var(--nav-text-white);
+    color: white;
     font-weight: 600;
 }
 
@@ -227,12 +226,11 @@ header {
     top: 100%;
     left: 0;
     width: 260px;
-    background: #1a1a1a;
+    background: white;
     border-radius: 16px;
     padding: 15px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 5px 15px rgba(0, 0, 0, 0.3);
-
-    /* Hidden State */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-light);
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px) scale(0.95);
@@ -249,7 +247,7 @@ header {
     left: 30px;
     width: 12px;
     height: 12px;
-    background: #1a1a1a;
+    background: white;
     transform: rotate(45deg);
     border-radius: 2px;
 }
@@ -301,7 +299,7 @@ header {
     padding: 12px 15px;
     border-radius: 10px;
     text-decoration: none;
-    color: var(--white);
+    color: #1a1a1a;
     font-weight: 500;
     font-size: 0.9rem;
     transition: all 0.2s;
@@ -309,9 +307,8 @@ header {
 
 .dropdown-menu li a:hover {
     background-color: var(--nav-item-hover);
-    color: var(--white);
+    color: white;
     padding-left: 20px;
-    /* Slide interaction */
 }
 
 .dropdown-menu li a span {
@@ -325,20 +322,20 @@ header {
 
 /* --- 7. SPECIAL "PLAY" BUTTON --- */
 .highlight-btn a {
-    border: 1.5px solid var(--nav-text-gray);
+    border: 1.5px solid var(--joy-green);
     background: transparent;
-    color: var(--nav-text-white) !important;
+    color: var(--joy-green) !important;
 }
 
 /* Remove the standard black pill hover for this specific button */
 .highlight-btn a::before {
-    background-color: var(--nav-text-white);
+    background-color: var(--joy-green);
 }
 
 .highlight-btn:hover a {
-    background: var(--nav-text-white);
-    color: var(--nav-dark-bg) !important;
-    border-color: var(--nav-text-white);
+    background: var(--joy-green);
+    color: white !important;
+    border-color: var(--joy-green);
 }
 
 /* --- 8. INTERACTIVE ICONS --- */
@@ -354,17 +351,13 @@ header {
 
 .icon-btn {
     background: transparent;
-    /* No circle background */
     border: none;
-    color: white;
-    /* White icon */
+    color: #1a1a1a;
     font-size: 1.2rem;
     padding: 8px;
-    /* Maintain touch target but no visible background */
     cursor: pointer;
     transition: all 0.3s var(--spring);
     border-radius: 50%;
-    /* Hover effect can still be circular or just icon scale */
     display: flex !important;
     align-items: center;
     justify-content: center;
@@ -376,7 +369,7 @@ header {
 }
 
 .icon-btn i {
-    color: var(--nav-text-white);
+    color: #1a1a1a;
     font-size: 1.3rem;
     z-index: 100;
 }
@@ -389,20 +382,16 @@ header {
     position: absolute;
     top: -5px;
     right: -5px;
-    background: var(--joy-orange);
-    color: var(--joy-black);
-    font-size: 0.75rem;
-    font-weight: 800;
-    width: 22px;
-    height: 22px;
+    background: var(--joy-green);
+    color: #ffffff;
     border-radius: 50%;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid var(--white);
-    box-shadow: 0 2px 8px rgba(255, 140, 0, 0.6);
-    animation: pulse 2s infinite;
-    z-index: 200;
+    font-size: 0.7rem;
+    font-weight: 700;
 }
 
 @keyframes pulse {
@@ -442,19 +431,19 @@ header {
 
 .icon-btn.cart:hover i {
     animation: shake 0.4s ease forwards;
-    color: var(--white);
+    color: var(--joy-green);
 }
 
 /* SEARCH ZOOM ANIMATION */
 .icon-btn.search:hover i {
     transform: scale(1.2) rotate(-10deg);
-    color: var(--white);
+    color: var(--joy-green);
 }
 
 /* USER NOD ANIMATION */
 .icon-btn.user:hover i {
     transform: translateY(-2px);
-    color: var(--white);
+    color: var(--joy-green);
 }
 
 /* --- PROFILE DROPDOWN --- */
@@ -470,10 +459,10 @@ header {
     top: 60px;
     right: 0;
     width: 280px;
-    background: #0a1612;
-    border: 1px solid rgba(46, 204, 113, 0.2);
+    background: white;
+    border: 1px solid var(--border-light);
     border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     z-index: 3000;
     animation: dropdownIn 0.3s var(--spring);
 }
@@ -494,18 +483,18 @@ header {
     display: flex;
     gap: 12px;
     padding: 20px;
-    border-bottom: 1px solid rgba(46, 204, 113, 0.2);
+    border-bottom: 1px solid var(--border-light);
 }
 
 .profile-avatar {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    background: linear-gradient(135deg, var(--joy-green), var(--joy-green-dark));
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #000;
+    color: white;
     font-size: 1.3rem;
     font-weight: 700;
     flex-shrink: 0;
@@ -515,13 +504,13 @@ header {
     margin: 0 0 5px 0;
     font-size: 1rem;
     font-weight: 600;
-    color: #fff;
+    color: #1a1a1a;
 }
 
 .profile-info p {
     margin: 0;
     font-size: 0.85rem;
-    color: #9eaead;
+    color: #666;
 }
 
 .profile-menu {
@@ -533,7 +522,7 @@ header {
     align-items: center;
     gap: 12px;
     padding: 12px 15px;
-    color: #fff;
+    color: #1a1a1a;
     text-decoration: none;
     border-radius: 8px;
     transition: all 0.2s ease;
@@ -541,8 +530,8 @@ header {
 }
 
 .profile-menu a:hover {
-    background: rgba(46, 204, 113, 0.1);
-    color: #2ecc71;
+    background: rgba(45, 74, 62, 0.1);
+    color: var(--joy-green);
 }
 
 .profile-menu a i {
@@ -555,7 +544,7 @@ header {
     position: relative;
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.1);
+    background: #f8f8f8;
     border-radius: 50px;
     overflow: visible;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -565,9 +554,9 @@ header {
 
 .search-wrapper.expanded {
     width: 320px;
-    background: #1a1a1a;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    background: white;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
 
 .search-trigger {
@@ -580,7 +569,7 @@ header {
 }
 
 .search-wrapper.expanded .search-trigger i {
-    color: white;
+    color: #1a1a1a;
     transform: rotate(180deg);
 }
 
@@ -592,7 +581,7 @@ header {
     opacity: 0;
     border: none;
     background: transparent;
-    color: white;
+    color: #1a1a1a;
     font-size: 1rem;
     font-family: 'Poppins', sans-serif;
     outline: none;
@@ -606,7 +595,7 @@ header {
 }
 
 .search-input-inline::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: #999;
 }
 
 .inline-search-results {
@@ -616,10 +605,10 @@ header {
     width: 350px;
     max-height: 400px;
     overflow-y: auto;
-    background: #1a1a1a;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: white;
+    border: 1px solid var(--border-light);
     border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     z-index: 3000;
     animation: searchResultsIn 0.3s ease;
 }
@@ -641,13 +630,13 @@ header {
     align-items: center;
     gap: 15px;
     padding: 12px 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--border-light);
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .inline-search-results .search-result-item:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: #f8f8f8;
 }
 
 .inline-search-results .search-result-item img {
@@ -655,17 +644,17 @@ header {
     height: 50px;
     object-fit: cover;
     border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-light);
 }
 
 .inline-search-results .search-result-info h4 {
-    color: white;
+    color: #1a1a1a;
     font-size: 0.95rem;
     margin: 0 0 5px 0;
 }
 
 .inline-search-results .search-result-info p {
-    color: #FF8C00;
+    color: var(--joy-green);
     font-size: 0.85rem;
     margin: 0;
     font-weight: 600;
@@ -674,13 +663,12 @@ header {
 .inline-search-results .no-results {
     padding: 20px;
     text-align: center;
-    color: #888;
+    color: #666;
 }
 
 /* --- EXPANDING SEARCH --- */
 .search-box {
     background: transparent;
-    /* Transparent initially */
     height: 40px;
     border-radius: 40px;
     padding: 5px;
@@ -693,12 +681,10 @@ header {
 }
 
 .search-box.active {
-    background: #1f3530;
-    /* Dark background only when active */
+    background: white;
     border-color: var(--joy-green);
-    box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
+    box-shadow: 0 0 10px rgba(45, 74, 62, 0.15);
     width: 250px;
-    /* Ensure width expansion logic relies on child or max-width if needed */
 }
 
 /* Ensure padding is removed in default state to avoid 'pill' shape */

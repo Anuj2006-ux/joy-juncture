@@ -17,7 +17,8 @@ function Auth() {
         password: '',
         confirmPassword: '',
         firstName: '', // Using name field logic from backend
-        lastName: ''
+        lastName: '',
+        referralCode: '' // Referral code from friend
     });
 
     const [otp, setOtp] = useState('');
@@ -25,6 +26,10 @@ function Auth() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [agreeToTerms, setAgreeToTerms] = useState(false);
+    
+    // Referral code validation states
+    const [referralStatus, setReferralStatus] = useState({ checking: false, valid: null, message: '' });
+    const [referralTimeout, setReferralTimeout] = useState(null);
 
     // Handle Google Login Callback
     React.useEffect(() => {
@@ -42,6 +47,53 @@ function Auth() {
 
     const handleGoogleLogin = () => {
         window.location.href = API_URL + '/api/auth/google';
+    };
+
+    // Validate referral code
+    const validateReferralCode = async (code) => {
+        if (!code || code.length < 5) {
+            setReferralStatus({ checking: false, valid: null, message: '' });
+            return;
+        }
+
+        setReferralStatus({ checking: true, valid: null, message: 'Checking...' });
+
+        try {
+            const response = await fetch(`${API_URL}/api/auth/validate-referral/${code.toUpperCase()}`);
+            const data = await response.json();
+
+            if (data.valid) {
+                setReferralStatus({ checking: false, valid: true, message: data.message });
+            } else {
+                setReferralStatus({ checking: false, valid: false, message: data.message || 'Invalid referral code' });
+            }
+        } catch (err) {
+            setReferralStatus({ checking: false, valid: false, message: 'Error checking code' });
+        }
+    };
+
+    // Handle referral code change with debounce
+    const handleReferralChange = (e) => {
+        const code = e.target.value.toUpperCase();
+        setFormData({ ...formData, referralCode: code });
+        
+        // Clear previous timeout
+        if (referralTimeout) {
+            clearTimeout(referralTimeout);
+        }
+        
+        // Reset status if empty
+        if (!code) {
+            setReferralStatus({ checking: false, valid: null, message: '' });
+            return;
+        }
+        
+        // Debounce API call
+        const timeout = setTimeout(() => {
+            validateReferralCode(code);
+        }, 500);
+        
+        setReferralTimeout(timeout);
     };
 
     // Handle Input Change
@@ -89,6 +141,19 @@ function Auth() {
             setError('You must agree to the terms and policy.');
             return;
         }
+        
+        // Check if referral code is provided but invalid
+        if (formData.referralCode && referralStatus.valid === false) {
+            setError('Please enter a valid referral code or remove it.');
+            return;
+        }
+        
+        // Wait if still checking referral code
+        if (formData.referralCode && referralStatus.checking) {
+            setError('Please wait, validating referral code...');
+            return;
+        }
+        
         setLoading(true);
         setError('');
 
@@ -99,7 +164,8 @@ function Auth() {
                 body: JSON.stringify({
                     username: formData.firstName, // Mapping Name to username for simplicity
                     email: formData.email,
-                    password: formData.password
+                    password: formData.password,
+                    referralCode: formData.referralCode.trim() || undefined // Send referral code if provided
                 }),
             });
             const data = await response.json();
@@ -377,6 +443,30 @@ function Auth() {
                                     onChange={handleChange}
                                     required
                                 />
+                            </div>
+                            <div className="form-group referral-group">
+                                <label>Referral Code <span className="optional-label">(Optional)</span></label>
+                                <div className={`referral-input-wrapper ${referralStatus.valid === true ? 'valid' : referralStatus.valid === false ? 'invalid' : ''}`}>
+                                    <input
+                                        type="text"
+                                        name="referralCode"
+                                        placeholder="Enter friend's referral code"
+                                        value={formData.referralCode}
+                                        onChange={handleReferralChange}
+                                        maxLength={12}
+                                    />
+                                    {referralStatus.checking && <span className="referral-icon checking">⏳</span>}
+                                    {referralStatus.valid === true && <span className="referral-icon valid">✓</span>}
+                                    {referralStatus.valid === false && <span className="referral-icon invalid">✗</span>}
+                                </div>
+                                {referralStatus.message && (
+                                    <small className={`referral-message ${referralStatus.valid === true ? 'valid' : referralStatus.valid === false ? 'invalid' : ''}`}>
+                                        {referralStatus.message}
+                                    </small>
+                                )}
+                                {!referralStatus.message && (
+                                    <small className="referral-hint">🎁 Get 20 bonus points when you sign up!</small>
+                                )}
                             </div>
                             <div className="form-options">
                                 <label className="remember-me">

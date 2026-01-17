@@ -26,10 +26,11 @@ router.get('/', optionalAuth, async (req, res) => {
       return res.json({ success: true, cart: null, message: 'Guest user' });
     }
 
-    let cart = await Cart.findOne({ userId: req.userId });
+    let cart = await Cart.findOne({ userId: req.userId }).lean();
     
     if (!cart) {
       cart = await Cart.create({ userId: req.userId, items: [] });
+      cart = cart.toObject(); // Convert to plain object after create
     }
 
     res.json({ success: true, cart });

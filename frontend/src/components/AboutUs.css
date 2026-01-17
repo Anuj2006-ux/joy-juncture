@@ -1,758 +1,357 @@
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Nanum+Pen+Script&family=Roboto:wght@300;400;700&display=swap');
+/* AboutUs.css */
 
-/* CSS Variables & Reset */
-:root {
-    --toxic-green: #39FF14;
-    --blood-red: #8a0303;
-    --dark-bg: #050505;
-    --card-bg: #1a1a1a;
-    --text-main: #dddddd;
-    --font-heading: 'Creepster', display;
-    --font-body: 'Roboto', sans-serif;
-    --font-hand: 'Nanum Pen Script', cursive;
-}
-
-.about-us-page {
-    background-color: var(--dark-bg);
-    color: var(--text-main);
-    font-family: var(--font-body);
-}
-
-.about-us-page img {
-    max-width: 100%;
-    display: block;
-}
-
-.about-us-page .container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-}
-
-/* Typography */
-.about-us-page h1,
-.about-us-page h2,
-.about-us-page h3 {
-    font-family: var(--font-heading);
-    letter-spacing: 2px;
-}
-
-/* SECTION 1: HERO (25% Height) */
-.about-us-page .hero-section {
-    height: 25vh;
-    background: #000;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-.about-us-page .hero-section::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
+.about-us-container {
     width: 100%;
-    height: 100%;
-    background: url('./about-us-images/hero-fog.png') bottom center no-repeat;
-    background-size: cover;
-    opacity: 0.6;
-    animation: fog-move 20s infinite alternate linear;
-    z-index: 1;
-}
-
-.about-us-page .drip-text {
-    font-size: 4rem;
-    color: var(--toxic-green);
-    position: relative;
-    z-index: 2;
-    text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
     display: flex;
+    flex-direction: column;
+    background-color: #f5f5f5;
 }
 
-.about-us-page .drip-text span {
-    position: relative;
-    display: inline-block;
+.section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    text-align: center;
 }
 
-.about-us-page .drip-text span.spacer {
-    width: 20px;
+/* 1. Our Story Section (Hero) */
+.hero-section {
+    background: #e8eff0;
+    padding: 5rem 2rem 6rem 2rem;
+    text-align: center;
 }
 
-/* Static Drip (Hardened Wax) */
-.about-us-page .drip-text span::after {
-    content: '';
-    position: absolute;
-    top: 65%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 6px;
-    background: var(--toxic-green);
-    border-radius: 4px;
-    box-shadow: 0 0 10px var(--toxic-green);
+.hero-content h1 {
+    font-size: 2.8rem;
+    color: #2c5555;
+    margin-bottom: 2.5rem;
+    font-weight: 700;
 }
 
-/* Static lengths */
-.about-us-page .drip-text span:nth-child(1)::after {
-    height: 25px;
+.story-text {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
 }
 
-.about-us-page .drip-text span:nth-child(2)::after {
-    height: 45px;
+.story-text p {
+    font-size: 1.15rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
 }
 
-.about-us-page .drip-text span:nth-child(3)::after {
-    height: 15px;
+.story-text p:last-child {
+    margin-bottom: 0;
 }
 
-.about-us-page .drip-text span:nth-child(4)::after {
-    height: 35px;
+/* 2. Our Goal & Mission Section */
+.mission-section {
+    background-color: #fff;
+    padding: 5rem 2rem;
 }
 
-.about-us-page .drip-text span:nth-child(5)::after {
-    height: 55px;
+.mission-section h2 {
+    font-size: 2.5rem;
+    color: #2c5555;
+    margin-bottom: 3.5rem;
+    font-weight: 700;
 }
 
-.about-us-page .drip-text span:nth-child(6)::after {
-    height: 10px;
-}
-
-.about-us-page .drip-text span:nth-child(7)::after {
-    height: 30px;
-}
-
-.about-us-page .drip-text span:nth-child(8)::after {
-    height: 50px;
-}
-
-@keyframes fog-move {
-    from {
-        transform: scale(1);
-    }
-
-    to {
-        transform: scale(1.1);
-    }
-}
-
-/* SECTION 2: ABOUT + VISION */
-.about-us-page .about-section {
-    padding: 5rem 0;
-    background: #0a0a0a;
-}
-
-.about-us-page .grid-2-col {
+.mission-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 4rem;
-    align-items: center;
-}
-
-.about-us-page .about-image-wrapper {
-    position: relative;
-}
-
-.about-us-page .horror-art {
-    border: 2px solid var(--toxic-green);
-    box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
-    border-radius: 4px;
-    filter: brightness(0.8) contrast(1.2);
-}
-
-.about-us-page .about-content h2 {
-    color: var(--toxic-green);
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.about-us-page .about-content p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-    color: #ccc;
-}
-
-/* SECTION 3: VISION TRANSITION */
-.about-us-page .vision-transition {
-    background: radial-gradient(circle at center, #1a4a1a 0%, #000000 100%);
-    padding: 6rem 0;
-    text-align: center;
-    border-top: 1px solid #1f331f;
-    border-bottom: 1px solid #1f331f;
-}
-
-.about-us-page .vision-content h2 {
-    font-size: 3.5rem;
-    color: #fff;
-    text-transform: uppercase;
-    text-shadow: 0 0 20px #206020;
-    margin-bottom: 1rem;
-}
-
-.about-us-page .vision-content p {
-    font-size: 1.5rem;
-    color: var(--toxic-green);
-    font-style: italic;
-    font-family: var(--font-heading);
-}
-
-/* SECTION 4: TIMELINE */
-.about-us-page .timeline-section {
-    padding: 6rem 0;
-    background: #080808;
-    position: relative;
-    overflow: hidden;
-}
-
-.about-us-page .timeline {
-    position: relative;
-    max-width: 800px;
+    text-align: left;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
-.about-us-page .timeline-line {
-    position: absolute;
-    left: 20px;
-    top: 0;
-    bottom: 0;
-    width: 6px;
-    background: var(--toxic-green);
-    box-shadow: 0 0 10px var(--toxic-green);
-    border-radius: 3px;
+.mission-block h3 {
+    font-size: 1.8rem;
+    color: #ff8c00;
+    margin-bottom: 1.2rem;
+    font-weight: 700;
 }
 
-.about-us-page .timeline-item {
-    position: relative;
-    margin-left: 60px;
-    margin-bottom: 4rem;
-    padding-left: 20px;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s ease;
+.mission-block p {
+    font-size: 1.05rem;
+    color: #555;
+    line-height: 1.7;
 }
 
-.about-us-page .timeline-item.visible {
-    opacity: 1;
-    transform: translateY(0);
+/* 3. Our Philosophy (Card Section) */
+.philosophy-section {
+    background-color: #f5f5f5;
+    padding: 5rem 2rem;
 }
 
-.about-us-page .timeline-item::before {
-    content: '';
-    position: absolute;
-    left: -49px;
-    top: 5px;
-    width: 16px;
-    height: 16px;
-    background: #000;
-    border: 2px solid var(--toxic-green);
-    border-radius: 50%;
-    z-index: 2;
+.philosophy-section h2 {
+    font-size: 2.5rem;
+    color: #2c5555;
+    margin-bottom: 3.5rem;
+    font-weight: 700;
 }
 
-.about-us-page .year {
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    color: var(--toxic-green);
-    margin-bottom: 0.5rem;
-}
-
-.about-us-page .description {
-    font-size: 1.1rem;
-    color: #aaa;
-}
-
-/* SECTION 4.5: PHILOSOPHY */
-.about-us-page .philosophy-section {
-    padding: 6rem 0;
-    background: #0f1a0f;
-    text-align: center;
-    border-bottom: 1px solid var(--toxic-green);
-}
-
-.about-us-page .section-title {
-    font-size: 3rem;
-    color: #fff;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-}
-
-.about-us-page .section-subtitle {
-    font-size: 1.2rem;
-    color: #ccc;
-    max-width: 800px;
-    margin: 0 auto 4rem;
-}
-
-.about-us-page .philosophy-grid {
+.cards-grid,
+.profile-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
-.about-us-page .philosophy-item {
-    background: #151515;
-    padding: 2.5rem 1.5rem;
-    border: 2px solid #333;
-    border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    min-height: 350px;
+.card {
+    background: #fff;
+    padding: 2.5rem 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-}
-
-.about-us-page .philosophy-item::before {
-    content: attr(data-rank);
-    position: absolute;
-    top: 10px;
-    left: 15px;
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    color: var(--toxic-green);
-    opacity: 0.8;
-}
-
-.about-us-page .philosophy-item::after {
-    content: attr(data-rank);
-    position: absolute;
-    bottom: 10px;
-    right: 15px;
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    color: var(--toxic-green);
-    transform: rotate(180deg);
-    opacity: 0.8;
-}
-
-.about-us-page .philosophy-item:hover {
-    transform: translateY(-15px) rotate(2deg) scale(1.02);
-    border-color: var(--toxic-green);
-    background: #000;
-    box-shadow: 0 0 25px rgba(57, 255, 20, 0.15);
-}
-
-.about-us-page .philosophy-item:hover::before,
-.about-us-page .philosophy-item:hover::after {
-    opacity: 1;
-    text-shadow: 0 0 10px var(--toxic-green);
-}
-
-.about-us-page .philosophy-item .icon {
-    font-size: 3rem;
-    color: var(--toxic-green);
-    margin-bottom: 1rem;
-    text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
-}
-
-.about-us-page .philosophy-item h3 {
-    color: #fff;
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    letter-spacing: 2px;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-}
-
-.about-us-page .philosophy-item p {
-    color: #ddd;
-    line-height: 1.6;
-    font-family: var(--font-hand);
-    font-size: 1.5rem;
-}
-
-/* SECTION 5 & 6: STORIES */
-.about-us-page .white-bg {
-    background: var(--dark-bg);
-    color: var(--text-main);
-    padding: 8rem 0;
-    position: relative;
-    overflow: visible;
-}
-
-/* Cards */
-.about-us-page .card-wrapper {
-    position: relative;
-    perspective: 1000px;
-    background: transparent;
-    z-index: 5;
-}
-
-.about-us-page .profile-card {
-    background: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 1rem;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-    transform: rotate(-2deg);
-    position: relative;
-    z-index: 5;
-    transition: transform 0.3s;
-}
-
-.about-us-page .profile-card:hover {
-    transform: rotate(0deg) scale(1.02);
-}
-
-.about-us-page .card-image {
-    position: relative;
-    overflow: hidden;
-}
-
-.about-us-page .card-image img {
-    width: 100%;
-    height: 350px;
-    object-fit: cover;
-    filter: sepia(0.3) contrast(1.1);
-}
-
-.about-us-page .card-info {
+    align-items: center;
     text-align: center;
-    padding-top: 1rem;
 }
 
-.about-us-page .card-info h3 {
-    font-family: 'Courier New', monospace;
-    font-weight: bold;
-    font-size: 1.5rem;
-    letter-spacing: 0;
-    color: #000;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
-.about-us-page .card-info span {
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    color: #555;
-    text-transform: uppercase;
-}
-
-/* Zombies */
-.about-us-page .zombie-hanging {
-    position: absolute;
-    top: -160px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 260px;
-    z-index: 25;
-    pointer-events: none;
-    filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.5));
-    animation: subtle-sway 6s infinite ease-in-out;
-}
-
-.about-us-page .zombie-leaning {
-    position: absolute;
-    bottom: 0;
-    right: -250px;
-    height: 130%;
-    width: auto;
-    z-index: 20;
-    pointer-events: none;
-    transform: rotate(5deg);
-    filter: drop-shadow(-20px 10px 15px rgba(0, 0, 0, 0.5));
-}
-
-@keyframes subtle-sway {
-
-    0%,
-    100% {
-        transform: translateX(-50%) rotate(0deg);
-    }
-
-    50% {
-        transform: translateX(-50%) rotate(2deg);
-    }
-}
-
-/* Handwritten Text (Paper Effect) */
-.about-us-page .handwritten-content {
-    background: #fdfdfd;
-    color: #000;
-    padding: 3rem;
-    border-radius: 2px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    transform: rotate(1deg);
-    position: relative;
-    margin: 1rem;
-    border: 1px solid #ddd;
-}
-
-.about-us-page .blood-title {
-    font-family: var(--font-hand);
-    font-size: 3rem;
-    color: var(--blood-red);
-    margin-bottom: 1rem;
-    transform: rotate(-2deg);
-    letter-spacing: 0;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
-}
-
-.about-us-page .blood-text {
-    font-family: var(--font-hand);
-    font-size: 2rem;
-    line-height: 1.4;
-    color: #222;
-}
-
-.about-us-page .blood-splatter {
-    position: absolute;
-    bottom: -20px;
-    right: -10px;
-    width: 200px;
-    opacity: 0.9;
-    pointer-events: none;
-    mix-blend-mode: multiply;
-}
-
-/* Footer */
-.about-us-page footer {
-    background: #2d4a3e;
-    padding: 80px 5% 30px;
-    color: white;
-    position: relative;
-    z-index: 2;
-}
-
-.about-us-page .footer-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
-    gap: 40px;
-    margin-bottom: 40px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.about-us-page .footer-col h4 {
-    font-weight: 800;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    color: white;
-}
-
-.about-us-page .footer-col ul {
-    list-style: none;
-    padding: 0;
-}
-
-.about-us-page .footer-col ul li {
-    margin-bottom: 10px;
-}
-
-.about-us-page .footer-col ul li a {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.8);
-    transition: 0.3s;
-}
-
-.about-us-page .footer-col ul li a:hover {
-    font-weight: 700;
-    padding-left: 5px;
-}
-
-.about-us-page .footer-logo img {
-    height: 70px;
-    margin-bottom: 20px;
-    background: white;
-    padding: 10px;
-    border-radius: 8px;
-}
-
-.about-us-page .footer-logo p {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9rem;
-    line-height: 1.6;
-}
-
-.about-us-page .footer-bottom {
-    text-align: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 20px;
-    font-weight: 600;
-    color: white;
-}
-
-/* SECTION 7: GOT QUESTIONS (CONTACT) */
-.about-us-page .contact-section {
-    background: #080808;
-    color: var(--text-main);
-    padding: 6rem 0;
-    border-top: 1px solid #1a1a1a;
-}
-
-.about-us-page .contact-title {
+.card-icon,
+.profile-icon {
     font-size: 3.5rem;
-    color: #fff;
-    margin-bottom: 3rem;
-    font-family: var(--font-body);
-    font-weight: bold;
-    letter-spacing: -1px;
+    margin-bottom: 1.2rem;
+    background: #f0f8f8;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 }
 
-.about-us-page .contact-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
+.card h3 {
+    font-size: 1.4rem;
+    color: #2c5555;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.card p {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* 4. Meet the Minds Section */
+.founders-section {
+    background-color: #fff;
+    padding: 5rem 2rem;
+}
+
+.founders-section h2 {
+    font-size: 2.5rem;
+    color: #2c5555;
+    margin-bottom: 3.5rem;
+    font-weight: 700;
+}
+
+.profile-cards {
+    justify-content: center;
+    max-width: 900px;
+    margin: 0 auto;
     gap: 4rem;
 }
 
-.about-us-page .contact-info h3 {
-    font-family: var(--font-body);
-    font-weight: bold;
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    color: #eee;
+.profile-card {
+    max-width: 400px;
 }
 
-.about-us-page .contact-info p {
-    color: #aaa;
-    line-height: 1.6;
-    margin-bottom: 2rem;
+.role-description {
+    font-style: italic;
+    color: #666 !important;
+    font-size: 1rem;
 }
 
-.about-us-page .contact-details p {
-    margin-bottom: 0.5rem;
-    color: #ccc;
-}
-
-.about-us-page .contact-details strong {
-    color: #fff;
-}
-
-.about-us-page .contact-link {
-    color: var(--toxic-green);
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.about-us-page .contact-link:hover {
-    color: #fff;
-    text-decoration: underline;
-}
-
-.about-us-page .contact-form {
+/* Update for Founder Images */
+.profile-image-container {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #f0f8f8;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: #f0f8f8;
     display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    align-items: center;
+    justify-content: center;
 }
 
-.about-us-page .form-row {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.about-us-page .form-row input,
-.about-us-page .form-row textarea {
+.profile-image {
     width: 100%;
-    padding: 1rem;
-    background: #1a1a1a;
-    border: 1px solid #333;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.profile-card .profile-image-container::before {
+    content: '👤';
+    font-size: 4rem;
+    position: absolute;
+    display: none;
+}
+
+.profile-card .profile-image-container:has(img[src=""])::before,
+.profile-card .profile-image-container:empty::before {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-icon {
+    display: none;
+}
+
+/* 5. Closing Section */
+.closing-section {
+    background: #2c5555;
     color: #fff;
-    font-family: var(--font-body);
-    font-size: 1rem;
-    border-radius: 4px;
-    transition: all 0.3s ease;
+    padding: 5rem 2rem;
+    text-align: center;
 }
 
-.about-us-page .form-row input:focus,
-.about-us-page .form-row textarea:focus {
-    outline: none;
-    border-color: var(--toxic-green);
-    box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
+.closing-content h2 {
+    font-size: 2.5rem;
+    color: #ff8c00;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
 }
 
-.about-us-page .submit-btn {
-    align-self: flex-start;
-    padding: 1rem 3rem;
-    background: var(--toxic-green);
-    color: #000;
-    font-weight: bold;
+.closing-quote {
+    font-size: 1.5rem;
+    font-style: italic;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    display: block;
+    color: #fff;
+}
+
+.cta-button {
+    background-color: #ff8c00;
+    color: #fff;
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    font-weight: 600;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
-    font-size: 1rem;
-    text-transform: uppercase;
     transition: all 0.3s ease;
 }
 
-.about-us-page .submit-btn:hover {
-    background: #fff;
-    box-shadow: 0 0 20px var(--toxic-green);
+.cta-button:hover {
+    background-color: #e67e00;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 140, 0, 0.3);
 }
 
-/* Responsive */
-@media (min-width: 768px) {
-
-    .about-us-page .timeline-line,
-    .about-us-page .timeline-progress {
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    .about-us-page .timeline-item {
-        margin-left: 0;
-        width: 45%;
-    }
-
-    .about-us-page .timeline-item:nth-child(even) {
-        margin-left: auto;
-    }
-
-    .about-us-page .timeline-item::before {
-        right: -59px;
-        left: auto;
-    }
-
-    .about-us-page .timeline-item:nth-child(odd)::before {
-        right: -60px;
-    }
-
-    .about-us-page .timeline-item:nth-child(even)::before {
-        left: -60px;
-    }
-
-    .about-us-page .timeline-item:nth-child(odd) {
-        text-align: right;
-        padding-right: 2rem;
-    }
-
-    .about-us-page .timeline-item:nth-child(even) {
-        text-align: left;
-        padding-left: 2rem;
-    }
-}
-
+/* Responsive Adjustments */
 @media (max-width: 768px) {
-    .about-us-page .grid-2-col {
+    .mission-content {
         grid-template-columns: 1fr;
-        gap: 6rem;
+        gap: 2.5rem;
+        text-align: center;
     }
 
-    .about-us-page .reverse-mobile {
-        display: flex;
-        flex-direction: column-reverse;
-        gap: 6rem;
+    .hero-content h1 {
+        font-size: 2rem;
     }
 
-    .about-us-page .drip-text {
-        font-size: 2.5rem;
+    .story-text p {
+        font-size: 1.05rem;
     }
 
-    .about-us-page .white-bg {
-        padding: 4rem 0;
+    .closing-quote {
+        font-size: 1.2rem;
     }
 
-    .about-us-page .contact-grid {
+    .mission-section h2,
+    .philosophy-section h2,
+    .founders-section h2,
+    .closing-content h2 {
+        font-size: 2rem;
+    }
+
+    .cards-grid,
+    .profile-cards {
         grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .profile-cards {
         gap: 3rem;
     }
+}
 
-    .about-us-page .form-row {
-        flex-direction: column;
-        gap: 1.5rem;
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
     }
 
-    .about-us-page .contact-title {
-        font-size: 2.5rem;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Animation Utility Classes */
+.animate-on-scroll {
+    opacity: 0;
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-on-scroll.is-visible {
+    opacity: 1;
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Staggered delays for cards */
+.cards-grid .card:nth-child(1),
+.profile-cards .card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.cards-grid .card:nth-child(2),
+.profile-cards .card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.cards-grid .card:nth-child(3),
+.profile-cards .card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.cards-grid .card:nth-child(4),
+.profile-cards .card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.card.is-visible {
+    animation: popIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }

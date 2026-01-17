@@ -341,7 +341,7 @@ function Homepage() {
       <section className="hero" id="heroSection" ref={heroRef}>
         <div className="hero-bg" id="heroBg" ref={heroBgRef}>
           <Canvas camera={{ position: [0, 0, 10], fov: 45 }} style={{ width: '100%', height: '100%' }}>
-            <color attach="background" args={['#050505']} />
+            <color attach="background" args={['#e8f5e9']} />
             <ParticleSystem />
           </Canvas>
         </div>

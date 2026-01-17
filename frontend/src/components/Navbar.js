@@ -68,6 +68,15 @@ function Navbar() {
     };
   }, []);
 
+  // Check if we should open cart (coming from checkout page)
+  useEffect(() => {
+    const shouldOpenCart = sessionStorage.getItem('openCart');
+    if (shouldOpenCart === 'true' && location.pathname === '/') {
+      setCartOpen(true);
+      sessionStorage.removeItem('openCart');
+    }
+  }, [location]);
+
   const [games, setGames] = useState([]);
 
   useEffect(() => {
@@ -279,9 +288,9 @@ function Navbar() {
         </div>
 
         <nav className="main-nav">
-          <a href="#" className="logo">
+          <Link to="/" className="logo">
             <img src={logo} alt="Joy Juncture Logo" />
-          </a>
+          </Link>
 
           <ul className="nav-links">
             <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}><Link to="/">Home</Link></li>
@@ -317,7 +326,7 @@ function Navbar() {
               <a href="#">Community <i className="fa-solid fa-chevron-down"></i></a>
               <ul className="dropdown-menu">
                 <li><Link to="/blog">Blog <span>✍️</span></Link></li>
-                <li><a href="#">Wallet & Points <span>💰</span></a></li>
+                <li><Link to="/wallet">Wallet & Points <span>💰</span></Link></li>
                 <li><Link to="/about-us">About us <span>❤️</span></Link></li>
               </ul>
             </li>
@@ -391,8 +400,9 @@ function Navbar() {
                           </Link>
                         )}
                         <a href="#" onClick={(e) => { e.preventDefault(); setProfileDropdown(false); setProfilePopupOpen(true); }}><i className="fa-solid fa-user"></i> My Profile</a>
-                        <a href="#"><i className="fa-solid fa-box"></i> Orders</a>
-                        <a href="#"><i className="fa-solid fa-wallet"></i> Wallet</a>
+                        <Link to="/orders" onClick={() => setProfileDropdown(false)}><i className="fa-solid fa-box"></i> Orders</Link>
+                        <Link to="/wallet" onClick={() => setProfileDropdown(false)}><i className="fa-solid fa-wallet"></i> Wallet</Link>
+                        <Link to="/addresses" onClick={() => setProfileDropdown(false)}><i className="fa-solid fa-location-dot"></i> Addresses</Link>
                         <a href="#" onClick={(e) => { e.preventDefault(); handleLogout(); }}>
                           <i className="fa-solid fa-right-from-bracket"></i> Logout
                         </a>
@@ -420,7 +430,9 @@ function Navbar() {
         {/* Mobile Menu */}
         <div className={`mobile-menu ${mobileMenuOpen ? 'active' : ''}`}>
           <div className="mobile-menu-header">
-            <img src={logo} alt="Joy Juncture Logo" className="mobile-logo" />
+            <Link to="/" onClick={() => setMobileMenuOpen(false)}>
+              <img src={logo} alt="Joy Juncture Logo" className="mobile-logo" />
+            </Link>
             <button className="mobile-close" onClick={() => setMobileMenuOpen(false)}>
               <i className="fa-solid fa-xmark"></i>
             </button>
@@ -445,7 +457,7 @@ function Navbar() {
               <span>Community <i className="fa-solid fa-chevron-down"></i></span>
               <ul className="mobile-submenu">
                 <li><Link to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog ✍️</Link></li>
-                <li><a href="#" onClick={() => setMobileMenuOpen(false)}>Wallet & Points 💰</a></li>
+                <li><Link to="/wallet" onClick={() => setMobileMenuOpen(false)}>Wallet & Points 💰</Link></li>
                 <li><Link to="/about-us" onClick={() => setMobileMenuOpen(false)}>About us ❤️</Link></li>
               </ul>
             </li>

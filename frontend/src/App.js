@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import ScrollToTop from './components/ScrollToTop';
@@ -19,9 +19,18 @@ import TermsConditions from './components/TermsConditions';
 import ShippingPolicy from './components/ShippingPolicy';
 import Checkout from './components/Checkout';
 import AdminDashboard from './components/AdminDashboard';
+import Orders from './components/Orders';
+import Wallet from './components/Wallet';
+import Addresses from './components/Addresses';
 import Footer from './components/Footer';
+import { initializePointsTracking } from './utils/pointsTracker';
 
 function App() {
+  useEffect(() => {
+    // Initialize points tracking when app loads
+    initializePointsTracking();
+  }, []);
+
   return (
     <Router>
       <ScrollToTop />
@@ -44,6 +53,9 @@ function App() {
           <Route path="/shipping-policy" element={<ShippingPolicy />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/wallet" element={<Wallet />} />
+          <Route path="/addresses" element={<Addresses />} />
         </Routes>
         <Footer />
       </div>

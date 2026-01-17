@@ -39,6 +39,57 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  referralCode: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  referredBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
+  },
+  referralCount: {
+    type: Number,
+    default: 0
+  },
+  wallet: {
+    balance: {
+      type: Number,
+      default: 0
+    },
+    lastLoginPoints: {
+      type: Date,
+      default: null
+    },
+    lastDailyGamePoints: {
+      type: Date,
+      default: null
+    },
+    totalPointsEarned: {
+      type: Number,
+      default: 0
+    },
+    totalPointsRedeemed: {
+      type: Number,
+      default: 0
+    }
+  },
+  gameActivity: {
+    totalTimeSpent: {
+      type: Number,
+      default: 0 // in minutes
+    },
+    lastActivityUpdate: {
+      type: Date,
+      default: null
+    },
+    gamesPlayed: [{
+      gameId: String,
+      timePlayed: Number, // in minutes
+      lastPlayed: Date
+    }]
+  },
   otp: {
     type: String,
     required: false,
@@ -90,5 +141,9 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
     return candidatePassword === this.password;
   }
 };
+
+// Add indexes for faster queries
+userSchema.index({ email: 1 });
+userSchema.index({ referralCode: 1 });
 
 module.exports = mongoose.model('User', userSchema);

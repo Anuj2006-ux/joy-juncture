@@ -8,17 +8,17 @@
 }
 
 :root {
-    /* Color Palette - Dark Theme */
-    --bg-dark: #0a0a0a;
-    --bg-card: #141414;
-    --nav-bg: #1a3a2e;
-    --text-light: #ffffff;
-    --text-gray: #b8b8b8;
-    --text-dim: #808080;
-    --accent-green: #6fb33f;
-    --accent-green-hover: #8fd15f;
-    --accent-green-dark: #4a7a2b;
-    --border-dark: #2a2a2a;
+    /* Color Palette - Light Theme */
+    --bg-dark: #ffffff;
+    --bg-card: #f8f8f8;
+    --nav-bg: #2d4a3e;
+    --text-light: #1a1a1a;
+    --text-gray: #666666;
+    --text-dim: #999999;
+    --accent-green: #2d4a3e;
+    --accent-green-hover: #1f3530;
+    --accent-green-dark: #1f3530;
+    --border-dark: rgba(45, 74, 62, 0.2);
 
     /* Typography */
     --font-heading: 'Bebas Neue', sans-serif;
@@ -54,7 +54,7 @@ body {
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .nav-container {
@@ -76,7 +76,7 @@ body {
     font-family: var(--font-heading);
     font-size: 1.5rem;
     letter-spacing: 1px;
-    color: var(--text-light);
+    color: #ffffff;
 }
 
 .nav-menu {
@@ -89,7 +89,7 @@ body {
 }
 
 .nav-menu a {
-    color: var(--text-light);
+    color: #ffffff;
     text-decoration: none;
     font-size: 0.95rem;
     font-weight: 400;
@@ -104,15 +104,15 @@ body {
 }
 
 .nav-menu .btn-highlight {
-    background-color: var(--accent-green);
+    background-color: #6fb33f;
     padding: 0.6rem 1.2rem;
     border-radius: 25px;
     font-weight: 500;
-    color: var(--text-light);
+    color: #ffffff;
 }
 
 .nav-menu .btn-highlight:hover {
-    background-color: var(--accent-green-hover);
+    background-color: #8fd15f;
     transform: translateY(-2px);
 }
 
@@ -122,20 +122,20 @@ body {
 }
 
 .nav-icon {
-    color: var(--text-light);
+    color: #ffffff;
     font-size: 1.1rem;
     transition: var(--transition-smooth);
 }
 
 .nav-icon:hover {
-    color: var(--accent-green-hover);
+    color: #8fd15f;
 }
 
 .mobile-menu-toggle {
     display: none;
     background: none;
     border: none;
-    color: var(--text-light);
+    color: #ffffff;
     font-size: 1.5rem;
     cursor: pointer;
 }
@@ -197,8 +197,8 @@ body {
     margin: 0 auto var(--spacing-lg);
     overflow: hidden;
     border-radius: 8px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-    border: 2px solid var(--accent-green-dark);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--border-dark);
 }
 
 .featured-image {
@@ -258,7 +258,7 @@ body {
     font-family: var(--font-body);
     font-size: 1rem;
     font-weight: 600;
-    color: var(--text-light);
+    color: #ffffff;
     text-decoration: none;
     padding: 0.8rem 2rem;
     background-color: var(--accent-green);
@@ -273,7 +273,7 @@ body {
     background-color: var(--accent-green-hover);
     border-color: var(--accent-green-hover);
     transform: translateY(-3px);
-    box-shadow: 0 5px 20px rgba(111, 179, 63, 0.4);
+    box-shadow: 0 5px 20px rgba(45, 74, 62, 0.4);
 }
 
 /* ===============================
@@ -293,14 +293,14 @@ body {
     background-color: var(--bg-card);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     transition: var(--transition-smooth);
     cursor: pointer;
     border: 1px solid var(--border-dark);
 }
 
 .blog-card:hover {
-    box-shadow: 0 8px 30px rgba(111, 179, 63, 0.3);
+    box-shadow: 0 8px 24px rgba(45, 74, 62, 0.15);
     transform: translateY(-6px);
     border-color: var(--accent-green);
 }
@@ -309,7 +309,7 @@ body {
     width: 100%;
     height: 250px;
     overflow: hidden;
-    background-color: var(--bg-dark);
+    background-color: var(--bg-card);
     position: relative;
 }
 
@@ -581,7 +581,7 @@ button:focus {
     margin: 0 auto var(--spacing-xxl);
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--border-dark);
 }
 
@@ -602,8 +602,7 @@ button:focus {
 .article-content p {
     margin-bottom: var(--spacing-lg);
     line-height: 1.8;
-    color: #d0d0d0;
-    /* Slightly softer white for reading */
+    color: var(--text-gray);
 }
 
 .article-content h2 {
@@ -626,7 +625,7 @@ button:focus {
 .article-content ol {
     margin-bottom: var(--spacing-lg);
     padding-left: var(--spacing-lg);
-    color: #d0d0d0;
+    color: var(--text-gray);
 }
 
 .article-content li {
@@ -649,7 +648,7 @@ button:focus {
     margin: var(--spacing-lg) 0;
     font-style: italic;
     color: var(--text-gray);
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(45, 74, 62, 0.05);
     padding: var(--spacing-md);
     border-radius: 0 8px 8px 0;
 }
@@ -661,7 +660,7 @@ button:focus {
     color: var(--text-gray);
     text-decoration: none;
     margin-bottom: var(--spacing-lg);
-    font-weight: 500;
+    font-weight: 700;
     transition: var(--transition-smooth);
 }
 
@@ -680,7 +679,7 @@ button:focus {
 
 /* CTA Section */
 .cta-section {
-    background-color: var(--card-bg, #1a1a1a);
+    background-color: var(--bg-card);
     padding: 2rem;
     margin-top: 3rem;
     border-radius: 8px;
@@ -712,7 +711,7 @@ button:focus {
 
 .cta-links a:hover,
 .cta-contact a:hover {
-    color: #fff;
+    color: var(--accent-green-hover);
     text-decoration: underline;
 }
 
@@ -763,7 +762,7 @@ button:focus {
 }
 
 .related-reads a:hover {
-    color: #fff;
+    color: var(--accent-green-hover);
     border-bottom-color: var(--accent-green);
 }
 
@@ -795,7 +794,7 @@ button:focus {
 
 .comment-form input,
 .comment-form textarea {
-    background-color: var(--card-bg, #1a1a1a);
+    background-color: #ffffff;
     border: 1px solid var(--border-dark);
     padding: 1rem;
     color: var(--text-light);
@@ -817,7 +816,7 @@ button:focus {
     padding: 0.8rem 2rem;
     font-size: 1.1rem;
     background-color: var(--accent-green);
-    color: #000;
+    color: #ffffff;
     border: none;
     font-family: 'Bebas Neue', sans-serif;
     cursor: pointer;
@@ -825,7 +824,7 @@ button:focus {
 }
 
 .comment-form button:hover {
-    background-color: #fff;
+    background-color: var(--accent-green-hover);
 }
 
 @media (max-width: 600px) {

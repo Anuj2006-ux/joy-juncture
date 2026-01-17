@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import API_URL from '../config';
 import './ProfilePopup.css';
 
 function ProfilePopup({ isOpen, onClose }) {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editingName, setEditingName] = useState(false);
@@ -472,6 +474,29 @@ function ProfilePopup({ isOpen, onClose }) {
                   <div className="field-value">
                     <span>{user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'N/A'}</span>
                   </div>
+                </div>
+
+                <div className="profile-actions">
+                  <button 
+                    className="profile-action-btn orders-btn" 
+                    onClick={() => { onClose(); navigate('/orders'); }}
+                  >
+                    <i className="fa-solid fa-box"></i> My Orders
+                  </button>
+                  
+                  <button 
+                    className="profile-action-btn wallet-btn" 
+                    onClick={() => { onClose(); navigate('/wallet'); }}
+                  >
+                    <i className="fa-solid fa-wallet"></i> Wallet & Points
+                  </button>
+
+                  <button 
+                    className="profile-action-btn address-btn" 
+                    onClick={() => { onClose(); navigate('/addresses'); }}
+                  >
+                    <i className="fa-solid fa-location-dot"></i> My Addresses
+                  </button>
                 </div>
 
                 <button 

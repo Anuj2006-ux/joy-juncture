@@ -28,7 +28,7 @@
             </header>
 
             <div class="article-image-wrapper">
-                <img src="blogs homepage/gameplayquestionindeadmansdeck.webp" alt="Dead Man's Deck FAQs"
+                <img src="gameplayquestionindeadmansdeck.webp" alt="Dead Man's Deck FAQs"
                     class="article-image">
             </div>
 
@@ -86,7 +86,7 @@
 
                 <div class="comment-section">
                     <h3>Leave a comment</h3>
-                    <form class="comment-form">
+                    <form class="comment-form" id="commentForm">
                         <div class="form-row">
                             <input type="text" placeholder="Name *" required>
                             <input type="email" placeholder="Email *" required>
@@ -98,6 +98,16 @@
             </div>
         </article>
     </main>
+
+    <script>
+        document.getElementById('commentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Clear form
+            this.reset();
+        });
+    </script>
 </body>
 
 </html>

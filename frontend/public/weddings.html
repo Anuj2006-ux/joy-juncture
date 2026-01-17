@@ -14,19 +14,20 @@
 
     <style>
         :root {
-            --bg-dark: #020a05;
-            --grid-line: rgba(247, 37, 133, 0.1);
-            --accent: #F72585;
-            /* Neon Pink */
-            --btn-color: #380e22;
-            --text-main: #FFFFFF;
-            --text-muted: #c09fb0;
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(247, 37, 133, 0.2);
+            --bg-light: #ffffff;
+            --grid-line: rgba(45, 74, 62, 0.1);
+            --accent: #2d4a3e;
+            /* Dark Green */
+            --accent-hover: #1f3530;
+            --btn-color: #2d4a3e;
+            --text-main: #1a1a1a;
+            --text-muted: #666666;
+            --glass: rgba(45, 74, 62, 0.05);
+            --border: rgba(45, 74, 62, 0.15);
         }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--bg-light);
             background-image:
                 linear-gradient(var(--grid-line) 1px, transparent 1px),
                 linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
@@ -55,7 +56,7 @@
             line-height: 1;
             text-transform: uppercase;
             margin: 0;
-            text-shadow: 0 0 30px rgba(247, 37, 133, 0.4);
+            text-shadow: 0 2px 10px rgba(45, 74, 62, 0.15);
             max-width: 1200px;
         }
 
@@ -82,9 +83,9 @@
         }
 
         .cta-btn:hover {
-            background: var(--accent);
+            background: var(--accent-hover);
             color: white;
-            box-shadow: 0 0 30px rgba(247, 37, 133, 0.4);
+            box-shadow: 0 4px 20px rgba(45, 74, 62, 0.3);
             transform: translateY(-5px);
         }
 
@@ -108,7 +109,7 @@
             font-family: 'Zilla Slab';
             font-size: 3rem;
             margin-bottom: 4rem;
-            color: white;
+            color: var(--text-main);
         }
 
         .event-card {
@@ -129,7 +130,7 @@
 
         .event-card:hover {
             border-color: var(--accent);
-            box-shadow: 0 0 30px rgba(247, 37, 133, 0.15);
+            box-shadow: 0 10px 30px rgba(45, 74, 62, 0.2);
         }
 
         .card-gallery {
@@ -201,14 +202,14 @@
         .meta-item div {
             font-size: 1.2rem;
             font-weight: 600;
-            color: white;
+            color: var(--text-main);
         }
 
         /* Modal */
         .modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(20px);
             z-index: 1000;
             display: flex;
@@ -225,13 +226,13 @@
         }
 
         .glass-card {
-            background: #050505;
+            background: #ffffff;
             border: 1px solid var(--border);
             padding: 3rem;
             border-radius: 20px;
             width: 100%;
             max-width: 450px;
-            box-shadow: 0 0 50px rgba(247, 37, 133, 0.1);
+            box-shadow: 0 10px 50px rgba(45, 74, 62, 0.2);
             transform: scale(0.95);
             transition: 0.4s;
         }
@@ -243,10 +244,10 @@
         input,
         select {
             width: 100%;
-            background: rgba(255, 255, 255, 0.03);
+            background: #f8f8f8;
             border: 1px solid var(--border);
             padding: 1rem;
-            color: white;
+            color: var(--text-main);
             margin-bottom: 1rem;
             border-radius: 8px;
             outline: none;
@@ -257,7 +258,7 @@
         input:focus,
         select:focus {
             border-color: var(--accent);
-            background: rgba(255, 255, 255, 0.05);
+            background: #ffffff;
         }
 
         .close-modal {
@@ -271,7 +272,69 @@
         }
 
         .close-modal:hover {
-            color: white;
+            color: var(--accent);
+        }
+
+        /* Success Popup */
+        .success-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: #ffffff;
+            border: 2px solid var(--accent);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s ease;
+            box-shadow: 0 20px 60px rgba(45, 74, 62, 0.3);
+            max-width: 450px;
+            width: 90%;
+        }
+
+        .success-popup.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .success-popup i {
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .success-popup h3 {
+            color: var(--text-main);
+            font-family: 'Zilla Slab';
+            font-size: 1.8rem;
+            margin: 0 0 1rem;
+        }
+
+        .success-popup p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin: 0 0 2rem;
+            font-size: 1rem;
+        }
+
+        .success-popup button {
+            background: var(--accent);
+            color: #ffffff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .success-popup button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
         }
 
         @media (max-width: 768px) {
@@ -294,7 +357,7 @@
             top: 20px;
             left: 20px;
             background: var(--accent);
-            color: #fff;
+            color: #ffffff;
             padding: 12px 24px;
             border-radius: 50px;
             font-weight: 700;
@@ -304,14 +367,14 @@
             gap: 8px;
             z-index: 1000;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(247, 37, 133, 0.3);
+            box-shadow: 0 4px 15px rgba(45, 74, 62, 0.3);
         }
 
         .home-btn:hover {
-            background: #fff;
-            color: var(--accent);
+            background: var(--accent-hover);
+            color: #ffffff;
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(247, 37, 133, 0.4);
+            box-shadow: 0 6px 20px rgba(45, 74, 62, 0.4);
         }
     </style>
 </head>
@@ -433,21 +496,30 @@
         <div class="glass-card" style="position: relative;">
             <i class="fas fa-times close-modal" onclick="closeModal()"></i>
             <h2 style="margin:0 0 2rem; font-family:'Zilla Slab'">WEDDING INQUIRY</h2>
-            <form>
+            <form id="bookingForm">
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                    <input type="text" placeholder="Partner 1">
-                    <input type="text" placeholder="Partner 2">
+                    <input type="text" placeholder="Partner 1" id="partner1" required>
+                    <input type="text" placeholder="Partner 2" id="partner2" required>
                 </div>
-                <input type="email" placeholder="Email Address">
-                <input type="date" style="color: #888;">
-                <select>
+                <input type="email" placeholder="Email Address" id="email" required>
+                <input type="date" style="color: #888;" id="weddingDate" required>
+                <select id="eventType" required>
+                    <option value="">Select Event Type</option>
                     <option>Reception Only</option>
                     <option>Full Wedding</option>
                     <option>After Party</option>
                 </select>
-                <button type="button" class="cta-btn" style="width:100%;">Check Availability</button>
+                <button type="button" class="cta-btn" style="width:100%;" onclick="submitBooking()">Check Availability</button>
             </form>
         </div>
+    </div>
+
+    <!-- Success Popup -->
+    <div class="success-popup" id="successPopup">
+        <i class="fas fa-check-circle"></i>
+        <h3>Request Accepted!</h3>
+        <p>Your request has been received. We will connect with you shortly on your Gmail.</p>
+        <button onclick="closeSuccessPopup()">Got It</button>
     </div>
 
     <!-- TILT JS -->
@@ -521,6 +593,29 @@
 
         function openModal() { document.getElementById('bookingModal').classList.add('active'); }
         function closeModal() { document.getElementById('bookingModal').classList.remove('active'); }
+        
+        function submitBooking() {
+            const partner1 = document.getElementById('partner1').value.trim();
+            const partner2 = document.getElementById('partner2').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const weddingDate = document.getElementById('weddingDate').value;
+            const eventType = document.getElementById('eventType').value;
+            
+            if (!partner1 || !partner2 || !email || !weddingDate || !eventType) {
+                alert('Please fill in all the details to proceed.');
+                return;
+            }
+            
+            closeModal();
+            setTimeout(() => {
+                document.getElementById('successPopup').classList.add('active');
+                document.getElementById('bookingForm').reset();
+            }, 300);
+        }
+        
+        function closeSuccessPopup() {
+            document.getElementById('successPopup').classList.remove('active');
+        }
 
         gsap.to(".floater", { y: -20, duration: 2, yoyo: true, repeat: -1, ease: "sine.inOut", stagger: 1 });
     </script>
