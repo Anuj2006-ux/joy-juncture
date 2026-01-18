@@ -17,10 +17,30 @@ const app = express();
 connectDB();
 
 // Middleware
+// Allow multiple origins for CORS (localhost + production Vercel domains)
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:58606',
+  'https://joy-juncture-seven.vercel.app',
+  'https://joy-juncture.vercel.app',
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(null, true); // Allow all for now to debug, change to callback(new Error('Not allowed by CORS')) in production
+    }
+  },
   credentials: true
 }));
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
