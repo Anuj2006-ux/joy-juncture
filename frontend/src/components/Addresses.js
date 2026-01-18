@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../config';
 import './Addresses.css';
 
 const Addresses = () => {
@@ -35,7 +36,7 @@ const Addresses = () => {
     const fetchAddresses = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/address', {
+            const response = await fetch(API_URL + '/api/address', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
@@ -80,10 +81,10 @@ const Addresses = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const url = editingAddress 
-                ? `http://localhost:5000/api/address/${editingAddress._id}`
-                : 'http://localhost:5000/api/address';
-            
+            const url = editingAddress
+                ? API_URL + `/api/address/${editingAddress._id}`
+                : API_URL + '/api/address';
+
             const response = await fetch(url, {
                 method: editingAddress ? 'PUT' : 'POST',
                 headers: {
@@ -132,7 +133,7 @@ const Addresses = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/address/${id}`, {
+            const response = await fetch(API_URL + `/api/address/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -151,7 +152,7 @@ const Addresses = () => {
     const handleSetDefault = async (id) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/address/${id}/default`, {
+            const response = await fetch(API_URL + `/api/address/${id}/default`, {
                 method: 'PATCH',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -211,7 +212,7 @@ const Addresses = () => {
                                     {address.addressLine2 && <p>{address.addressLine2}</p>}
                                     <p>{address.city}, {address.state} - {address.pincode}</p>
                                     <p className="address-phone"><i className="fas fa-phone"></i> {address.phone}</p>
-                                    
+
                                     <div className="address-actions">
                                         <button className="edit-btn" onClick={() => handleEdit(address)}>
                                             <i className="fas fa-edit"></i> Edit

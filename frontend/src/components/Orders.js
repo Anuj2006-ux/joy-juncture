@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../config';
 import './Orders.css';
 
 const Orders = () => {
@@ -21,13 +22,13 @@ const Orders = () => {
                 return;
             }
 
-            const response = await fetch('http://localhost:5000/api/orders', {
+            const response = await fetch(API_URL + '/api/orders', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
             const data = await response.json();
-            
+
             if (data.success) {
                 setOrders(data.orders);
             }
@@ -39,7 +40,7 @@ const Orders = () => {
     };
 
     const getStatusText = (status) => {
-        switch(status) {
+        switch (status) {
             case 'processing': return 'Processing - We are packing your order';
             case 'shipped': return 'Shipped - Expected soon';
             case 'delivered': return 'Delivered - Enjoy!';
@@ -77,7 +78,7 @@ const Orders = () => {
                     <div className="no-orders-icon">📦</div>
                     <h2>No Orders Yet</h2>
                     <p>You haven't placed any orders yet.</p>
-                    <button 
+                    <button
                         className="shop-now-btn"
                         onClick={() => navigate('/games')}
                     >
@@ -87,8 +88,8 @@ const Orders = () => {
             ) : (
                 <div className="orders-list">
                     {orders.map((order) => (
-                        <div 
-                            key={order._id} 
+                        <div
+                            key={order._id}
                             className={`order-card ${selectedOrder?._id === order._id ? 'expanded' : ''}`}
                             onClick={() => setSelectedOrder(selectedOrder?._id === order._id ? null : order)}
                         >
@@ -102,16 +103,16 @@ const Orders = () => {
                                 </div>
                             </div>
 
-                            <p className="status-message" style={{color: 'var(--joy-green)', fontSize: '0.9rem', marginBottom: '15px' }}>
+                            <p className="status-message" style={{ color: 'var(--joy-green)', fontSize: '0.9rem', marginBottom: '15px' }}>
                                 <i className="fas fa-truck"></i> {getStatusText(order.orderStatus)}
                             </p>
 
                             <div className="order-items-preview">
                                 <div className="items-images">
                                     {order.items.slice(0, 3).map((item, idx) => (
-                                        <img 
+                                        <img
                                             key={idx}
-                                            src={item.image || 'https://via.placeholder.com/60'} 
+                                            src={item.image || 'https://via.placeholder.com/60'}
                                             alt={item.title}
                                             className="item-preview-image"
                                         />
@@ -164,7 +165,7 @@ const Orders = () => {
                                             <p><strong>{order.shippingAddress?.name || order.shippingAddress?.fullName}</strong></p>
                                             <p>{order.shippingAddress?.address || order.shippingAddress?.addressLine1}</p>
                                             <p>
-                                                {order.shippingAddress?.city}, {order.shippingAddress?.state} - 
+                                                {order.shippingAddress?.city}, {order.shippingAddress?.state} -
                                                 {order.shippingAddress?.pincode || order.shippingAddress?.zipCode}
                                             </p>
                                             <p>Phone: {order.shippingAddress?.phone}</p>

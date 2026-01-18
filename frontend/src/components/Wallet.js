@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import API_URL from '../config';
 import './Wallet.css';
 
 const Wallet = () => {
@@ -26,13 +27,13 @@ const Wallet = () => {
     const fetchWalletData = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/wallet', {
+            const response = await fetch(API_URL + '/api/wallet', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
             const data = await response.json();
-            
+
             if (data.success) {
                 setWallet(data.wallet);
             }
@@ -46,13 +47,13 @@ const Wallet = () => {
     const fetchPointsHistory = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/wallet/history', {
+            const response = await fetch(API_URL + '/api/wallet/history', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
             const data = await response.json();
-            
+
             if (data.success) {
                 setHistory(data.history);
             }
@@ -64,17 +65,17 @@ const Wallet = () => {
     const claimDailyGameBonus = async () => {
         setClaimingBonus(true);
         setMessage({ type: '', text: '' });
-        
+
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/wallet/daily-game-bonus', {
+            const response = await fetch(API_URL + '/api/wallet/daily-game-bonus', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
             const data = await response.json();
-            
+
             if (data.success) {
                 setMessage({ type: 'success', text: data.message });
                 fetchWalletData();
@@ -133,7 +134,7 @@ Sign up now and start playing amazing games!
         if (minutes < 60) return `${minutes}m ago`;
         if (hours < 24) return `${hours}h ago`;
         if (days < 7) return `${days}d ago`;
-        
+
         return date.toLocaleDateString('en-IN', {
             day: 'numeric',
             month: 'short',
@@ -242,7 +243,7 @@ Sign up now and start playing amazing games!
                                 <p className="rule-desc">One-time bonus when you create an account</p>
                             </div>
                         </div>
-                        
+
                         <div className="rule-card daily">
                             <div className="rule-icon">🎮</div>
                             <div className="rule-content">
@@ -251,7 +252,7 @@ Sign up now and start playing amazing games!
                                 <p className="rule-desc">Play any game on our website daily</p>
                             </div>
                         </div>
-                        
+
                         <div className="rule-card referral">
                             <div className="rule-icon">🤝</div>
                             <div className="rule-content">
@@ -352,7 +353,7 @@ Sign up now and start playing amazing games!
                             <p className="rule-desc">One-time bonus when you create an account</p>
                         </div>
                     </div>
-                    
+
                     <div className="rule-card daily">
                         <div className="rule-icon">🎮</div>
                         <div className="rule-content">
@@ -360,7 +361,7 @@ Sign up now and start playing amazing games!
                             <p className="points-value">+10 Points/Day</p>
                             <p className="rule-desc">Play any game on our website daily</p>
                         </div>
-                        <button 
+                        <button
                             className="claim-btn"
                             onClick={claimDailyGameBonus}
                             disabled={claimingBonus}
@@ -368,7 +369,7 @@ Sign up now and start playing amazing games!
                             {claimingBonus ? 'Claiming...' : 'Claim Today'}
                         </button>
                     </div>
-                    
+
                     <div className="rule-card referral">
                         <div className="rule-icon">🤝</div>
                         <div className="rule-content">
@@ -378,7 +379,7 @@ Sign up now and start playing amazing games!
                         </div>
                     </div>
                 </div>
-                
+
                 {message.text && (
                     <div className={`message ${message.type}`}>
                         {message.text}
@@ -390,12 +391,12 @@ Sign up now and start playing amazing games!
             <div className="referral-section">
                 <h3>🔗 Your Referral Code</h3>
                 <p className="referral-desc">Share your code with friends. When they sign up, you get <strong>200 points</strong>!</p>
-                
+
                 <div className="referral-code-box">
                     <span className="referral-code">
                         {loading ? 'Loading...' : (wallet?.referralCode || 'Not available')}
                     </span>
-                    <button 
+                    <button
                         className="copy-btn"
                         onClick={copyReferralCode}
                         disabled={!wallet?.referralCode}
@@ -403,9 +404,9 @@ Sign up now and start playing amazing games!
                         {referralCopied ? '✓ Copied!' : '📋 Copy'}
                     </button>
                 </div>
-                
+
                 <div className="share-buttons">
-                    <a 
+                    <a
                         href={getWhatsAppShareLink()}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -443,7 +444,7 @@ Sign up now and start playing amazing games!
                         </div>
                     </div>
                 </div>
-                
+
                 {/* Discount Calculator */}
                 <div className="discount-calculator">
                     <h4>Your Current Discount Power</h4>

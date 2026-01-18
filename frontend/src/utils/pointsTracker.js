@@ -1,4 +1,6 @@
 // Point tracking utility for automatic time tracking
+import API_URL from '../config';
+
 class PointsTracker {
     constructor() {
         this.startTime = null;
@@ -10,9 +12,9 @@ class PointsTracker {
     // Start tracking website time
     startTracking() {
         if (this.intervalId) return; // Already tracking
-        
+
         this.startTime = Date.now();
-        
+
         // Send activity every 5 minutes
         this.intervalId = setInterval(() => {
             this.sendActivity();
@@ -25,7 +27,7 @@ class PointsTracker {
             clearInterval(this.intervalId);
             this.intervalId = null;
         }
-        
+
         // Send final activity
         if (this.startTime) {
             this.sendActivity();
@@ -42,13 +44,13 @@ class PointsTracker {
     // Stop tracking game play and send data
     async stopGameTracking() {
         if (!this.gameStartTime || !this.currentGameId) return;
-        
+
         const duration = Math.floor((Date.now() - this.gameStartTime) / 60000); // in minutes
-        
+
         if (duration > 0) {
             await this.sendGameActivity(this.currentGameId, duration);
         }
-        
+
         this.gameStartTime = null;
         this.currentGameId = null;
     }
@@ -56,13 +58,13 @@ class PointsTracker {
     // Send website activity to backend
     async sendActivity() {
         if (!this.startTime) return;
-        
+
         const duration = Math.floor((Date.now() - this.startTime) / 60000); // in minutes
-        
+
         if (duration < 5) return; // Minimum 5 minutes
-        
+
         try {
-            await fetch('http://localhost:5000/api/wallet/game-activity', {
+            await fetch(API_URL + '/api/wallet/game-activity', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -70,7 +72,7 @@ class PointsTracker {
                 credentials: 'include',
                 body: JSON.stringify({ duration })
             });
-            
+
             // Reset start time for next interval
             this.startTime = Date.now();
         } catch (error) {
@@ -81,7 +83,7 @@ class PointsTracker {
     // Send game-specific activity
     async sendGameActivity(gameId, duration) {
         try {
-            const response = await fetch('http://localhost:5000/api/wallet/game-activity', {
+            const response = await fetch(API_URL + '/api/wallet/game-activity', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -89,9 +91,9 @@ class PointsTracker {
                 credentials: 'include',
                 body: JSON.stringify({ gameId, duration })
             });
-            
+
             const data = await response.json();
-            
+
             if (data.success) {
                 return data.pointsEarned;
             }
@@ -109,14 +111,14 @@ const pointsTracker = new PointsTracker();
 export const initializePointsTracking = () => {
     // Check if user is logged in via token
     const token = localStorage.getItem('token');
-    
+
     if (!token) {
         // No token, user not logged in
         return;
     }
 
     // Verify token by calling profile endpoint
-    fetch('http://localhost:5000/api/auth/profile', { 
+    fetch(API_URL + '/api/auth/profile', {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -130,12 +132,12 @@ export const initializePointsTracking = () => {
         .then(data => {
             if (data.success && data.user) {
                 pointsTracker.startTracking();
-                
+
                 // Stop tracking on page unload
                 window.addEventListener('beforeunload', () => {
                     pointsTracker.stopTracking();
                 });
-                
+
                 // Stop tracking on visibility change
                 document.addEventListener('visibilitychange', () => {
                     if (document.hidden) {
