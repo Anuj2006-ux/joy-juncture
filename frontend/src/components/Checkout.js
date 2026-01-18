@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import API_URL from '../config';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -9,11 +10,11 @@ const Checkout = () => {
     const [wallet, setWallet] = useState(null);
     const [usePoints, setUsePoints] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
-    
+
     // Popup State
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [orderSuccessData, setOrderSuccessData] = useState(null);
-    
+
     // Address State
     const [savedAddresses, setSavedAddresses] = useState([]);
     const [selectedAddressId, setSelectedAddressId] = useState(null);
@@ -31,7 +32,7 @@ const Checkout = () => {
         isDefault: false
     });
     const [savingAddress, setSavingAddress] = useState(false);
-    
+
     const [paymentMethod, setPaymentMethod] = useState('card');
 
     // Payment Modal States
@@ -51,20 +52,20 @@ const Checkout = () => {
         const fetchData = async () => {
             try {
                 const token = localStorage.getItem('token');
-                
+
                 // Fetch all data in parallel for faster loading
                 const fetchPromises = [
-                    fetch('http://localhost:5000/api/cart', {
+                    fetch(API_URL + '/api/cart', {
                         headers: token ? { 'Authorization': `Bearer ${token}` } : {}
                     })
                 ];
 
                 if (token) {
                     fetchPromises.push(
-                        fetch('http://localhost:5000/api/wallet', {
+                        fetch(API_URL + '/api/wallet', {
                             headers: { 'Authorization': `Bearer ${token}` }
                         }),
-                        fetch('http://localhost:5000/api/address', {
+                        fetch(API_URL + '/api/address', {
                             headers: { 'Authorization': `Bearer ${token}` }
                         })
                     );
@@ -121,7 +122,7 @@ const Checkout = () => {
 
     const handleSaveNewAddress = async () => {
         // Validate required fields before sending
-        if (!newAddress.name || !newAddress.fullName || !newAddress.phone || 
+        if (!newAddress.name || !newAddress.fullName || !newAddress.phone ||
             !newAddress.addressLine1 || !newAddress.city || !newAddress.state || !newAddress.pincode) {
             alert('Please fill all required fields');
             return;
@@ -130,7 +131,7 @@ const Checkout = () => {
         setSavingAddress(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/address', {
+            const response = await fetch(API_URL + '/api/address', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,7 +143,7 @@ const Checkout = () => {
 
             if (data.success) {
                 // Refetch addresses to get updated list
-                const addressRes = await fetch('http://localhost:5000/api/address', {
+                const addressRes = await fetch(API_URL + '/api/address', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const addressData = await addressRes.json();
@@ -180,7 +181,7 @@ const Checkout = () => {
         if (!cart || !cart.items) return { subtotal: 0, discount: 0, total: 0, pointsUsed: 0 };
 
         const subtotal = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        
+
         let discount = 0;
         let pointsToRedeem = 0;
 
@@ -189,10 +190,10 @@ const Checkout = () => {
             const maxDiscount = Math.floor(subtotal * 0.5);
             // Available points
             const availablePoints = wallet.currentPoints;
-            
+
             // Actual points to use is the lesser of available points or max discount
             pointsToRedeem = Math.min(availablePoints, maxDiscount);
-            
+
             // 1 Point = ₹1 Discount
             discount = pointsToRedeem;
         }
@@ -213,10 +214,10 @@ const Checkout = () => {
         console.log('Payment Method:', paymentMethod);
         console.log('Cart:', cart);
         console.log('Selected Address ID:', selectedAddressId);
-        
+
         const token = localStorage.getItem('token');
         console.log('Token exists:', !!token);
-        
+
         if (!token) {
             alert('Please login to place an order');
             navigate('/login?redirect=checkout');
@@ -278,7 +279,7 @@ const Checkout = () => {
                 phone: selectedAddress.phone
             };
 
-            const response = await fetch('http://localhost:5000/api/orders', {
+            const response = await fetch(API_URL + '/api/orders', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -297,15 +298,15 @@ const Checkout = () => {
             if (data.success) {
                 // Clear cart immediately in the UI
                 setCart({ items: [] });
-                
+
                 // Close payment modals
                 setShowCardModal(false);
                 setShowUpiModal(false);
-                
+
                 // Reset payment details
                 setCardDetails({ cardNumber: '', cardName: '', expiry: '', cvv: '' });
                 setUpiId('');
-                
+
                 // Show Success Popup instead of redirect
                 setOrderSuccessData({
                     orderId: data.order.orderNumber || data.order._id.slice(-6).toUpperCase(),
@@ -328,25 +329,25 @@ const Checkout = () => {
     // Handle Card Payment
     const handleCardPayment = async (e) => {
         e.preventDefault();
-        
+
         // Validate card details
         if (!cardDetails.cardNumber || !cardDetails.cardName || !cardDetails.expiry || !cardDetails.cvv) {
             alert('Please fill all card details');
             return;
         }
-        
+
         if (cardDetails.cardNumber.replace(/\s/g, '').length !== 16) {
             alert('Please enter a valid 16-digit card number');
             return;
         }
-        
+
         if (cardDetails.cvv.length < 3) {
             alert('Please enter a valid CVV');
             return;
         }
 
         setPaymentProcessing(true);
-        
+
         // Simulate payment processing
         setTimeout(async () => {
             await processOrder();
@@ -356,7 +357,7 @@ const Checkout = () => {
     // Handle UPI Payment
     const handleUpiPayment = async (e) => {
         e.preventDefault();
-        
+
         // Validate UPI ID
         if (!upiId || !upiId.includes('@')) {
             alert('Please enter a valid UPI ID (e.g., yourname@upi)');
@@ -364,7 +365,7 @@ const Checkout = () => {
         }
 
         setPaymentProcessing(true);
-        
+
         // Simulate payment processing
         setTimeout(async () => {
             await processOrder();
@@ -397,12 +398,12 @@ const Checkout = () => {
     // Don't show empty cart if popup is visible (order just completed) or payment modal is open
     if ((!cart || !cart.items || cart.items.length === 0) && !showSuccessPopup && !showCardModal && !showUpiModal) {
         return (
-            <div className="checkout-container" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                <div className="empty-cart-message" style={{textAlign: 'center', padding: '60px 40px'}}>
-                    <div style={{fontSize: '5rem', marginBottom: '25px'}}>🛒</div>
-                    <h2 style={{fontSize: '2.5rem', marginBottom: '15px'}}>Your cart is empty</h2>
-                    <p style={{fontSize: '1.2rem', color: '#666', marginBottom: '30px'}}>Looks like you haven't added anything yet</p>
-                    <a href="/deals/gamepage.html" className="continue-shopping-btn" style={{fontSize: '1.1rem', padding: '15px 40px', display: 'inline-block', textDecoration: 'none'}}>Browse Games</a>
+            <div className="checkout-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="empty-cart-message" style={{ textAlign: 'center', padding: '60px 40px' }}>
+                    <div style={{ fontSize: '5rem', marginBottom: '25px' }}>🛒</div>
+                    <h2 style={{ fontSize: '2.5rem', marginBottom: '15px' }}>Your cart is empty</h2>
+                    <p style={{ fontSize: '1.2rem', color: '#666', marginBottom: '30px' }}>Looks like you haven't added anything yet</p>
+                    <a href="/deals/gamepage.html" className="continue-shopping-btn" style={{ fontSize: '1.1rem', padding: '15px 40px', display: 'inline-block', textDecoration: 'none' }}>Browse Games</a>
                 </div>
             </div>
         );
@@ -413,7 +414,7 @@ const Checkout = () => {
             {console.log('Rendering - showCardModal:', showCardModal, 'showUpiModal:', showUpiModal)}
             {/* Success Modal Popup - Shows after order placed */}
             {showSuccessPopup && (
-                <div className="modal-overlay" style={{zIndex: 99999}}>
+                <div className="modal-overlay" style={{ zIndex: 99999 }}>
                     <div className="success-modal">
                         <div className="success-icon">
                             <i className="fas fa-check-circle"></i>
@@ -430,7 +431,7 @@ const Checkout = () => {
                                 +{orderSuccessData.pointsEarned} Points Earned
                             </div>
                         )}
-                        <button 
+                        <button
                             className="modal-close-btn"
                             onClick={() => setShowSuccessPopup(false)}
                         >
@@ -442,7 +443,7 @@ const Checkout = () => {
 
             {/* Card Payment Modal */}
             {showCardModal && (
-                <div 
+                <div
                     onClick={() => setShowCardModal(false)}
                     style={{
                         position: 'fixed',
@@ -465,7 +466,7 @@ const Checkout = () => {
                         width: '90%',
                         boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
                     }}>
-                        <button 
+                        <button
                             style={{
                                 position: 'absolute',
                                 top: '15px',
@@ -479,65 +480,65 @@ const Checkout = () => {
                         >
                             ✕
                         </button>
-                        <h2 style={{textAlign: 'center', marginBottom: '20px', color: '#2d4a3e'}}>
+                        <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#2d4a3e' }}>
                             💳 Card Payment
                         </h2>
-                        <p style={{textAlign: 'center', fontSize: '1.2rem', marginBottom: '25px'}}>
-                            Amount: <strong style={{color: '#FF8C00'}}>₹{totals.total}</strong>
+                        <p style={{ textAlign: 'center', fontSize: '1.2rem', marginBottom: '25px' }}>
+                            Amount: <strong style={{ color: '#FF8C00' }}>₹{totals.total}</strong>
                         </p>
-                        
+
                         <form onSubmit={handleCardPayment}>
-                            <div style={{marginBottom: '15px'}}>
-                                <label style={{display: 'block', marginBottom: '5px', fontWeight: '600'}}>Card Number</label>
-                                <input 
+                            <div style={{ marginBottom: '15px' }}>
+                                <label style={{ display: 'block', marginBottom: '5px', fontWeight: '600' }}>Card Number</label>
+                                <input
                                     type="text"
                                     placeholder="1234 5678 9012 3456"
                                     maxLength="19"
                                     value={cardDetails.cardNumber}
-                                    onChange={(e) => setCardDetails({...cardDetails, cardNumber: formatCardNumber(e.target.value)})}
-                                    style={{width: '100%', padding: '12px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '1rem', boxSizing: 'border-box'}}
+                                    onChange={(e) => setCardDetails({ ...cardDetails, cardNumber: formatCardNumber(e.target.value) })}
+                                    style={{ width: '100%', padding: '12px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '1rem', boxSizing: 'border-box' }}
                                     required
                                 />
                             </div>
-                            <div style={{marginBottom: '15px'}}>
-                                <label style={{display: 'block', marginBottom: '5px', fontWeight: '600'}}>Cardholder Name</label>
-                                <input 
+                            <div style={{ marginBottom: '15px' }}>
+                                <label style={{ display: 'block', marginBottom: '5px', fontWeight: '600' }}>Cardholder Name</label>
+                                <input
                                     type="text"
                                     placeholder="John Doe"
                                     value={cardDetails.cardName}
-                                    onChange={(e) => setCardDetails({...cardDetails, cardName: e.target.value})}
-                                    style={{width: '100%', padding: '12px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '1rem', boxSizing: 'border-box'}}
+                                    onChange={(e) => setCardDetails({ ...cardDetails, cardName: e.target.value })}
+                                    style={{ width: '100%', padding: '12px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '1rem', boxSizing: 'border-box' }}
                                     required
                                 />
                             </div>
-                            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px'}}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
                                 <div>
-                                    <label style={{display: 'block', marginBottom: '5px', fontWeight: '600'}}>Expiry</label>
-                                    <input 
+                                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: '600' }}>Expiry</label>
+                                    <input
                                         type="text"
                                         placeholder="MM/YY"
                                         maxLength="5"
                                         value={cardDetails.expiry}
-                                        onChange={(e) => setCardDetails({...cardDetails, expiry: formatExpiry(e.target.value)})}
-                                        style={{width: '100%', padding: '12px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '1rem', boxSizing: 'border-box'}}
+                                        onChange={(e) => setCardDetails({ ...cardDetails, expiry: formatExpiry(e.target.value) })}
+                                        style={{ width: '100%', padding: '12px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '1rem', boxSizing: 'border-box' }}
                                         required
                                     />
                                 </div>
                                 <div>
-                                    <label style={{display: 'block', marginBottom: '5px', fontWeight: '600'}}>CVV</label>
-                                    <input 
+                                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: '600' }}>CVV</label>
+                                    <input
                                         type="password"
                                         placeholder="•••"
                                         maxLength="4"
                                         value={cardDetails.cvv}
-                                        onChange={(e) => setCardDetails({...cardDetails, cvv: e.target.value.replace(/\D/g, '')})}
-                                        style={{width: '100%', padding: '12px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '1rem', boxSizing: 'border-box'}}
+                                        onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value.replace(/\D/g, '') })}
+                                        style={{ width: '100%', padding: '12px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '1rem', boxSizing: 'border-box' }}
                                         required
                                     />
                                 </div>
                             </div>
-                            <button 
-                                type="submit" 
+                            <button
+                                type="submit"
                                 disabled={paymentProcessing}
                                 style={{
                                     width: '100%',
@@ -554,7 +555,7 @@ const Checkout = () => {
                                 {paymentProcessing ? '⏳ Processing...' : `🔒 Pay ₹${totals.total}`}
                             </button>
                         </form>
-                        <p style={{textAlign: 'center', marginTop: '15px', color: '#888', fontSize: '0.85rem'}}>
+                        <p style={{ textAlign: 'center', marginTop: '15px', color: '#888', fontSize: '0.85rem' }}>
                             🔐 Your payment is secure & encrypted
                         </p>
                     </div>
@@ -563,7 +564,7 @@ const Checkout = () => {
 
             {/* UPI Payment Modal */}
             {showUpiModal && (
-                <div 
+                <div
                     onClick={() => setShowUpiModal(false)}
                     style={{
                         position: 'fixed',
@@ -586,7 +587,7 @@ const Checkout = () => {
                         width: '90%',
                         boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
                     }}>
-                        <button 
+                        <button
                             style={{
                                 position: 'absolute',
                                 top: '15px',
@@ -600,35 +601,35 @@ const Checkout = () => {
                         >
                             ✕
                         </button>
-                        <h2 style={{textAlign: 'center', marginBottom: '20px', color: '#5f259f'}}>
+                        <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#5f259f' }}>
                             📱 UPI Payment
                         </h2>
-                        <p style={{textAlign: 'center', fontSize: '1.2rem', marginBottom: '25px'}}>
-                            Amount: <strong style={{color: '#FF8C00'}}>₹{totals.total}</strong>
+                        <p style={{ textAlign: 'center', fontSize: '1.2rem', marginBottom: '25px' }}>
+                            Amount: <strong style={{ color: '#FF8C00' }}>₹{totals.total}</strong>
                         </p>
-                        
+
                         <form onSubmit={handleUpiPayment}>
-                            <div style={{marginBottom: '20px'}}>
-                                <label style={{display: 'block', marginBottom: '8px', fontWeight: '600'}}>UPI ID</label>
-                                <input 
+                            <div style={{ marginBottom: '20px' }}>
+                                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>UPI ID</label>
+                                <input
                                     type="text"
                                     placeholder="yourname@upi"
                                     value={upiId}
                                     onChange={(e) => setUpiId(e.target.value)}
-                                    style={{width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '1rem', boxSizing: 'border-box'}}
+                                    style={{ width: '100%', padding: '14px', border: '2px solid #ddd', borderRadius: '8px', fontSize: '1rem', boxSizing: 'border-box' }}
                                     required
                                 />
                             </div>
-                            <div style={{marginBottom: '20px', textAlign: 'center'}}>
-                                <span style={{color: '#666', fontSize: '0.9rem'}}>Popular UPI Apps: </span>
-                                <span style={{display: 'inline-flex', gap: '10px', marginTop: '8px', flexWrap: 'wrap', justifyContent: 'center'}}>
-                                    <span style={{background: '#f0f0f0', padding: '5px 12px', borderRadius: '15px', fontSize: '0.85rem'}}>GPay</span>
-                                    <span style={{background: '#f0f0f0', padding: '5px 12px', borderRadius: '15px', fontSize: '0.85rem'}}>PhonePe</span>
-                                    <span style={{background: '#f0f0f0', padding: '5px 12px', borderRadius: '15px', fontSize: '0.85rem'}}>Paytm</span>
+                            <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+                                <span style={{ color: '#666', fontSize: '0.9rem' }}>Popular UPI Apps: </span>
+                                <span style={{ display: 'inline-flex', gap: '10px', marginTop: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                                    <span style={{ background: '#f0f0f0', padding: '5px 12px', borderRadius: '15px', fontSize: '0.85rem' }}>GPay</span>
+                                    <span style={{ background: '#f0f0f0', padding: '5px 12px', borderRadius: '15px', fontSize: '0.85rem' }}>PhonePe</span>
+                                    <span style={{ background: '#f0f0f0', padding: '5px 12px', borderRadius: '15px', fontSize: '0.85rem' }}>Paytm</span>
                                 </span>
                             </div>
-                            <button 
-                                type="submit" 
+                            <button
+                                type="submit"
                                 disabled={paymentProcessing}
                                 style={{
                                     width: '100%',
@@ -645,7 +646,7 @@ const Checkout = () => {
                                 {paymentProcessing ? '⏳ Processing...' : `✓ Pay ₹${totals.total}`}
                             </button>
                         </form>
-                        <p style={{textAlign: 'center', marginTop: '15px', color: '#888', fontSize: '0.85rem'}}>
+                        <p style={{ textAlign: 'center', marginTop: '15px', color: '#888', fontSize: '0.85rem' }}>
                             🔐 Your payment is secure & encrypted
                         </p>
                     </div>
@@ -654,323 +655,323 @@ const Checkout = () => {
 
             {/* Show empty cart or checkout form */}
             {(!cart || !cart.items || cart.items.length === 0) ? (
-                <div className="empty-cart-message" style={{gridColumn: 'span 2', textAlign: 'center', padding: '100px 40px'}}>
-                    <div style={{fontSize: '5rem', marginBottom: '25px'}}>✓</div>
-                    <h2 style={{fontSize: '2.5rem', marginBottom: '15px'}}>Order Complete!</h2>
-                    <p style={{fontSize: '1.2rem', color: '#666', marginBottom: '30px'}}>Your cart is now empty</p>
-                    <div style={{display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap'}}>
-                        <a href="/deals/gamepage.html" className="continue-shopping-btn" style={{fontSize: '1.1rem', padding: '15px 40px', display: 'inline-block', textDecoration: 'none'}}>Continue Shopping</a>
-                        <button onClick={() => navigate('/orders')} className="continue-shopping-btn" style={{fontSize: '1.1rem', padding: '15px 40px', background: '#2d4a3e', border: 'none', cursor: 'pointer', borderRadius: '50px', color: 'white'}}>Track Your Order</button>
+                <div className="empty-cart-message" style={{ gridColumn: 'span 2', textAlign: 'center', padding: '100px 40px' }}>
+                    <div style={{ fontSize: '5rem', marginBottom: '25px' }}>✓</div>
+                    <h2 style={{ fontSize: '2.5rem', marginBottom: '15px' }}>Order Complete!</h2>
+                    <p style={{ fontSize: '1.2rem', color: '#666', marginBottom: '30px' }}>Your cart is now empty</p>
+                    <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <a href="/deals/gamepage.html" className="continue-shopping-btn" style={{ fontSize: '1.1rem', padding: '15px 40px', display: 'inline-block', textDecoration: 'none' }}>Continue Shopping</a>
+                        <button onClick={() => navigate('/orders')} className="continue-shopping-btn" style={{ fontSize: '1.1rem', padding: '15px 40px', background: '#2d4a3e', border: 'none', cursor: 'pointer', borderRadius: '50px', color: 'white' }}>Track Your Order</button>
                     </div>
                 </div>
             ) : (
-            <>
-            {/* Left Column: Form */}
-            <div className="checkout-main">
-                <div>
-                    <div className="checkout-card">
-                        <h2><i className="fas fa-truck"></i> Delivery Address</h2>
-                        
-                        {/* Saved Addresses */}
-                        {savedAddresses.length > 0 && !showNewAddressForm && (
-                            <div className="saved-addresses-list">
-                                {savedAddresses.map(addr => (
-                                    <div 
-                                        key={addr._id} 
-                                        className={`saved-address-option ${selectedAddressId === addr._id ? 'selected' : ''}`}
-                                        onClick={() => setSelectedAddressId(addr._id)}
-                                    >
-                                        <div className="address-radio">
-                                            <input 
-                                                type="radio" 
-                                                name="deliveryAddress"
-                                                checked={selectedAddressId === addr._id}
-                                                onChange={() => setSelectedAddressId(addr._id)}
-                                            />
-                                        </div>
-                                        <div className="address-content">
-                                            <div className="address-label-row">
-                                                <span className="address-label">{addr.name}</span>
-                                                {addr.isDefault && <span className="default-tag">Default</span>}
+                <>
+                    {/* Left Column: Form */}
+                    <div className="checkout-main">
+                        <div>
+                            <div className="checkout-card">
+                                <h2><i className="fas fa-truck"></i> Delivery Address</h2>
+
+                                {/* Saved Addresses */}
+                                {savedAddresses.length > 0 && !showNewAddressForm && (
+                                    <div className="saved-addresses-list">
+                                        {savedAddresses.map(addr => (
+                                            <div
+                                                key={addr._id}
+                                                className={`saved-address-option ${selectedAddressId === addr._id ? 'selected' : ''}`}
+                                                onClick={() => setSelectedAddressId(addr._id)}
+                                            >
+                                                <div className="address-radio">
+                                                    <input
+                                                        type="radio"
+                                                        name="deliveryAddress"
+                                                        checked={selectedAddressId === addr._id}
+                                                        onChange={() => setSelectedAddressId(addr._id)}
+                                                    />
+                                                </div>
+                                                <div className="address-content">
+                                                    <div className="address-label-row">
+                                                        <span className="address-label">{addr.name}</span>
+                                                        {addr.isDefault && <span className="default-tag">Default</span>}
+                                                    </div>
+                                                    <p className="address-name">{addr.fullName}</p>
+                                                    <p>{addr.addressLine1}{addr.addressLine2 ? `, ${addr.addressLine2}` : ''}</p>
+                                                    <p>{addr.city}, {addr.state} - {addr.pincode}</p>
+                                                    <p className="address-phone"><i className="fas fa-phone"></i> {addr.phone}</p>
+                                                </div>
                                             </div>
-                                            <p className="address-name">{addr.fullName}</p>
-                                            <p>{addr.addressLine1}{addr.addressLine2 ? `, ${addr.addressLine2}` : ''}</p>
-                                            <p>{addr.city}, {addr.state} - {addr.pincode}</p>
-                                            <p className="address-phone"><i className="fas fa-phone"></i> {addr.phone}</p>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Add New Address Button/Form */}
+                                {!showNewAddressForm ? (
+                                    <button
+                                        type="button"
+                                        className="add-new-address-btn"
+                                        onClick={() => setShowNewAddressForm(true)}
+                                    >
+                                        <i className="fas fa-plus"></i> Add New Address
+                                    </button>
+                                ) : (
+                                    <div className="new-address-form">
+                                        <div className="new-address-header">
+                                            <h3>Add New Address</h3>
+                                            <button
+                                                type="button"
+                                                className="cancel-btn"
+                                                onClick={() => setShowNewAddressForm(false)}
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+
+                                        <div className="form-grid">
+                                            <div className="form-group full-width">
+                                                <label>Address Label *</label>
+                                                <input
+                                                    type="text"
+                                                    name="name"
+                                                    value={newAddress.name}
+                                                    onChange={handleNewAddressChange}
+                                                    placeholder="e.g., Home, Office"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Full Name *</label>
+                                                <input
+                                                    type="text"
+                                                    name="fullName"
+                                                    value={newAddress.fullName}
+                                                    onChange={handleNewAddressChange}
+                                                    placeholder="Receiver's name"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Phone *</label>
+                                                <input
+                                                    type="tel"
+                                                    name="phone"
+                                                    value={newAddress.phone}
+                                                    onChange={handleNewAddressChange}
+                                                    placeholder="10-digit number"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="form-group full-width">
+                                                <label>Address Line 1 *</label>
+                                                <input
+                                                    type="text"
+                                                    name="addressLine1"
+                                                    value={newAddress.addressLine1}
+                                                    onChange={handleNewAddressChange}
+                                                    placeholder="House No, Building, Street"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="form-group full-width">
+                                                <label>Address Line 2</label>
+                                                <input
+                                                    type="text"
+                                                    name="addressLine2"
+                                                    value={newAddress.addressLine2}
+                                                    onChange={handleNewAddressChange}
+                                                    placeholder="Landmark (optional)"
+                                                />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>City *</label>
+                                                <input
+                                                    type="text"
+                                                    name="city"
+                                                    value={newAddress.city}
+                                                    onChange={handleNewAddressChange}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>State *</label>
+                                                <input
+                                                    type="text"
+                                                    name="state"
+                                                    value={newAddress.state}
+                                                    onChange={handleNewAddressChange}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Pincode *</label>
+                                                <input
+                                                    type="text"
+                                                    name="pincode"
+                                                    value={newAddress.pincode}
+                                                    onChange={handleNewAddressChange}
+                                                    placeholder="6-digit"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Country</label>
+                                                <input
+                                                    type="text"
+                                                    name="country"
+                                                    value={newAddress.country}
+                                                    disabled
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <label className="checkbox-label">
+                                            <input
+                                                type="checkbox"
+                                                name="isDefault"
+                                                checked={newAddress.isDefault}
+                                                onChange={handleNewAddressChange}
+                                            />
+                                            Set as default address
+                                        </label>
+
+                                        <button
+                                            type="button"
+                                            className="save-new-address-btn"
+                                            onClick={handleSaveNewAddress}
+                                            disabled={savingAddress}
+                                        >
+                                            {savingAddress ? 'Saving...' : 'Save Address'}
+                                        </button>
+                                    </div>
+                                )}
+
+                                {/* No addresses message */}
+                                {savedAddresses.length === 0 && !showNewAddressForm && (
+                                    <p className="no-address-msg">
+                                        No saved addresses. Please add a delivery address.
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="checkout-card" style={{ marginTop: '30px' }}>
+                                <h2><i className="fas fa-credit-card"></i> Payment Method</h2>
+                                <div className="payment-methods">
+                                    <div
+                                        className={`payment-option ${paymentMethod === 'card' ? 'selected' : ''}`}
+                                        onClick={() => setPaymentMethod('card')}
+                                    >
+                                        <i className="fas fa-credit-card"></i>
+                                        <div>Card</div>
+                                    </div>
+                                    <div
+                                        className={`payment-option ${paymentMethod === 'upi' ? 'selected' : ''}`}
+                                        onClick={() => setPaymentMethod('upi')}
+                                    >
+                                        <i className="fas fa-mobile-alt"></i>
+                                        <div>UPI</div>
+                                    </div>
+                                    <div
+                                        className={`payment-option ${paymentMethod === 'cod' ? 'selected' : ''}`}
+                                        onClick={() => setPaymentMethod('cod')}
+                                    >
+                                        <i className="fas fa-money-bill-wave"></i>
+                                        <div>Cash on Delivery</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right Column: Summary */}
+                    <div className="checkout-sidebar">
+                        <div className="checkout-card">
+                            <h2>Order Summary</h2>
+
+                            <div className="order-items-preview">
+                                {cart.items.map((item, index) => (
+                                    <div key={index} className="preview-item">
+                                        <img src={item.image || 'https://via.placeholder.com/60'} alt={item.title} />
+                                        <div className="preview-details">
+                                            <h4>{item.title}</h4>
+                                            <span>Qty: {item.quantity} x ₹{item.price}</span>
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                        )}
 
-                        {/* Add New Address Button/Form */}
-                        {!showNewAddressForm ? (
-                            <button 
-                                type="button" 
-                                className="add-new-address-btn"
-                                onClick={() => setShowNewAddressForm(true)}
-                            >
-                                <i className="fas fa-plus"></i> Add New Address
-                            </button>
-                        ) : (
-                            <div className="new-address-form">
-                                <div className="new-address-header">
-                                    <h3>Add New Address</h3>
-                                    <button 
-                                        type="button" 
-                                        className="cancel-btn"
-                                        onClick={() => setShowNewAddressForm(false)}
-                                    >
-                                        Cancel
-                                    </button>
+                            {/* Points Redemption Section */}
+                            {wallet && wallet.currentPoints > 0 && (
+                                <div className="points-redemption">
+                                    <div className="points-header">
+                                        <h3><i className="fas fa-gem"></i> Joy Points</h3>
+                                        <span className="available-points">{wallet.currentPoints} Available</span>
+                                    </div>
+                                    <label className="points-toggle">
+                                        <input
+                                            type="checkbox"
+                                            className="toggle-checkbox"
+                                            checked={usePoints}
+                                            onChange={(e) => setUsePoints(e.target.checked)}
+                                        />
+                                        <span>Redeem Points for Discount</span>
+                                    </label>
+                                    {usePoints && (
+                                        <p className="points-info">
+                                            Using {totals.pointsUsed} points for ₹{totals.pointsUsed} off
+                                            (Max 50% of order value)
+                                        </p>
+                                    )}
                                 </div>
-                                
-                                <div className="form-grid">
-                                    <div className="form-group full-width">
-                                        <label>Address Label *</label>
-                                        <input 
-                                            type="text" 
-                                            name="name"
-                                            value={newAddress.name}
-                                            onChange={handleNewAddressChange}
-                                            placeholder="e.g., Home, Office"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Full Name *</label>
-                                        <input 
-                                            type="text" 
-                                            name="fullName"
-                                            value={newAddress.fullName}
-                                            onChange={handleNewAddressChange}
-                                            placeholder="Receiver's name"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Phone *</label>
-                                        <input 
-                                            type="tel" 
-                                            name="phone"
-                                            value={newAddress.phone}
-                                            onChange={handleNewAddressChange}
-                                            placeholder="10-digit number"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group full-width">
-                                        <label>Address Line 1 *</label>
-                                        <input 
-                                            type="text" 
-                                            name="addressLine1"
-                                            value={newAddress.addressLine1}
-                                            onChange={handleNewAddressChange}
-                                            placeholder="House No, Building, Street"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group full-width">
-                                        <label>Address Line 2</label>
-                                        <input 
-                                            type="text" 
-                                            name="addressLine2"
-                                            value={newAddress.addressLine2}
-                                            onChange={handleNewAddressChange}
-                                            placeholder="Landmark (optional)"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>City *</label>
-                                        <input 
-                                            type="text" 
-                                            name="city"
-                                            value={newAddress.city}
-                                            onChange={handleNewAddressChange}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>State *</label>
-                                        <input 
-                                            type="text" 
-                                            name="state"
-                                            value={newAddress.state}
-                                            onChange={handleNewAddressChange}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Pincode *</label>
-                                        <input 
-                                            type="text" 
-                                            name="pincode"
-                                            value={newAddress.pincode}
-                                            onChange={handleNewAddressChange}
-                                            placeholder="6-digit"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Country</label>
-                                        <input 
-                                            type="text" 
-                                            name="country"
-                                            value={newAddress.country}
-                                            disabled
-                                        />
-                                    </div>
-                                </div>
-                                
-                                <label className="checkbox-label">
-                                    <input 
-                                        type="checkbox"
-                                        name="isDefault"
-                                        checked={newAddress.isDefault}
-                                        onChange={handleNewAddressChange}
-                                    />
-                                    Set as default address
-                                </label>
-                                
-                                <button 
-                                    type="button" 
-                                    className="save-new-address-btn"
-                                    onClick={handleSaveNewAddress}
-                                    disabled={savingAddress}
-                                >
-                                    {savingAddress ? 'Saving...' : 'Save Address'}
-                                </button>
-                            </div>
-                        )}
-
-                        {/* No addresses message */}
-                        {savedAddresses.length === 0 && !showNewAddressForm && (
-                            <p className="no-address-msg">
-                                No saved addresses. Please add a delivery address.
-                            </p>
-                        )}
-                    </div>
-
-                    <div className="checkout-card" style={{marginTop: '30px'}}>
-                        <h2><i className="fas fa-credit-card"></i> Payment Method</h2>
-                        <div className="payment-methods">
-                            <div 
-                                className={`payment-option ${paymentMethod === 'card' ? 'selected' : ''}`}
-                                onClick={() => setPaymentMethod('card')}
-                            >
-                                <i className="fas fa-credit-card"></i>
-                                <div>Card</div>
-                            </div>
-                            <div 
-                                className={`payment-option ${paymentMethod === 'upi' ? 'selected' : ''}`}
-                                onClick={() => setPaymentMethod('upi')}
-                            >
-                                <i className="fas fa-mobile-alt"></i>
-                                <div>UPI</div>
-                            </div>
-                            <div 
-                                className={`payment-option ${paymentMethod === 'cod' ? 'selected' : ''}`}
-                                onClick={() => setPaymentMethod('cod')}
-                            >
-                                <i className="fas fa-money-bill-wave"></i>
-                                <div>Cash on Delivery</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Right Column: Summary */}
-            <div className="checkout-sidebar">
-                <div className="checkout-card">
-                    <h2>Order Summary</h2>
-                    
-                    <div className="order-items-preview">
-                        {cart.items.map((item, index) => (
-                            <div key={index} className="preview-item">
-                                <img src={item.image || 'https://via.placeholder.com/60'} alt={item.title} />
-                                <div className="preview-details">
-                                    <h4>{item.title}</h4>
-                                    <span>Qty: {item.quantity} x ₹{item.price}</span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Points Redemption Section */}
-                    {wallet && wallet.currentPoints > 0 && (
-                        <div className="points-redemption">
-                            <div className="points-header">
-                                <h3><i className="fas fa-gem"></i> Joy Points</h3>
-                                <span className="available-points">{wallet.currentPoints} Available</span>
-                            </div>
-                            <label className="points-toggle">
-                                <input 
-                                    type="checkbox" 
-                                    className="toggle-checkbox"
-                                    checked={usePoints}
-                                    onChange={(e) => setUsePoints(e.target.checked)}
-                                />
-                                <span>Redeem Points for Discount</span>
-                            </label>
-                            {usePoints && (
-                                <p className="points-info">
-                                    Using {totals.pointsUsed} points for ₹{totals.pointsUsed} off 
-                                    (Max 50% of order value)
-                                </p>
                             )}
+
+                            <div className="summary-row">
+                                <span>Subtotal</span>
+                                <span>₹{totals.subtotal}</span>
+                            </div>
+                            {totals.discount > 0 && (
+                                <div className="summary-row discount">
+                                    <span>Points Discount</span>
+                                    <span>- ₹{totals.discount}</span>
+                                </div>
+                            )}
+                            <div className="summary-row">
+                                <span>Shipping</span>
+                                <span>Free</span>
+                            </div>
+                            <div className="summary-row total">
+                                <span>Total</span>
+                                <span>₹{totals.total}</span>
+                            </div>
+
+                            <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '10px', textAlign: 'center' }}>
+                                You will earn {Math.floor(totals.total * 0.01)} points with this order!
+                            </p>
+
+                            <button
+                                type="button"
+                                className="place-order-btn"
+                                disabled={isProcessing}
+                                onClick={handlePlaceOrder}
+                            >
+                                {isProcessing ? 'Processing...' : `Place Order • ₹${totals.total}`}
+                            </button>
+
+                            <div style={{ textAlign: 'center', marginTop: '15px' }}>
+                                <a
+                                    href="/"
+                                    style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem' }}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        // Store flag to open cart on homepage
+                                        sessionStorage.setItem('openCart', 'true');
+                                        navigate('/');
+                                    }}
+                                >
+                                    ← Return to Cart
+                                </a>
+                            </div>
                         </div>
-                    )}
-
-                    <div className="summary-row">
-                        <span>Subtotal</span>
-                        <span>₹{totals.subtotal}</span>
                     </div>
-                    {totals.discount > 0 && (
-                        <div className="summary-row discount">
-                            <span>Points Discount</span>
-                            <span>- ₹{totals.discount}</span>
-                        </div>
-                    )}
-                    <div className="summary-row">
-                        <span>Shipping</span>
-                        <span>Free</span>
-                    </div>
-                    <div className="summary-row total">
-                        <span>Total</span>
-                        <span>₹{totals.total}</span>
-                    </div>
-
-                    <p style={{fontSize: '0.8rem', color: '#666', marginTop: '10px', textAlign: 'center'}}>
-                        You will earn {Math.floor(totals.total * 0.01)} points with this order!
-                    </p>
-
-                    <button 
-                        type="button" 
-                        className="place-order-btn"
-                        disabled={isProcessing}
-                        onClick={handlePlaceOrder}
-                    >
-                        {isProcessing ? 'Processing...' : `Place Order • ₹${totals.total}`}
-                    </button>
-                    
-                    <div style={{textAlign: 'center', marginTop: '15px'}}>
-                        <a 
-                            href="/" 
-                            style={{color: '#666', textDecoration: 'none', fontSize: '0.9rem'}}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                // Store flag to open cart on homepage
-                                sessionStorage.setItem('openCart', 'true');
-                                navigate('/');
-                            }}
-                        >
-                            ← Return to Cart
-                        </a>
-                    </div>
-                </div>
-            </div>
-            </>
+                </>
             )}
         </div>
     );
