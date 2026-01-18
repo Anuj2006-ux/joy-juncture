@@ -382,9 +382,9 @@ function Homepage() {
             <p>Card games for family & friends. Cozy, social and endlessly replayable.</p>
             <button className="card-cta confetti-btn" onClick={(e) => {
               handleConfettiClick(e);
-              const playStyleSection = document.querySelector('.section-title h2');
-              if (playStyleSection && playStyleSection.textContent.includes('Choose Your Play Style')) {
-                const y = playStyleSection.getBoundingClientRect().top + window.pageYOffset - 40; // adjust offset as needed
+              const playFreeSection = document.querySelector('.free-games-section');
+              if (playFreeSection) {
+                const y = playFreeSection.getBoundingClientRect().top + window.pageYOffset - 40;
                 window.scrollTo({ top: y, behavior: 'smooth' });
               }
             }}>Explore</button>
@@ -396,7 +396,7 @@ function Homepage() {
             </div>
             <h3>Play Together (Live)</h3>
             <p>Join our exclusive game nights — laughter guaranteed.</p>
-            <button className="card-cta confetti-btn" onClick={handleConfettiClick}>Join Now</button>
+            <button className="card-cta confetti-btn" onClick={(e) => { handleConfettiClick(e); navigate('/events'); }}>Join Now</button>
           </div>
           <div className="style-card" tabIndex="0">
             <span className="badge">Events</span>
@@ -405,7 +405,7 @@ function Homepage() {
             </div>
             <h3>Play for Occasions</h3>
             <p>Perfect for weddings, parties & special celebrations.</p>
-            <button className="card-cta confetti-btn" onClick={handleConfettiClick}>Plan an Event</button>
+            <button className="card-cta confetti-btn" onClick={(e) => { handleConfettiClick(e); navigate('/events'); }}>Plan an Event</button>
           </div>
           <div className="style-card" tabIndex="0">
             <span className="badge">Top Pick</span>
