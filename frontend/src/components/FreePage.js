@@ -4,8 +4,12 @@ import API_URL from '../config';
 import './FreePage.css';
 
 // Import fallback images
-import freeChessImg from '../images/free_chess.png';
-import freeSudokuImg from '../images/free_sudoku.png';
+import gameMemoryImg from '../images/game_memory.svg';
+import gameSweeperImg from '../images/game_sweeper.svg';
+import gamePuzzleImg from '../images/game_puzzle.svg';
+import gameTicTacToeImg from '../images/game_tictactoe.svg';
+import gameSnakeImg from '../images/game_snake.svg';
+import gameColorushImg from '../images/game_colorush.svg';
 
 const FreePage = () => {
   const [freeGames, setFreeGames] = useState([]);
@@ -14,24 +18,60 @@ const FreePage = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const searchRef = useRef(null);
 
-  // Fallback free games (Chess and Sudoku)
+  // Fallback free games
   const fallbackFreeGames = [
     {
-      _id: 'chess-1',
-      title: 'Chess',
-      description: 'Play the classic game of chess! Challenge your mind with strategic moves.',
-      image: freeChessImg,
-      gameUrl: '/games/game1/game1.html',
+      _id: 'memory-1',
+      title: 'Memory Match',
+      description: 'Match pairs of cards to test your memory! Find all matching pairs to win.',
+      image: gameMemoryImg,
+      gameUrl: '/games/memory-match/index.html',
       rating: 4.8,
       isActive: true
     },
     {
-      _id: 'sudoku-1',
-      title: 'Sudoku',
-      description: 'Test your logic skills with this addictive number puzzle game!',
-      image: freeSudokuImg,
-      gameUrl: '/games/game2/game2.html',
+      _id: 'sweeper-1',
+      title: 'Gem Sweeper',
+      description: 'Find all the gems without hitting the bombs! A classic puzzle challenge.',
+      image: gameSweeperImg,
+      gameUrl: '/games/gem-sweeper/index.html',
+      rating: 4.7,
+      isActive: true
+    },
+    {
+      _id: 'puzzle-1',
+      title: 'Puzzle Slider',
+      description: 'Slide the tiles to arrange numbers in order. How fast can you solve it?',
+      image: gamePuzzleImg,
+      gameUrl: '/games/puzzle-slider/index.html',
+      rating: 4.6,
+      isActive: true
+    },
+    {
+      _id: 'tictactoe-1',
+      title: 'Tic Tac Toe',
+      description: 'The classic X and O game! Play against AI or challenge a friend.',
+      image: gameTicTacToeImg,
+      gameUrl: '/games/tic-tac-toe/index.html',
       rating: 4.5,
+      isActive: true
+    },
+    {
+      _id: 'snake-1',
+      title: 'Snake Game',
+      description: 'Control the snake and eat food to grow! Avoid hitting walls and yourself.',
+      image: gameSnakeImg,
+      gameUrl: '/games/snake-game/index.html',
+      rating: 4.9,
+      isActive: true
+    },
+    {
+      _id: 'colorush-1',
+      title: 'Color Rush',
+      description: 'Test your brain! Match the COLOR of the word, not what it says.',
+      image: gameColorushImg,
+      gameUrl: '/games/color-rush/index.html',
+      rating: 4.7,
       isActive: true
     }
   ];
@@ -98,10 +138,10 @@ const FreePage = () => {
   if (loading) {
     return (
       <div className="free-page-container">
-        <div className="content-area" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-          <div style={{ textAlign: 'center', color: '#aaa' }}>
-            <div style={{ fontSize: '2rem', marginBottom: '10px' }}>🎮</div>
-            <p>Loading games...</p>
+        <div className="content-area">
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p className="loading-text">Loading games...</p>
           </div>
         </div>
       </div>
@@ -166,11 +206,12 @@ const FreePage = () => {
 
       <div className="content-area">
         <h1 className="page-title">Free Games</h1>
+        <p className="page-subtitle">Play these fun games for free - no purchase required!</p>
         {filteredGames.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', color: '#aaa' }}>
-            <div style={{ fontSize: '4rem', marginBottom: '20px' }}>🎮</div>
-            <h2 style={{ color: 'white', marginBottom: '10px' }}>No Games Found</h2>
-            <p>Try a different search or check back later for free games!</p>
+          <div className="empty-state">
+            <i className="fa-solid fa-gamepad"></i>
+            <h3>No Games Found</h3>
+            <p>Try a different search or check back later for more games!</p>
           </div>
         ) : (
           <div className="cards-container">

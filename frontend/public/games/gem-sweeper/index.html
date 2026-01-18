@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gem Sweeper - Joy Juncture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      color: #fff;
+    }
+
+    .game-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .game-header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .game-stats {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px 25px;
+      border-radius: 25px;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat span {
+      color: #f093fb;
+      font-weight: 600;
+    }
+
+    .difficulty-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .diff-btn {
+      padding: 8px 20px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .diff-btn.active {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      border-color: transparent;
+    }
+
+    .diff-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .diff-btn.active:hover {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .game-board {
+      display: grid;
+      gap: 3px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .cell {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      transition: all 0.2s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .cell:hover:not(.revealed):not(.flagged) {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .cell.revealed {
+      background: rgba(255, 255, 255, 0.1);
+      cursor: default;
+    }
+
+    .cell.revealed.mine {
+      background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+    }
+
+    .cell.flagged {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .cell.revealed[data-count="1"] { color: #4fc3f7; }
+    .cell.revealed[data-count="2"] { color: #81c784; }
+    .cell.revealed[data-count="3"] { color: #ffb74d; }
+    .cell.revealed[data-count="4"] { color: #9575cd; }
+    .cell.revealed[data-count="5"] { color: #f06292; }
+    .cell.revealed[data-count="6"] { color: #4dd0e1; }
+    .cell.revealed[data-count="7"] { color: #fff; }
+    .cell.revealed[data-count="8"] { color: #bdbdbd; }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 25px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      border: 2px solid rgba(240, 147, 251, 0.3);
+      animation: bounceIn 0.5s ease;
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      70% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-content h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    .modal-content.win h2 { color: #81c784; }
+    .modal-content.lose h2 { color: #f5576c; }
+
+    .modal-content p {
+      color: #aaa;
+      margin-bottom: 20px;
+    }
+
+    .instructions {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px 25px;
+      border-radius: 15px;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    @media (max-width: 500px) {
+      .cell {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+      }
+      
+      .game-header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-header">
+    <h1>💎 Gem Sweeper</h1>
+    <p>Find all gems without hitting the bombs!</p>
+  </div>
+
+  <div class="game-stats">
+    <div class="stat">💣 Bombs: <span id="bombs">10</span></div>
+    <div class="stat">🚩 Flags: <span id="flags">0</span></div>
+    <div class="stat">⏱️ Time: <span id="timer">0:00</span></div>
+  </div>
+
+  <div class="difficulty-selector">
+    <button class="diff-btn active" onclick="setDifficulty('easy')">Easy</button>
+    <button class="diff-btn" onclick="setDifficulty('medium')">Medium</button>
+    <button class="diff-btn" onclick="setDifficulty('hard')">Hard</button>
+  </div>
+
+  <div class="game-board" id="gameBoard"></div>
+
+  <div class="instructions">
+    <strong>How to play:</strong> Left-click to reveal • Right-click to flag
+  </div>
+
+  <div class="buttons">
+    <button class="btn btn-primary" onclick="restartGame()">New Game</button>
+    <button class="btn btn-secondary" onclick="window.location.href='/'">Back Home</button>
+  </div>
+
+  <div class="modal" id="gameModal">
+    <div class="modal-content" id="modalContent">
+      <h2 id="modalTitle">Game Over</h2>
+      <p id="modalText">Better luck next time!</p>
+      <button class="btn btn-primary" onclick="restartGame()">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    const difficulties = {
+      easy: { rows: 8, cols: 8, mines: 10 },
+      medium: { rows: 10, cols: 10, mines: 20 },
+      hard: { rows: 12, cols: 12, mines: 35 }
+    };
+
+    let currentDifficulty = 'easy';
+    let board = [];
+    let revealed = [];
+    let flagged = [];
+    let gameOver = false;
+    let gameStarted = false;
+    let timerInterval = null;
+    let seconds = 0;
+    let flagCount = 0;
+
+    function setDifficulty(diff) {
+      currentDifficulty = diff;
+      document.querySelectorAll('.diff-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      restartGame();
+    }
+
+    function createBoard() {
+      const { rows, cols, mines } = difficulties[currentDifficulty];
+      const boardEl = document.getElementById('gameBoard');
+      boardEl.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+      boardEl.innerHTML = '';
+
+      board = Array(rows).fill().map(() => Array(cols).fill(0));
+      revealed = Array(rows).fill().map(() => Array(cols).fill(false));
+      flagged = Array(rows).fill().map(() => Array(cols).fill(false));
+
+      // Place mines
+      let minesPlaced = 0;
+      while (minesPlaced < mines) {
+        const r = Math.floor(Math.random() * rows);
+        const c = Math.floor(Math.random() * cols);
+        if (board[r][c] !== -1) {
+          board[r][c] = -1;
+          minesPlaced++;
+        }
+      }
+
+      // Calculate numbers
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (board[r][c] === -1) continue;
+          let count = 0;
+          for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+              const nr = r + dr, nc = c + dc;
+              if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && board[nr][nc] === -1) {
+                count++;
+              }
+            }
+          }
+          board[r][c] = count;
+        }
+      }
+
+      // Create cells
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cell = document.createElement('button');
+          cell.className = 'cell';
+          cell.dataset.row = r;
+          cell.dataset.col = c;
+          cell.addEventListener('click', () => revealCell(r, c));
+          cell.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            toggleFlag(r, c);
+          });
+          boardEl.appendChild(cell);
+        }
+      }
+
+      document.getElementById('bombs').textContent = mines;
+      document.getElementById('flags').textContent = '0';
+    }
+
+    function revealCell(r, c) {
+      if (gameOver || revealed[r][c] || flagged[r][c]) return;
+
+      if (!gameStarted) {
+        startTimer();
+        gameStarted = true;
+      }
+
+      const { rows, cols } = difficulties[currentDifficulty];
+      revealed[r][c] = true;
+      const cell = getCell(r, c);
+      cell.classList.add('revealed');
+
+      if (board[r][c] === -1) {
+        cell.classList.add('mine');
+        cell.textContent = '💣';
+        endGame(false);
+        return;
+      }
+
+      if (board[r][c] > 0) {
+        cell.textContent = board[r][c];
+        cell.dataset.count = board[r][c];
+      } else {
+        // Reveal adjacent cells
+        for (let dr = -1; dr <= 1; dr++) {
+          for (let dc = -1; dc <= 1; dc++) {
+            const nr = r + dr, nc = c + dc;
+            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+              revealCell(nr, nc);
+            }
+          }
+        }
+      }
+
+      checkWin();
+    }
+
+    function toggleFlag(r, c) {
+      if (gameOver || revealed[r][c]) return;
+
+      const cell = getCell(r, c);
+      flagged[r][c] = !flagged[r][c];
+      
+      if (flagged[r][c]) {
+        cell.classList.add('flagged');
+        cell.textContent = '🚩';
+        flagCount++;
+      } else {
+        cell.classList.remove('flagged');
+        cell.textContent = '';
+        flagCount--;
+      }
+      
+      document.getElementById('flags').textContent = flagCount;
+    }
+
+    function getCell(r, c) {
+      const { cols } = difficulties[currentDifficulty];
+      return document.querySelectorAll('.cell')[r * cols + c];
+    }
+
+    function checkWin() {
+      const { rows, cols, mines } = difficulties[currentDifficulty];
+      let revealedCount = 0;
+      
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (revealed[r][c]) revealedCount++;
+        }
+      }
+
+      if (revealedCount === rows * cols - mines) {
+        endGame(true);
+      }
+    }
+
+    function endGame(won) {
+      gameOver = true;
+      clearInterval(timerInterval);
+
+      const { rows, cols } = difficulties[currentDifficulty];
+      
+      // Reveal all mines
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (board[r][c] === -1) {
+            const cell = getCell(r, c);
+            cell.classList.add('revealed', 'mine');
+            cell.textContent = won ? '💎' : '💣';
+          }
+        }
+      }
+
+      const modal = document.getElementById('gameModal');
+      const content = document.getElementById('modalContent');
+      const title = document.getElementById('modalTitle');
+      const text = document.getElementById('modalText');
+
+      content.className = 'modal-content ' + (won ? 'win' : 'lose');
+      title.textContent = won ? '🎉 You Won!' : '💥 Game Over!';
+      text.textContent = won 
+        ? `You found all gems in ${document.getElementById('timer').textContent}!` 
+        : 'You hit a bomb! Try again.';
+      
+      modal.classList.add('show');
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        seconds++;
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    function restartGame() {
+      clearInterval(timerInterval);
+      document.getElementById('gameModal').classList.remove('show');
+      gameOver = false;
+      gameStarted = false;
+      seconds = 0;
+      flagCount = 0;
+      document.getElementById('timer').textContent = '0:00';
+      createBoard();
+    }
+
+    createBoard();
+  </script>
+</body>
+</html>

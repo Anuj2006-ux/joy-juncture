@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puzzle Slider - Joy Juncture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      color: #fff;
+    }
+
+    .game-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .game-header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .game-stats {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px 25px;
+      border-radius: 25px;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat span {
+      color: #38ef7d;
+      font-weight: 600;
+    }
+
+    .size-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .size-btn {
+      padding: 8px 20px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .size-btn.active {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      border-color: transparent;
+    }
+
+    .size-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .size-btn.active:hover {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    }
+
+    .game-board {
+      display: grid;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .tile {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #fff;
+      transition: all 0.2s ease;
+      font-family: 'Poppins', sans-serif;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .tile:hover:not(.empty) {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    }
+
+    .tile.empty {
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: none;
+      cursor: default;
+    }
+
+    .tile.correct {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      box-shadow: 0 4px 15px rgba(56, 239, 125, 0.3);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 25px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(56, 239, 125, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      border: 2px solid rgba(56, 239, 125, 0.3);
+      animation: bounceIn 0.5s ease;
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      70% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-content h2 {
+      font-size: 2rem;
+      color: #38ef7d;
+      margin-bottom: 15px;
+    }
+
+    .modal-content p {
+      color: #aaa;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 500px) {
+      .tile {
+        width: 60px;
+        height: 60px;
+        font-size: 1.4rem;
+      }
+      
+      .game-header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-header">
+    <h1>🧩 Puzzle Slider</h1>
+    <p>Arrange numbers in order!</p>
+  </div>
+
+  <div class="game-stats">
+    <div class="stat">Moves: <span id="moves">0</span></div>
+    <div class="stat">Time: <span id="timer">0:00</span></div>
+  </div>
+
+  <div class="size-selector">
+    <button class="size-btn active" onclick="setSize(3)">3×3</button>
+    <button class="size-btn" onclick="setSize(4)">4×4</button>
+    <button class="size-btn" onclick="setSize(5)">5×5</button>
+  </div>
+
+  <div class="game-board" id="gameBoard"></div>
+
+  <div class="buttons">
+    <button class="btn btn-primary" onclick="shuffleBoard()">Shuffle</button>
+    <button class="btn btn-secondary" onclick="window.location.href='/'">Back Home</button>
+  </div>
+
+  <div class="modal" id="winModal">
+    <div class="modal-content">
+      <h2>🎉 Puzzle Solved!</h2>
+      <p>Completed in <span id="finalMoves">0</span> moves and <span id="finalTime">0:00</span></p>
+      <button class="btn btn-primary" onclick="shuffleBoard()">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    let size = 3;
+    let tiles = [];
+    let emptyIndex = 0;
+    let moves = 0;
+    let gameStarted = false;
+    let timerInterval = null;
+    let seconds = 0;
+
+    function setSize(newSize) {
+      size = newSize;
+      document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      initBoard();
+    }
+
+    function initBoard() {
+      clearInterval(timerInterval);
+      gameStarted = false;
+      moves = 0;
+      seconds = 0;
+      document.getElementById('moves').textContent = '0';
+      document.getElementById('timer').textContent = '0:00';
+      document.getElementById('winModal').classList.remove('show');
+
+      const total = size * size;
+      tiles = Array.from({ length: total - 1 }, (_, i) => i + 1);
+      tiles.push(0); // Empty tile
+      emptyIndex = total - 1;
+
+      renderBoard();
+    }
+
+    function renderBoard() {
+      const board = document.getElementById('gameBoard');
+      board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+      board.innerHTML = '';
+
+      const solution = [...Array(size * size - 1).keys()].map(i => i + 1);
+      solution.push(0);
+
+      tiles.forEach((tile, index) => {
+        const tileEl = document.createElement('button');
+        tileEl.className = 'tile';
+        
+        if (tile === 0) {
+          tileEl.classList.add('empty');
+        } else {
+          tileEl.textContent = tile;
+          // Check if tile is in correct position
+          if (tile === solution[index]) {
+            tileEl.classList.add('correct');
+          }
+        }
+        
+        tileEl.addEventListener('click', () => moveTile(index));
+        board.appendChild(tileEl);
+      });
+    }
+
+    function moveTile(index) {
+      if (!canMove(index)) return;
+
+      if (!gameStarted) {
+        startTimer();
+        gameStarted = true;
+      }
+
+      // Swap tiles
+      [tiles[index], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[index]];
+      emptyIndex = index;
+      moves++;
+      document.getElementById('moves').textContent = moves;
+
+      renderBoard();
+      checkWin();
+    }
+
+    function canMove(index) {
+      const row = Math.floor(index / size);
+      const col = index % size;
+      const emptyRow = Math.floor(emptyIndex / size);
+      const emptyCol = emptyIndex % size;
+
+      return (
+        (Math.abs(row - emptyRow) === 1 && col === emptyCol) ||
+        (Math.abs(col - emptyCol) === 1 && row === emptyRow)
+      );
+    }
+
+    function shuffleBoard() {
+      initBoard();
+      
+      // Perform many random valid moves to shuffle
+      for (let i = 0; i < size * size * 100; i++) {
+        const validMoves = getValidMoves();
+        const randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
+        [tiles[randomMove], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[randomMove]];
+        emptyIndex = randomMove;
+      }
+
+      renderBoard();
+    }
+
+    function getValidMoves() {
+      const moves = [];
+      const row = Math.floor(emptyIndex / size);
+      const col = emptyIndex % size;
+
+      if (row > 0) moves.push(emptyIndex - size);
+      if (row < size - 1) moves.push(emptyIndex + size);
+      if (col > 0) moves.push(emptyIndex - 1);
+      if (col < size - 1) moves.push(emptyIndex + 1);
+
+      return moves;
+    }
+
+    function checkWin() {
+      const solution = [...Array(size * size - 1).keys()].map(i => i + 1);
+      solution.push(0);
+
+      if (tiles.every((tile, index) => tile === solution[index])) {
+        clearInterval(timerInterval);
+        document.getElementById('finalMoves').textContent = moves;
+        document.getElementById('finalTime').textContent = document.getElementById('timer').textContent;
+        document.getElementById('winModal').classList.add('show');
+      }
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        seconds++;
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    initBoard();
+  </script>
+</body>
+</html>

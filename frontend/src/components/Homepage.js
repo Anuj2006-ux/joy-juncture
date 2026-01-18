@@ -8,8 +8,10 @@ import playHomeImg from '../images/play_home.png';
 import playLiveImg from '../images/play_live.png';
 import playOccasionsImg from '../images/play_occasions.png';
 import playEarnImg from '../images/play_earn.png';
-import freeChessImg from '../images/free_chess.png';
-import freeSudokuImg from '../images/free_sudoku.png';
+import gameMemoryImg from '../images/game_memory.svg';
+import gameSweeperImg from '../images/game_sweeper.svg';
+import gamePuzzleImg from '../images/game_puzzle.svg';
+import gameTicTacToeImg from '../images/game_tictactoe.svg';
 
 function Homepage() {
   const navigate = useNavigate();
@@ -473,20 +475,38 @@ function Homepage() {
         <div className="free-games-grid">
           <div className="free-game-card">
             <div className="free-game-image">
-              <img src={freeChessImg} alt="Chess" />
+              <img src={gameMemoryImg} alt="Memory Match" />
             </div>
             <div className="free-game-info">
-              <h3>Chess</h3>
-              <button className="free-game-play-btn" onClick={() => window.location.href = '/games/game1/game1.html'}>Play Now</button>
+              <h3>Memory Match</h3>
+              <button className="free-game-play-btn" onClick={() => window.location.href = '/games/memory-match/index.html'}>Play Now</button>
             </div>
           </div>
           <div className="free-game-card">
             <div className="free-game-image">
-              <img src={freeSudokuImg} alt="Sudoku" />
+              <img src={gameSweeperImg} alt="Gem Sweeper" />
             </div>
             <div className="free-game-info">
-              <h3>Sudoku</h3>
-              <button className="free-game-play-btn" onClick={() => window.location.href = '/games/game2/game2.html'}>Play Now</button>
+              <h3>Gem Sweeper</h3>
+              <button className="free-game-play-btn" onClick={() => window.location.href = '/games/gem-sweeper/index.html'}>Play Now</button>
+            </div>
+          </div>
+          <div className="free-game-card">
+            <div className="free-game-image">
+              <img src={gamePuzzleImg} alt="Puzzle Slider" />
+            </div>
+            <div className="free-game-info">
+              <h3>Puzzle Slider</h3>
+              <button className="free-game-play-btn" onClick={() => window.location.href = '/games/puzzle-slider/index.html'}>Play Now</button>
+            </div>
+          </div>
+          <div className="free-game-card">
+            <div className="free-game-image">
+              <img src={gameTicTacToeImg} alt="Tic Tac Toe" />
+            </div>
+            <div className="free-game-info">
+              <h3>Tic Tac Toe</h3>
+              <button className="free-game-play-btn" onClick={() => window.location.href = '/games/tic-tac-toe/index.html'}>Play Now</button>
             </div>
           </div>
         </div>

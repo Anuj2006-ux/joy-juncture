@@ -1192,10 +1192,22 @@ footer {
 
 .free-games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 40px;
-    max-width: 1000px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    max-width: 1200px;
     margin: 40px auto 0;
+}
+
+@media (max-width: 1100px) {
+    .free-games-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .free-games-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .free-game-card {

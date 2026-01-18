@@ -18,37 +18,69 @@ const seedFreeGames = async () => {
 
   const freeGames = [
     {
-      title: 'Chess',
-      description: 'Play the classic game of chess! Challenge your mind with strategic moves.',
-      image: '/images/free_chess.png',
-      gameUrl: '/games/game1/game1.html',
+      title: 'Memory Match',
+      description: 'Match pairs of cards to test your memory! Find all matching pairs to win.',
+      image: '/images/game_memory.svg',
+      gameUrl: '/games/memory-match/index.html',
       rating: 4.8,
       isActive: true,
       order: 1
     },
     {
-      title: 'Sudoku',
-      description: 'Test your logic skills with this addictive number puzzle game!',
-      image: '/images/free_sudoku.png',
-      gameUrl: '/games/game2/game2.html',
-      rating: 4.5,
+      title: 'Gem Sweeper',
+      description: 'Find all the gems without hitting the bombs! A classic puzzle challenge.',
+      image: '/images/game_sweeper.svg',
+      gameUrl: '/games/gem-sweeper/index.html',
+      rating: 4.7,
       isActive: true,
       order: 2
+    },
+    {
+      title: 'Puzzle Slider',
+      description: 'Slide the tiles to arrange numbers in order. How fast can you solve it?',
+      image: '/images/game_puzzle.svg',
+      gameUrl: '/games/puzzle-slider/index.html',
+      rating: 4.6,
+      isActive: true,
+      order: 3
+    },
+    {
+      title: 'Tic Tac Toe',
+      description: 'The classic X and O game! Play against AI or challenge a friend.',
+      image: '/images/game_tictactoe.svg',
+      gameUrl: '/games/tic-tac-toe/index.html',
+      rating: 4.5,
+      isActive: true,
+      order: 4
+    },
+    {
+      title: 'Snake Game',
+      description: 'Control the snake and eat food to grow! Avoid hitting walls and yourself.',
+      image: '/images/game_snake.svg',
+      gameUrl: '/games/snake-game/index.html',
+      rating: 4.9,
+      isActive: true,
+      order: 5
+    },
+    {
+      title: 'Color Rush',
+      description: 'Test your brain! Match the COLOR of the word, not what it says.',
+      image: '/images/game_colorush.svg',
+      gameUrl: '/games/color-rush/index.html',
+      rating: 4.7,
+      isActive: true,
+      order: 6
     }
   ];
 
   try {
-    // Check if games already exist
-    const existingCount = await FreeGame.countDocuments();
+    // Delete existing games and insert new ones
+    await FreeGame.deleteMany({});
+    console.log('Cleared existing free games.');
     
-    if (existingCount > 0) {
-      console.log(`Found ${existingCount} existing free games. Skipping seed.`);
-      console.log('To re-seed, delete existing games first.');
-    } else {
-      // Insert the free games
-      await FreeGame.insertMany(freeGames);
-      console.log('✅ Successfully added 2 free games (Chess & Sudoku) to the database!');
-    }
+    // Insert the free games
+    await FreeGame.insertMany(freeGames);
+    console.log('✅ Successfully added 6 free games to the database!');
 
     // Show current games
     const allGames = await FreeGame.find({});

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="orange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f2994a"/>
+      <stop offset="100%" style="stop-color:#f2c94c"/>
+    </linearGradient>
+    <linearGradient id="purple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  
+  <!-- Game board -->
+  <g transform="translate(115, 40)">
+    <!-- Grid lines -->
+    <rect x="0" y="0" width="170" height="170" rx="15" fill="rgba(0,0,0,0.3)"/>
+    
+    <!-- Cells -->
+    <!-- Row 1 -->
+    <rect x="10" y="10" width="45" height="45" rx="8" fill="#232526"/>
+    <text x="32" y="42" text-anchor="middle" fill="url(#orange)" font-size="32" font-weight="bold">X</text>
+    
+    <rect x="62" y="10" width="45" height="45" rx="8" fill="#232526"/>
+    
+    <rect x="114" y="10" width="45" height="45" rx="8" fill="#232526"/>
+    <text x="136" y="42" text-anchor="middle" fill="url(#purple)" font-size="32" font-weight="bold">O</text>
+    
+    <!-- Row 2 -->
+    <rect x="10" y="62" width="45" height="45" rx="8" fill="#232526"/>
+    
+    <rect x="62" y="62" width="45" height="45" rx="8" fill="#232526"/>
+    <text x="84" y="94" text-anchor="middle" fill="url(#orange)" font-size="32" font-weight="bold">X</text>
+    
+    <rect x="114" y="62" width="45" height="45" rx="8" fill="#232526"/>
+    
+    <!-- Row 3 -->
+    <rect x="10" y="114" width="45" height="45" rx="8" fill="#232526"/>
+    <text x="32" y="146" text-anchor="middle" fill="url(#purple)" font-size="32" font-weight="bold">O</text>
+    
+    <rect x="62" y="114" width="45" height="45" rx="8" fill="#232526"/>
+    
+    <rect x="114" y="114" width="45" height="45" rx="8" fill="#232526"/>
+    <text x="136" y="146" text-anchor="middle" fill="url(#orange)" font-size="32" font-weight="bold">X</text>
+  </g>
+  
+  <!-- Win line -->
+  <line x1="147" y1="72" x2="283" y2="208" stroke="#38ef7d" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- VS text -->
+  <text x="80" y="140" fill="white" font-size="14" opacity="0.5">vs</text>
+  <text x="320" y="140" fill="white" font-size="14" opacity="0.5">AI</text>
+  
+  <!-- Title -->
+  <text x="200" y="280" text-anchor="middle" fill="#f2c94c" font-family="Poppins, sans-serif" font-size="18" font-weight="600">TIC TAC TOE</text>
+</svg>

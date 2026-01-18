@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#11998e"/>
+      <stop offset="100%" style="stop-color:#38ef7d"/>
+    </linearGradient>
+    <linearGradient id="tile" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  
+  <!-- Puzzle grid -->
+  <g transform="translate(115, 45)">
+    <!-- Row 1 -->
+    <rect x="0" y="0" width="50" height="50" rx="8" fill="url(#accent)"/>
+    <text x="25" y="35" text-anchor="middle" fill="white" font-size="24" font-weight="bold">1</text>
+    
+    <rect x="55" y="0" width="50" height="50" rx="8" fill="url(#accent)"/>
+    <text x="80" y="35" text-anchor="middle" fill="white" font-size="24" font-weight="bold">2</text>
+    
+    <rect x="110" y="0" width="50" height="50" rx="8" fill="url(#tile)"/>
+    <text x="135" y="35" text-anchor="middle" fill="white" font-size="24" font-weight="bold">3</text>
+    
+    <!-- Row 2 -->
+    <rect x="0" y="55" width="50" height="50" rx="8" fill="url(#tile)"/>
+    <text x="25" y="90" text-anchor="middle" fill="white" font-size="24" font-weight="bold">4</text>
+    
+    <rect x="55" y="55" width="50" height="50" rx="8" fill="url(#accent)"/>
+    <text x="80" y="90" text-anchor="middle" fill="white" font-size="24" font-weight="bold">5</text>
+    
+    <rect x="110" y="55" width="50" height="50" rx="8" fill="url(#accent)"/>
+    <text x="135" y="90" text-anchor="middle" fill="white" font-size="24" font-weight="bold">6</text>
+    
+    <!-- Row 3 -->
+    <rect x="0" y="110" width="50" height="50" rx="8" fill="url(#accent)"/>
+    <text x="25" y="145" text-anchor="middle" fill="white" font-size="24" font-weight="bold">7</text>
+    
+    <rect x="55" y="110" width="50" height="50" rx="8" fill="url(#tile)"/>
+    <text x="80" y="145" text-anchor="middle" fill="white" font-size="24" font-weight="bold">8</text>
+    
+    <!-- Empty tile -->
+    <rect x="110" y="110" width="50" height="50" rx="8" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-dasharray="5,5"/>
+  </g>
+  
+  <!-- Arrow indicators -->
+  <text x="185" y="230" text-anchor="middle" fill="#38ef7d" font-size="20">↑ ↓ ← →</text>
+  
+  <!-- Title -->
+  <text x="200" y="280" text-anchor="middle" fill="#38ef7d" font-family="Poppins, sans-serif" font-size="18" font-weight="600">PUZZLE SLIDER</text>
+</svg>
