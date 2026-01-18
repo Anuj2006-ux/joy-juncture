@@ -381,8 +381,12 @@ function Homepage() {
             <h3>Play at Home</h3>
             <p>Card games for family & friends. Cozy, social and endlessly replayable.</p>
             <button className="card-cta confetti-btn" onClick={(e) => { 
-              handleConfettiClick(e); 
-              document.getElementById('free-games')?.scrollIntoView({ behavior: 'smooth' }); 
+              handleConfettiClick(e);
+              const playStyleSection = document.querySelector('.section-title h2');
+              if (playStyleSection && playStyleSection.textContent.includes('Choose Your Play Style')) {
+                const y = playStyleSection.getBoundingClientRect().top + window.pageYOffset - 40; // adjust offset as needed
+                window.scrollTo({ top: y, behavior: 'smooth' });
+              }
             }}>Explore</button>
           </div>
           <div className="style-card" tabIndex="0">
