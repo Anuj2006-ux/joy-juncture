@@ -16,18 +16,18 @@ const generateOTP = () => {
 const generateReferralCode = async (username) => {
   let referralCode;
   let isUnique = false;
-  
+
   while (!isUnique) {
     const random = Math.random().toString(36).substring(2, 8).toUpperCase();
     referralCode = `JJ${username?.substring(0, 3).toUpperCase() || 'USR'}${random}`;
-    
+
     // Check if code already exists
     const existing = await User.findOne({ referralCode });
     if (!existing) {
       isUnique = true;
     }
   }
-  
+
   return referralCode;
 };
 
@@ -37,28 +37,28 @@ const generateReferralCode = async (username) => {
 router.get('/validate-referral/:code', async (req, res) => {
   try {
     const { code } = req.params;
-    
+
     if (!code || code.length < 5) {
       return res.json({ success: false, valid: false, message: 'Invalid referral code format' });
     }
 
-    const referrer = await User.findOne({ 
+    const referrer = await User.findOne({
       referralCode: code.toUpperCase(),
-      isVerified: true 
+      isVerified: true
     }).select('username');
 
     if (referrer) {
-      return res.json({ 
-        success: true, 
-        valid: true, 
+      return res.json({
+        success: true,
+        valid: true,
         message: `Code belongs to ${referrer.username}! You'll both get bonus points.`,
         referrerName: referrer.username
       });
     } else {
-      return res.json({ 
-        success: true, 
-        valid: false, 
-        message: 'Referral code not found' 
+      return res.json({
+        success: true,
+        valid: false,
+        message: 'Referral code not found'
       });
     }
   } catch (error) {
@@ -137,7 +137,7 @@ router.post(
       // Create temp token for verification
       const tempToken = jwt.sign(
         { email, isTemp: true },
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET || 'your-secret-key',
         { expiresIn: '15m' }
       );
 
@@ -175,7 +175,7 @@ router.post(
       // Verify temp token
       let decoded;
       try {
-        decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+        decoded = jwt.verify(tempToken, process.env.JWT_SECRET || 'your-secret-key');
         if (!decoded.isTemp) {
           return res.status(401).json({ success: false, message: 'Invalid token' });
         }
@@ -208,10 +208,10 @@ router.post(
       user.isVerified = true;
       user.otp = undefined;
       user.otpExpiry = undefined;
-      
+
       // Generate unique referral code for the user
       user.referralCode = await generateReferralCode(user.username);
-      
+
       // Award signup bonus (20 points)
       const signupBonus = 20;
       user.points = signupBonus;
@@ -219,7 +219,7 @@ router.post(
         ...user.wallet,
         totalPointsEarned: signupBonus
       };
-      
+
       await user.save();
 
       // Record signup bonus in points history
@@ -254,7 +254,7 @@ router.post(
       }
 
       // Create JWT token
-      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || 'your-secret-key', {
         expiresIn: '7d',
       });
 
@@ -287,7 +287,7 @@ router.post('/resend-register-otp', async (req, res) => {
     // Verify temp token
     let decoded;
     try {
-      decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+      decoded = jwt.verify(tempToken, process.env.JWT_SECRET || 'your-secret-key');
     } catch (err) {
       return res.status(401).json({ success: false, message: 'Session expired. Please register again.' });
     }
@@ -313,7 +313,7 @@ router.post('/resend-register-otp', async (req, res) => {
     // Generate new temp token
     const newTempToken = jwt.sign(
       { email: user.email, isTemp: true },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || 'your-secret-key',
       { expiresIn: '15m' }
     );
 
@@ -352,7 +352,7 @@ router.post(
       // Find user by username, name, or email (case-sensitive)
       const user = await User.findOne({
         $or: [
-          { username }, 
+          { username },
           { name: username },
           { email: username }
         ],
@@ -379,7 +379,7 @@ router.post(
           user.blockExpiry = null;
           await user.save();
         } else {
-          const blockMessage = user.blockExpiry 
+          const blockMessage = user.blockExpiry
             ? `Your account has been blocked until ${user.blockExpiry.toLocaleDateString()}. Please contact support.`
             : 'Your account has been permanently blocked. Please contact support.';
           return res.status(403).json({
@@ -400,7 +400,7 @@ router.post(
       // Check password
       const isPasswordValid = await user.comparePassword(password);
       console.log('Password valid:', isPasswordValid);
-      
+
       if (!isPasswordValid) {
         return res.status(401).json({
           success: false,
@@ -409,7 +409,7 @@ router.post(
       }
 
       // Direct login - create JWT token
-      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || 'your-secret-key', {
         expiresIn: '7d',
       });
 
@@ -453,7 +453,7 @@ router.post(
       // Verify temp token
       let decoded;
       try {
-        decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+        decoded = jwt.verify(tempToken, process.env.JWT_SECRET || 'your-secret-key');
         if (!decoded.isTemp) {
           return res.status(401).json({ success: false, message: 'Invalid token' });
         }
@@ -484,7 +484,7 @@ router.post(
       await user.save();
 
       // Create full authentication token
-      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || 'your-secret-key', {
         expiresIn: '7d',
       });
 
@@ -522,7 +522,7 @@ router.post(
       // Verify temp token
       let decoded;
       try {
-        decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+        decoded = jwt.verify(tempToken, process.env.JWT_SECRET || 'your-secret-key');
       } catch (err) {
         return res.status(401).json({ success: false, message: 'Token expired. Please login again.' });
       }
@@ -578,7 +578,7 @@ router.post(
       // Find user by username, name, or email (case-sensitive)
       const user = await User.findOne({
         $or: [
-          { username }, 
+          { username },
           { name: username },
           { email: username }
         ],
@@ -614,7 +614,7 @@ router.post(
       }
 
       // Create temporary token
-      const tempToken = jwt.sign({ userId: user._id, isTemp: true }, process.env.JWT_SECRET, {
+      const tempToken = jwt.sign({ userId: user._id, isTemp: true }, process.env.JWT_SECRET || 'your-secret-key', {
         expiresIn: '15m',
       });
 
@@ -664,7 +664,7 @@ router.post('/forgot-password', async (req, res) => {
     }
 
     // Create temporary token
-    const tempToken = jwt.sign({ userId: user._id, isTemp: true }, process.env.JWT_SECRET, {
+    const tempToken = jwt.sign({ userId: user._id, isTemp: true }, process.env.JWT_SECRET || 'your-secret-key', {
       expiresIn: '15m',
     });
 
@@ -689,7 +689,7 @@ router.post('/reset-password', async (req, res) => {
     // Verify temp token
     let decoded;
     try {
-      decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+      decoded = jwt.verify(tempToken, process.env.JWT_SECRET || 'your-secret-key');
       if (!decoded.isTemp) {
         return res.status(400).json({ success: false, message: 'Invalid token' });
       }
@@ -735,7 +735,7 @@ const authMiddleware = async (req, res, next) => {
     if (!token) {
       return res.status(401).json({ success: false, message: 'No token provided' });
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
     const user = await User.findById(decoded.userId);
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
@@ -779,11 +779,11 @@ router.get('/profile', authMiddleware, async (req, res) => {
 router.put('/profile/update-picture', authMiddleware, async (req, res) => {
   try {
     const { profilePicture } = req.body;
-    
+
     const user = req.user;
     user.profilePicture = profilePicture || null;
     await user.save();
-    
+
     res.json({
       success: true,
       message: 'Profile picture updated successfully',
@@ -804,12 +804,12 @@ router.put('/profile/update-name', authMiddleware, async (req, res) => {
     if (!name || name.trim().length < 2) {
       return res.status(400).json({ success: false, message: 'Name must be at least 2 characters' });
     }
-    
+
     const user = req.user;
     user.name = name.trim();
     user.username = name.trim();
     await user.save();
-    
+
     res.json({
       success: true,
       message: 'Name updated successfully',
@@ -833,14 +833,14 @@ router.post('/profile/send-password-otp', authMiddleware, async (req, res) => {
   try {
     const user = req.user;
     const otp = generateOTP();
-    
+
     user.otp = otp;
     user.otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
     await user.save();
-    
+
     // Send OTP email
     await sendOTPEmail(user.email, otp);
-    
+
     res.json({
       success: true,
       message: 'OTP sent to your registered email'
@@ -858,31 +858,31 @@ router.post('/profile/verify-password-otp', authMiddleware, async (req, res) => 
   try {
     const { otp, newPassword } = req.body;
     const user = req.user;
-    
+
     if (!otp || otp.length !== 6) {
       return res.status(400).json({ success: false, message: 'Invalid OTP format' });
     }
-    
+
     if (!newPassword || newPassword.length < 6) {
       return res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
     }
-    
+
     // Check OTP
     if (user.otp !== otp) {
       return res.status(400).json({ success: false, message: 'Invalid OTP' });
     }
-    
+
     // Check if OTP expired
     if (!user.otpExpiry || new Date() > user.otpExpiry) {
       return res.status(400).json({ success: false, message: 'OTP has expired' });
     }
-    
+
     // Update password
     user.password = newPassword;
     user.otp = undefined;
     user.otpExpiry = undefined;
     await user.save();
-    
+
     res.json({
       success: true,
       message: 'Password changed successfully'
@@ -900,14 +900,14 @@ router.post('/profile/send-delete-otp', authMiddleware, async (req, res) => {
   try {
     const user = req.user;
     const otp = generateOTP();
-    
+
     user.otp = otp;
     user.otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
     await user.save();
-    
+
     // Send OTP email
     await sendOTPEmail(user.email, otp);
-    
+
     res.json({
       success: true,
       message: 'OTP sent to your registered email for account deletion verification'
@@ -925,24 +925,24 @@ router.post('/profile/delete-account', authMiddleware, async (req, res) => {
   try {
     const { otp } = req.body;
     const user = req.user;
-    
+
     if (!otp || otp.length !== 6) {
       return res.status(400).json({ success: false, message: 'Invalid OTP format' });
     }
-    
+
     // Check OTP
     if (user.otp !== otp) {
       return res.status(400).json({ success: false, message: 'Invalid OTP' });
     }
-    
+
     // Check if OTP expired
     if (!user.otpExpiry || new Date() > user.otpExpiry) {
       return res.status(400).json({ success: false, message: 'OTP has expired' });
     }
-    
+
     // Delete the user from database
     await User.findByIdAndDelete(user._id);
-    
+
     res.json({
       success: true,
       message: 'Your account has been deleted successfully'
@@ -956,7 +956,7 @@ router.post('/profile/delete-account', authMiddleware, async (req, res) => {
 // @route   GET /api/auth/google
 // @desc    Initiate Google OAuth
 // @access  Public
-router.get('/google', 
+router.get('/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
@@ -964,23 +964,25 @@ router.get('/google',
 // @desc    Google OAuth callback
 // @access  Public
 router.get('/google/callback',
-  passport.authenticate('google', { failureRedirect: 'http://localhost:3000/login?error=auth_failed' }),
+  passport.authenticate('google', { failureRedirect: (process.env.FRONTEND_URL || 'http://localhost:3000') + '/login?error=auth_failed' }),
   (req, res) => {
     try {
       // Generate JWT token for the authenticated user
-      const token = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET || 'your-secret-key', {
         expiresIn: '7d',
       });
 
       // Redirect to frontend with token
-      res.redirect(`http://localhost:3000/login?token=${token}&user=${encodeURIComponent(JSON.stringify({
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+      res.redirect(`${frontendUrl}/login?token=${token}&user=${encodeURIComponent(JSON.stringify({
         id: req.user._id,
         username: req.user.username,
         email: req.user.email
       }))}`);
     } catch (error) {
       console.error('Google callback error:', error);
-      res.redirect('http://localhost:3000/login?error=auth_failed');
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+      res.redirect(`${frontendUrl}/login?error=auth_failed`);
     }
   }
 );
