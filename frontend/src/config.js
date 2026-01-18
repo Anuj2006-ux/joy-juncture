@@ -1,3 +1,8 @@
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+// Auto-detect environment and use correct API URL
+const API_URL = process.env.REACT_APP_API_URL
+    || (window.location.hostname === 'localhost'
+        ? 'http://localhost:5000'
+        : 'https://joy-juncture-m09b.onrender.com');
 
 export default API_URL;
+
