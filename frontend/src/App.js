@@ -25,6 +25,12 @@ import Addresses from './components/Addresses';
 import Footer from './components/Footer';
 import { initializePointsTracking } from './utils/pointsTracker';
 
+// Events pages
+import Events from './pages/Events';
+import EventDetails from './pages/EventDetails';
+import PastEventDetails from './pages/PastEventDetails';
+import YourEvents from './pages/YourEvents';
+
 function App() {
   useEffect(() => {
     // Initialize points tracking when app loads
@@ -56,6 +62,10 @@ function App() {
           <Route path="/orders" element={<Orders />} />
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/addresses" element={<Addresses />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/events/:id" element={<EventDetails />} />
+          <Route path="/events/past/:id" element={<PastEventDetails />} />
+          <Route path="/your-events" element={<YourEvents />} />
         </Routes>
         <Footer />
       </div>

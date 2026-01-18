@@ -137,6 +137,13 @@ function Auth() {
     // 2. SIGNUP LOGIC - Step 1: Send OTP
     const handleSignup = async (e) => {
         e.preventDefault();
+        
+        // Password length validation
+        if (formData.password.length < 8) {
+            setError('Password must be at least 8 characters long.');
+            return;
+        }
+        
         if (!agreeToTerms) {
             setError('You must agree to the terms and policy.');
             return;
@@ -442,7 +449,15 @@ function Auth() {
                                     value={formData.password}
                                     onChange={handleChange}
                                     required
+                                    minLength={8}
                                 />
+                                <small className={`password-hint ${formData.password.length >= 8 ? 'valid' : ''}`}>
+                                    {formData.password.length > 0 && formData.password.length < 8 
+                                        ? `Password must be at least 8 characters (${formData.password.length}/8)`
+                                        : 'Password must be at least 8 characters'
+                                    }
+                                    {formData.password.length >= 8 && ' ✓'}
+                                </small>
                             </div>
                             <div className="form-group referral-group">
                                 <label>Referral Code <span className="optional-label">(Optional)</span></label>

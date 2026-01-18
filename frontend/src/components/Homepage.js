@@ -67,7 +67,7 @@ function Homepage() {
     const fetchGames = async () => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-      
+
       try {
         console.log('Fetching games from API...');
         const res = await fetch(API_URL + '/api/games', { signal: controller.signal });
@@ -380,7 +380,7 @@ function Homepage() {
             </div>
             <h3>Play at Home</h3>
             <p>Card games for family & friends. Cozy, social and endlessly replayable.</p>
-            <button className="card-cta confetti-btn" onClick={(e) => { 
+            <button className="card-cta confetti-btn" onClick={(e) => {
               handleConfettiClick(e);
               const playStyleSection = document.querySelector('.section-title h2');
               if (playStyleSection && playStyleSection.textContent.includes('Choose Your Play Style')) {

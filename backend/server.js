@@ -67,6 +67,7 @@ app.use('/api/contact', require('./routes/contact'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/wallet', require('./routes/wallet'));
 app.use('/api/address', require('./routes/address'));
+app.use('/api/events', require('./routes/events'));
 
 // Health check route
 app.get('/', (req, res) => {

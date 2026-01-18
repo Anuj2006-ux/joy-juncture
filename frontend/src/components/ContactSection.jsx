@@ -23,6 +23,13 @@ const ContactSection = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Email validation - must contain @
+        if (!formData.email.includes('@')) {
+            setStatus({ type: 'error', message: 'Please enter a valid email address.' });
+            return;
+        }
+        
         setIsSubmitting(true);
         setStatus({ type: '', message: '' });
 
@@ -85,6 +92,8 @@ const ContactSection = () => {
                                 id="email"
                                 name="email"
                                 required
+                                pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                                title="Please enter a valid email address (e.g., example@domain.com)"
                                 value={formData.email}
                                 onChange={handleChange}
                             />

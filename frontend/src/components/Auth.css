@@ -449,3 +449,16 @@ img.auth-corner-logo {
     color: #4caf50;
     font-size: 0.85rem;
 }
+
+/* Password hint styling */
+.password-hint {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: #888;
+    transition: color 0.3s ease;
+}
+
+.password-hint.valid {
+    color: #4caf50;
+}

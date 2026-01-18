@@ -88,16 +88,16 @@ function Navbar() {
         if (data.success) {
           setGames(data.games);
         } else {
-             // Fallback hardcoded if API fails
-            setGames([
-                { "id": "jj01", "title": "Dead Man's Deck", "oldPrice": 1038, "price": 518, "image": "https://images.unsplash.com/photo-1606167668584-78701c57f13d?q=80&w=2070&auto=format&fit=crop", "tag": "Sale" },
-                { "id": "jj02", "title": "Mehfil – Musical Card Game", "oldPrice": 1038, "price": 518, "image": "https://joyjuncture.com/cdn/shop/files/WhatsApp_Image_2025-11-29_at_13.51.05.jpg?v=1764407325&width=713", "tag": "Hot" },
-                { "id": "jj03", "title": "Tamasha – Bollywood Bid", "oldPrice": 1038, "price": 518, "image": "https://joyjuncture.com/cdn/shop/files/generated_image2.png?v=1764408944&width=713", "tag": "New" },
-                { "id": "jj04", "title": "Murder Mystery Case File", "oldPrice": 2598, "price": 1298, "image": "https://joyjuncture.com/cdn/shop/files/WhatsAppImage2025-11-26at22.26.34.jpg?v=1764311510&width=360", "tag": "Best Seller" },
-                { "id": "jj05", "title": "Buzzed – Drinking Game", "oldPrice": 778, "price": 388, "image": "https://joyjuncture.com/cdn/shop/files/generated_image_buzz.png?v=1764409590&width=360", "tag": "18+" },
-                { "id": "jj06", "title": "Judge Me & Guess", "oldPrice": 1948.70, "price": 1298.70, "image": "https://joyjuncture.com/cdn/shop/files/WhatsApp_Image_2025-11-29_at_14.45.13.jpg?v=1764407770&width=360", "tag": "Sale" },
-                { "id": "jj07", "title": "One More Round | Jigsaw Puzzle", "oldPrice": 843.70, "price": 648.70, "image": "https://joyjuncture.com/cdn/shop/files/IMG_1735.jpg?v=1750756387&width=360", "tag": "Sale" }
-            ]);
+          // Fallback hardcoded if API fails
+          setGames([
+            { "id": "jj01", "title": "Dead Man's Deck", "oldPrice": 1038, "price": 518, "image": "https://images.unsplash.com/photo-1606167668584-78701c57f13d?q=80&w=2070&auto=format&fit=crop", "tag": "Sale" },
+            { "id": "jj02", "title": "Mehfil – Musical Card Game", "oldPrice": 1038, "price": 518, "image": "https://joyjuncture.com/cdn/shop/files/WhatsApp_Image_2025-11-29_at_13.51.05.jpg?v=1764407325&width=713", "tag": "Hot" },
+            { "id": "jj03", "title": "Tamasha – Bollywood Bid", "oldPrice": 1038, "price": 518, "image": "https://joyjuncture.com/cdn/shop/files/generated_image2.png?v=1764408944&width=713", "tag": "New" },
+            { "id": "jj04", "title": "Murder Mystery Case File", "oldPrice": 2598, "price": 1298, "image": "https://joyjuncture.com/cdn/shop/files/WhatsAppImage2025-11-26at22.26.34.jpg?v=1764311510&width=360", "tag": "Best Seller" },
+            { "id": "jj05", "title": "Buzzed – Drinking Game", "oldPrice": 778, "price": 388, "image": "https://joyjuncture.com/cdn/shop/files/generated_image_buzz.png?v=1764409590&width=360", "tag": "18+" },
+            { "id": "jj06", "title": "Judge Me & Guess", "oldPrice": 1948.70, "price": 1298.70, "image": "https://joyjuncture.com/cdn/shop/files/WhatsApp_Image_2025-11-29_at_14.45.13.jpg?v=1764407770&width=360", "tag": "Sale" },
+            { "id": "jj07", "title": "One More Round | Jigsaw Puzzle", "oldPrice": 843.70, "price": 648.70, "image": "https://joyjuncture.com/cdn/shop/files/IMG_1735.jpg?v=1750756387&width=360", "tag": "Sale" }
+          ]);
         }
       } catch (error) {
         console.error('Error fetching games for search:', error);
@@ -106,7 +106,7 @@ function Navbar() {
     fetchGames();
   }, []);
 
-  const filteredGames = searchQuery 
+  const filteredGames = searchQuery
     ? games.filter(game => game.title.toLowerCase().includes(searchQuery.toLowerCase()))
     : games;
 
@@ -319,7 +319,7 @@ function Navbar() {
             </li>
 
             <li className="nav-item">
-              <a href="/events/index.html">Events</a>
+              <Link to="/events">Events</Link>
             </li>
 
             <li className="nav-item">
@@ -404,6 +404,7 @@ function Navbar() {
                           </Link>
                         )}
                         <button type="button" className="profile-menu-btn" onClick={() => { setProfileDropdown(false); setProfilePopupOpen(true); }}><i className="fa-solid fa-user"></i> My Profile</button>
+                        <Link to="/your-events" onClick={() => setProfileDropdown(false)}><i className="fa-solid fa-calendar-check"></i> Your Events</Link>
                         <Link to="/orders" onClick={() => setProfileDropdown(false)}><i className="fa-solid fa-box"></i> Orders</Link>
                         <Link to="/wallet" onClick={() => setProfileDropdown(false)}><i className="fa-solid fa-wallet"></i> Wallet</Link>
                         <Link to="/addresses" onClick={() => setProfileDropdown(false)}><i className="fa-solid fa-location-dot"></i> Addresses</Link>
@@ -456,7 +457,7 @@ function Navbar() {
             <li className="mobile-highlight">
               <Link to="/#play-style" onClick={() => setMobileMenuOpen(false)}>Play The Showdown 🚀</Link>
             </li>
-            <li><a href="/events/index.html" onClick={() => setMobileMenuOpen(false)}>Events</a></li>
+            <li><Link to="/events" onClick={() => setMobileMenuOpen(false)}>Events</Link></li>
             <li className="mobile-dropdown">
               <span>Community <i className="fa-solid fa-chevron-down"></i></span>
               <ul className="mobile-submenu">
