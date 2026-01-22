@@ -74,6 +74,11 @@ app.get('/', (req, res) => {
   res.json({ message: 'Joy Juncture API is running!' });
 });
 
+// Keep-alive health check endpoint (for cron jobs to prevent cold starts)
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

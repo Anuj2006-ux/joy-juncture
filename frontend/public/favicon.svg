@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d4a3e"/>
+      <stop offset="100%" style="stop-color:#1a2f26"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="30" fill="url(#bg)"/>
+  <!-- JJ Letters -->
+  <text x="32" y="42" font-family="Arial Black, sans-serif" font-size="28" font-weight="bold" fill="#FF8C00" text-anchor="middle">JJ</text>
+  <!-- Accent ring -->
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#FF8C00" stroke-width="2" opacity="0.5"/>
+</svg>
