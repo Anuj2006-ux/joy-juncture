@@ -1,1 +1,269 @@
-/* AmplifiedProgram CSS */
+/* Joy Juncture Theme - Amplified Program */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --joy-green: #2d4a3e;
+  --joy-green-dark: #1f3530;
+  --joy-orange: #FF8C00;
+  --joy-orange-dark: #e07b00;
+  --bg-white: #ffffff;
+  --bg-light: #f8f9fa;
+  --text-dark: #1a1a1a;
+  --text-muted: #666666;
+  --border-light: #e0e0e0;
+}
+
+.amplified-container {
+  min-height: 100vh;
+  background-color: var(--bg-white);
+  color: var(--text-dark);
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+/* Hero Section */
+.amplified-hero {
+  background: linear-gradient(135deg, var(--joy-green) 0%, var(--joy-green-dark) 100%);
+  padding: 80px 20px 60px;
+  text-align: center;
+  position: relative;
+}
+
+.amplified-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+.amplified-hero h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.amplified-hero p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  line-height: 1.7;
+}
+
+/* Content */
+.amplified-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 30px;
+}
+
+.amplified-content h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--joy-green);
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.amplified-content > p {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 40px;
+}
+
+/* Benefits Cards */
+.amplified-benefits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  margin: 40px 0;
+}
+
+.benefit-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 35px 25px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.benefit-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  border-color: var(--joy-orange);
+}
+
+.benefit-icon {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.benefit-card h3 {
+  color: var(--joy-green);
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.benefit-card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* How It Works */
+.amplified-steps {
+  background: var(--bg-light);
+  padding: 50px 30px;
+  border-radius: 16px;
+  margin: 50px 0;
+}
+
+.amplified-steps h2 {
+  text-align: center;
+  color: var(--joy-green);
+  margin-bottom: 40px;
+}
+
+.steps-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.step-item {
+  text-align: center;
+  position: relative;
+}
+
+.step-number {
+  width: 50px;
+  height: 50px;
+  background: var(--joy-orange);
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 auto 15px;
+}
+
+.step-item h4 {
+  color: var(--joy-green);
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.step-item p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* CTA Section */
+.amplified-cta {
+  background: linear-gradient(135deg, var(--joy-green) 0%, var(--joy-green-dark) 100%);
+  padding: 50px 30px;
+  border-radius: 16px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.amplified-cta h2 {
+  color: #ffffff;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+}
+
+.amplified-cta p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.05rem;
+  margin-bottom: 30px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-button {
+  display: inline-block;
+  background: var(--joy-orange);
+  color: #ffffff;
+  padding: 16px 45px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.cta-button:hover {
+  background: var(--joy-orange-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 140, 0, 0.4);
+}
+
+/* Stats */
+.amplified-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 30px;
+  margin: 50px 0;
+  text-align: center;
+}
+
+.stat-item h3 {
+  font-size: 2.5rem;
+  color: var(--joy-orange);
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.stat-item p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .amplified-hero {
+    padding: 60px 20px 40px;
+  }
+  
+  .amplified-hero h1 {
+    font-size: 1.8rem;
+  }
+  
+  .amplified-content {
+    padding: 40px 20px;
+  }
+  
+  .amplified-benefits {
+    grid-template-columns: 1fr;
+  }
+  
+  .steps-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .amplified-cta {
+    padding: 40px 20px;
+  }
+}

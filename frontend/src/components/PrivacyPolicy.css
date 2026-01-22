@@ -1,149 +1,114 @@
-/* Global Cinematic Theme Variables */
+/* Joy Juncture Policy Theme - Privacy Policy */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 :root {
-  --bg-color: #0a0a0a;
-  --text-color: #e0e0e0;
-  --accent-color: #39ff14;
-  /* Toxic Green */
-  --accent-dim: #2cb810;
-  --heading-font: 'Poppins', sans-serif;
-  --body-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --joy-green: #2d4a3e;
+  --joy-green-dark: #1f3530;
+  --joy-orange: #FF8C00;
+  --bg-white: #ffffff;
+  --bg-light: #f8f9fa;
+  --text-dark: #1a1a1a;
+  --text-muted: #666666;
 }
 
-/* Main Container - Centered Column */
 .privacy-container {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  padding: 80px 20px;
-  margin: 0 auto;
-  max-width: 800px;
-  /* Narrow, readable column */
-  text-align: center;
-  /* MANDATORY CENTER ALIGNMENT */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* Centers flex children */
-  font-family: var(--body-font);
-  line-height: 2.0;
+  min-height: 100vh;
+  background-color: var(--bg-white);
+  color: var(--text-dark);
+  padding: 0;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  line-height: 1.8;
 }
 
-/* Headings */
 .privacy-container h1 {
-  font-size: 48px;
-  font-family: var(--heading-font);
+  font-size: clamp(2rem, 5vw, 2.5rem);
   font-weight: 700;
+  color: var(--joy-green);
+  margin: 0 auto;
+  padding: 60px 20px 20px;
+  text-align: center;
   text-transform: uppercase;
   letter-spacing: 2px;
-  margin-bottom: 40px;
-  color: var(--accent-color);
-  text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
-  /* Subtle toxic glow */
-  border-bottom: 2px solid var(--accent-color);
-  padding-bottom: 10px;
-  display: inline-block;
-  /* Allows border to wrap text width */
+  max-width: 900px;
 }
 
-/* Subheadings / Sections */
 .privacy-container .numbered-section {
-  font-family: var(--heading-font);
-  color: var(--accent-color);
-  font-size: 20px;
+  font-size: 1.3rem;
   font-weight: 600;
-  margin-top: 50px;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  border-left: 0;
-  /* Removing side borders for centered look */
-  border-bottom: 1px solid rgba(57, 255, 20, 0.2);
-  /* Subtle underline divider */
-  padding-bottom: 5px;
-  display: inline-block;
+  color: var(--joy-green);
+  margin: 40px auto 15px;
+  border-left: 4px solid var(--joy-orange);
+  padding-left: 15px;
+  display: block;
+  text-align: left;
+  max-width: 900px;
+  padding-right: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
-/* Body Text */
 .privacy-container p {
-  color: var(--text-color);
-  font-size: 17px;
-  margin-bottom: 25px;
-  font-weight: 300;
-  max-width: 100%;
+  color: var(--text-dark);
+  font-size: 1rem;
+  margin: 0 auto 20px;
+  max-width: 900px;
+  padding: 0 20px;
+  text-align: left;
 }
 
 .privacy-container .effective-date {
-  color: #888;
-  font-size: 14px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
   font-style: italic;
-  margin-bottom: 40px;
-  letter-spacing: 1px;
+  text-align: center;
+  margin: 0 auto 40px;
 }
 
-/* Lists - Visually Centered Blocks */
 .privacy-container ul {
   list-style: none;
-  /* remove default bullets to handle custom centering */
-  margin-bottom: 30px;
-  padding: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin: 0 auto 30px;
+  padding: 0 20px;
+  max-width: 900px;
 }
 
 .privacy-container li {
-  color: #ccc;
-  font-size: 16px;
-  margin-bottom: 15px;
-  line-height: 1.8;
-  padding: 10px 15px;
-  background: rgba(255, 255, 255, 0.03);
-  /* Extremely subtle card effect for readability */
-  border-left: 2px solid var(--accent-dim);
-  text-align: center;
-  /* Center text inside list items */
-  width: 100%;
-  max-width: 700px;
-  /* Keep list itmes contained */
+  color: var(--text-dark);
+  font-size: 1rem;
+  margin-bottom: 12px;
+  padding: 12px 15px 12px 25px;
+  background: var(--bg-light);
+  border-left: 3px solid var(--joy-orange);
+  border-radius: 0 8px 8px 0;
   transition: all 0.3s ease;
 }
 
 .privacy-container li:hover {
-  background: rgba(57, 255, 20, 0.05);
-  /* Slight green tint on hover */
-  border-left-color: var(--accent-color);
+  background: rgba(45, 74, 62, 0.05);
+  border-left-color: var(--joy-green);
+  transform: translateX(5px);
 }
 
-/* Links (if any) */
 .privacy-container a {
-  color: var(--accent-color);
+  color: var(--joy-orange);
   text-decoration: none;
-  transition: color 0.3s ease;
-  border-bottom: 1px dotted var(--accent-color);
+  font-weight: 500;
 }
 
 .privacy-container a:hover {
-  color: #fff;
-  text-shadow: 0 0 5px var(--accent-color);
+  color: var(--joy-green);
+  text-decoration: underline;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-  .privacy-container {
-    padding: 40px 15px;
-  }
-
   .privacy-container h1 {
-    font-size: 32px;
-    letter-spacing: 1px;
+    font-size: 1.8rem;
+    padding: 40px 15px 15px;
   }
-
   .privacy-container .numbered-section {
-    font-size: 18px;
+    font-size: 1.1rem;
+    margin: 30px 15px 12px;
   }
-
-  .privacy-container p,
-  .privacy-container li {
-    font-size: 15px;
+  .privacy-container p, .privacy-container li {
+    font-size: 0.95rem;
   }
 }

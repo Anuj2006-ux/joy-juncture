@@ -1,1 +1,246 @@
-/* PartnerWithUs CSS */
+/* Joy Juncture Theme - Partner With Us */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --joy-green: #2d4a3e;
+  --joy-green-dark: #1f3530;
+  --joy-orange: #FF8C00;
+  --joy-orange-dark: #e07b00;
+  --bg-white: #ffffff;
+  --bg-light: #f8f9fa;
+  --text-dark: #1a1a1a;
+  --text-muted: #666666;
+  --border-light: #e0e0e0;
+}
+
+.partner-container {
+  min-height: 100vh;
+  background-color: var(--bg-white);
+  color: var(--text-dark);
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+/* Hero Section */
+.partner-hero {
+  background: linear-gradient(135deg, var(--joy-green) 0%, var(--joy-green-dark) 100%);
+  padding: 80px 20px 60px;
+  text-align: center;
+  position: relative;
+}
+
+.partner-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+.partner-hero h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.partner-hero p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Content */
+.partner-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 60px 30px;
+}
+
+.partner-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--joy-green);
+  margin-bottom: 20px;
+  border-left: 4px solid var(--joy-orange);
+  padding-left: 15px;
+}
+
+.partner-content p {
+  color: var(--text-dark);
+  font-size: 1rem;
+  margin-bottom: 25px;
+  line-height: 1.8;
+}
+
+/* Benefits Cards */
+.partner-benefits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  margin: 40px 0;
+}
+
+.benefit-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.benefit-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-color: var(--joy-orange);
+}
+
+.benefit-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.benefit-card h3 {
+  color: var(--joy-green);
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.benefit-card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Form */
+.partner-form {
+  background: var(--bg-light);
+  padding: 40px;
+  border-radius: 12px;
+  margin-top: 40px;
+}
+
+.partner-form h3 {
+  color: var(--joy-green);
+  font-size: 1.4rem;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  color: var(--text-dark);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.partner-form input,
+.partner-form textarea,
+.partner-form select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+  background: var(--bg-white);
+}
+
+.partner-form input:focus,
+.partner-form textarea:focus,
+.partner-form select:focus {
+  outline: none;
+  border-color: var(--joy-orange);
+}
+
+.partner-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.partner-form button {
+  background: var(--joy-orange);
+  color: #ffffff;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: block;
+  margin: 30px auto 0;
+}
+
+.partner-form button:hover {
+  background: var(--joy-orange-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(255, 140, 0, 0.4);
+}
+
+/* Contact Section */
+.partner-contact {
+  background: linear-gradient(135deg, var(--joy-green) 0%, var(--joy-green-dark) 100%);
+  padding: 40px;
+  border-radius: 12px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.partner-contact h3 {
+  color: #ffffff;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.partner-contact p {
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 10px;
+}
+
+.partner-contact a {
+  color: var(--joy-orange);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.partner-contact a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .partner-hero {
+    padding: 60px 20px 40px;
+  }
+  
+  .partner-hero h1 {
+    font-size: 1.8rem;
+  }
+  
+  .partner-content {
+    padding: 40px 20px;
+  }
+  
+  .partner-form {
+    padding: 30px 20px;
+  }
+  
+  .partner-benefits {
+    grid-template-columns: 1fr;
+  }
+}

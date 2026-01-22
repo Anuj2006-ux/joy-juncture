@@ -1,137 +1,120 @@
-/* Global Cinematic Theme Variables */
+/* Joy Juncture Policy Theme - Terms & Conditions */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 :root {
-    --bg-color: #0a0a0a;
-    --text-color: #e0e0e0;
-    --accent-color: #39ff14;
-    /* Toxic Green */
-    --accent-dim: #2cb810;
-    --heading-font: 'Poppins', sans-serif;
-    --body-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --joy-green: #2d4a3e;
+  --joy-green-dark: #1f3530;
+  --joy-orange: #FF8C00;
+  --bg-white: #ffffff;
+  --bg-light: #f8f9fa;
+  --text-dark: #1a1a1a;
+  --text-muted: #666666;
 }
 
-/* Main Container - Centered Column */
 .policy-container {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    padding: 80px 20px;
-    margin: 0 auto;
-    max-width: 800px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: var(--body-font);
-    line-height: 2.0; 
+  min-height: 100vh;
+  background-color: var(--bg-white);
+  color: var(--text-dark);
+  padding: 0;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  line-height: 1.8;
 }
 
-/* Headings */
 .policy-container h1 {
-    font-size: 48px;
-    font-family: var(--heading-font);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 40px;
-    color: var(--accent-color);
-    text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
-    border-bottom: 2px solid var(--accent-color);
-    padding-bottom: 10px;
-    display: inline-block;
+  font-size: clamp(2rem, 5vw, 2.5rem);
+  font-weight: 700;
+  color: var(--joy-green);
+  margin: 0 auto;
+  padding: 60px 20px 20px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  max-width: 900px;
 }
 
-/* Subheadings / Sections */
-.policy-container .section-heading, 
+.policy-container .section-heading,
 .policy-container h2 {
-    font-family: var(--heading-font);
-    color: var(--accent-color);
-    font-size: 20px;
-    font-weight: 600;
-    margin-top: 50px;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    border-left: 0;
-    border-bottom: 1px solid rgba(57, 255, 20, 0.2);
-    padding-bottom: 5px;
-    display: inline-block;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--joy-green);
+  margin: 40px auto 15px;
+  border-left: 4px solid var(--joy-orange);
+  padding-left: 15px;
+  display: block;
+  text-align: left;
+  max-width: 900px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
-/* Body Text */
 .policy-container p {
-    color: var(--text-color);
-    font-size: 17px;
-    margin-bottom: 25px;
-    font-weight: 300;
-    max-width: 100%;
+  color: var(--text-dark);
+  font-size: 1rem;
+  margin: 0 auto 20px;
+  max-width: 900px;
+  padding: 0 20px;
+  text-align: left;
 }
 
 .policy-container .effective-date {
-    color: #888;
-    font-size: 14px;
-    font-style: italic;
-    margin-bottom: 40px;
-    letter-spacing: 1px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-style: italic;
+  text-align: center;
+  margin: 0 auto 40px;
 }
 
 .policy-container .email-orange {
-    color: var(--accent-color);
-    font-weight: bold;
+  color: var(--joy-orange);
+  font-weight: 600;
 }
 
-/* Lists */
 .policy-container ul {
-    list-style: none;
-    margin-bottom: 30px;
-    padding: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  list-style: none;
+  margin: 0 auto 30px;
+  padding: 0 20px;
+  max-width: 900px;
 }
 
 .policy-container li {
-    color: #ccc;
-    font-size: 16px;
-    margin-bottom: 15px;
-    line-height: 1.8;
-    padding: 10px 15px;
-    background: rgba(255, 255, 255, 0.03);
-    border-left: 2px solid var(--accent-dim);
-    text-align: center;
-    width: 100%;
-    max-width: 700px;
-    transition: all 0.3s ease;
+  color: var(--text-dark);
+  font-size: 1rem;
+  margin-bottom: 12px;
+  padding: 12px 15px 12px 25px;
+  background: var(--bg-light);
+  border-left: 3px solid var(--joy-orange);
+  border-radius: 0 8px 8px 0;
+  transition: all 0.3s ease;
 }
 
 .policy-container li:hover {
-    background: rgba(57, 255, 20, 0.05);
-    border-left-color: var(--accent-color);
+  background: rgba(45, 74, 62, 0.05);
+  border-left-color: var(--joy-green);
+  transform: translateX(5px);
 }
 
-/* Links (if any) */
 .policy-container a {
-  color: var(--accent-color);
+  color: var(--joy-orange);
   text-decoration: none;
-  transition: color 0.3s ease;
-  border-bottom: 1px dotted var(--accent-color);
+  font-weight: 500;
 }
 
 .policy-container a:hover {
-  color: #fff;
-  text-shadow: 0 0 5px var(--accent-color);
+  color: var(--joy-green);
+  text-decoration: underline;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-    .policy-container {
-        padding: 40px 15px;
-    }
-    .policy-container h1 {
-        font-size: 32px;
-        letter-spacing: 1px;
-    }
-    .policy-container p, 
-    .policy-container li {
-        font-size: 15px;
-    }
+  .policy-container h1 {
+    font-size: 1.8rem;
+    padding: 40px 15px 15px;
+  }
+  .policy-container .section-heading,
+  .policy-container h2 {
+    font-size: 1.1rem;
+    margin: 30px 15px 12px;
+  }
+  .policy-container p, .policy-container li {
+    font-size: 0.95rem;
+  }
 }
